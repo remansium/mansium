@@ -5,1402 +5,1771 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mansium — Luxury Property Marketing</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════ */
 :root {
-  --gold:       #e0c58f;
-  --gold-light: #f2dcb0;
-  --gold-dim:   rgba(224,197,143,0.12);
-  --gold-mid:   rgba(224,197,143,0.35);
-  --navy:       #112250;
-  --navy-0:     #070e22;
-  --navy-1:     #0a1633;
-  --navy-2:     #0e1d44;
-  --navy-3:     #172c60;
-  --cream:      #f5f0e8;
-  --text:       rgba(245,240,232,0.9);
-  --text-dim:   rgba(245,240,232,0.45);
-  --text-faint: rgba(245,240,232,0.2);
-  --ease:       cubic-bezier(0.16,1,0.3,1);
+  --gold:        #e0c58f;
+  --gold-light:  #f2dcb0;
+  --gold-dark:   #c4a468;
+  --navy-0:      #060d1e;
+  --navy-1:      #091428;
+  --navy-2:      #0d1c38;
+  --navy-3:      #142448;
+
+  /* CONTRAST-FIXED TEXT SYSTEM */
+  --t1:  #ece6d9;      /* headings, primary — near-white warm */
+  --t2:  #b0a898;      /* body text — warm mid grey, fully readable */
+  --t3:  #7d7568;      /* secondary labels — readable grey */
+  --t4:  #524e46;      /* dividers, faint — decorative only */
+
+  --border: rgba(224,197,143,0.12);
+  --border-hover: rgba(224,197,143,0.35);
+  --ease: cubic-bezier(0.16,1,0.3,1);
+  --ease-out: cubic-bezier(0.0,0,0.2,1);
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+/* ════════════════════════════════════════
+   RESET + BASE
+════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--navy-0);
+  color:var(--t1);
+  font-family:'Jost',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  cursor:none;
+  line-height:1.6;
+}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:none}
 
-body {
-  background: var(--navy-0);
-  color: var(--text);
-  font-family: 'Jost', sans-serif;
-  font-weight: 300;
-  overflow-x: hidden;
-  cursor: none;
+/* ════════════════════════════════════════
+   CURSOR  (desktop only)
+════════════════════════════════════════ */
+@media(pointer:fine){
+  #cur-d{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:opacity .2s}
+  #cur-r{position:fixed;width:44px;height:44px;border:1px solid rgba(224,197,143,.55);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease),border-color .3s}
+  body.ch #cur-r{width:68px;height:68px;border-color:var(--gold)}
 }
+@media(pointer:coarse){body{cursor:auto}#cur-d,#cur-r{display:none}}
 
-/* ─── CURSOR ─────────────────────────────────── */
-#cur-dot {
-  position: fixed; width: 8px; height: 8px;
-  background: var(--gold); border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%,-50%);
-  mix-blend-mode: difference;
-}
-#cur-ring {
-  position: fixed; width: 42px; height: 42px;
-  border: 1px solid rgba(224,197,143,0.6);
-  border-radius: 50%; pointer-events: none;
-  z-index: 9998; transform: translate(-50%,-50%);
-  transition: width .25s var(--ease), height .25s var(--ease), border-color .25s;
-}
-body.cursor-hover #cur-ring {
-  width: 64px; height: 64px;
-  border-color: var(--gold);
-}
-
-/* ─── NOISE TEXTURE ───────────────────────────── */
-#noise {
-  position: fixed; inset: 0; pointer-events: none; z-index: 2;
-  opacity: 0.028;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 300px 300px;
+/* ════════════════════════════════════════
+   NOISE LAYER
+════════════════════════════════════════ */
+#noise{
+  position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:256px;
 }
 
-/* ─── NAV ─────────────────────────────────────── */
-#nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 200; display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 32px 64px;
-  transition: padding .5s var(--ease), background .5s;
+/* ════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 60px;
+  transition:padding .5s var(--ease),background .5s,border-color .5s;
+  border-bottom:1px solid transparent;
 }
-#nav.stuck {
-  padding: 18px 64px;
-  background: rgba(7,14,34,0.88);
-  backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(224,197,143,0.08);
+#nav.stuck{
+  padding:16px 60px;
+  background:rgba(6,13,30,.92);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border-color:var(--border);
 }
-.nav-logo {
-  height: 36px; width: auto; display: block;
-  transition: opacity .3s;
-}
-.nav-logo:hover { opacity: 0.8; }
-.nav-links { display: flex; align-items: center; gap: 44px; list-style: none; }
-.nav-links a {
-  font-size: 10.5px; letter-spacing: 3.5px; text-transform: uppercase;
-  color: var(--text-dim); text-decoration: none; font-weight: 400;
-  transition: color .3s; position: relative;
-}
-.nav-links a::after {
-  content: ''; position: absolute; bottom: -3px; left: 0;
-  width: 0; height: 1px; background: var(--gold);
-  transition: width .35s var(--ease);
-}
-.nav-links a:hover { color: var(--gold); }
-.nav-links a:hover::after { width: 100%; }
-.nav-cta {
-  border: 1px solid var(--gold-mid) !important;
-  color: var(--gold) !important; padding: 12px 28px;
-  letter-spacing: 2.5px !important; transition: background .35s, color .35s, border-color .35s !important;
-}
-.nav-cta::after { display: none !important; }
-.nav-cta:hover { background: var(--gold) !important; color: var(--navy-0) !important; border-color: var(--gold) !important; }
+.nav-logo{height:34px;display:block;flex-shrink:0}
+.nav-logo-fb{display:none;font-family:'Cormorant',serif;font-size:24px;font-weight:400;letter-spacing:8px;color:var(--gold);text-transform:uppercase}
 
-/* ─── MARQUEE ─────────────────────────────────── */
-.marquee-strip {
-  position: relative; z-index: 3;
-  border-top: 1px solid rgba(224,197,143,0.1);
-  border-bottom: 1px solid rgba(224,197,143,0.1);
-  overflow: hidden; background: rgba(224,197,143,0.03);
-  padding: 14px 0;
+/* Desktop links */
+.nav-links{display:flex;align-items:center;gap:40px;list-style:none}
+.nav-links a{
+  font-size:10.5px;letter-spacing:3.5px;text-transform:uppercase;
+  color:var(--t3);font-weight:400;
+  position:relative;transition:color .3s;
 }
-.marquee-inner {
-  display: flex; white-space: nowrap;
-  animation: marquee 28s linear infinite;
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .35s var(--ease)}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{color:var(--gold)}
+.nav-btn{
+  border:1px solid rgba(224,197,143,.3);
+  color:var(--gold)!important;
+  padding:11px 26px;letter-spacing:2.5px!important;
+  transition:background .3s,border-color .3s,color .3s!important;
 }
-.marquee-inner span {
-  display: inline-flex; align-items: center; gap: 24px;
-  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--text-faint); padding: 0 32px; flex-shrink: 0;
-}
-.marquee-inner span b { color: rgba(224,197,143,0.4); font-weight: 400; }
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.nav-btn::after{display:none!important}
+.nav-btn:hover{background:var(--gold)!important;color:var(--navy-0)!important;border-color:var(--gold)!important}
 
-/* ─── HERO ────────────────────────────────────── */
-#hero {
-  position: relative; height: 100vh; min-height: 720px;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+/* Hamburger */
+.ham{
+  display:none;flex-direction:column;justify-content:center;
+  width:44px;height:44px;gap:6px;background:none;border:none;padding:10px;
+  cursor:none;
+}
+.ham span{display:block;height:1px;background:var(--t1);transition:transform .35s var(--ease),opacity .25s,width .3s}
+.ham span:nth-child(2){width:75%;margin-left:auto}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0;width:0}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* Mobile overlay */
+#mob-menu{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(6,13,30,.98);
+  backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  transform:translateX(100%);transition:transform .5s var(--ease);
+  pointer-events:none;
+}
+#mob-menu.open{transform:translateX(0);pointer-events:all}
+.mob-links{list-style:none;text-align:center;display:flex;flex-direction:column;gap:8px}
+.mob-links a{
+  display:block;
+  font-family:'Cormorant',serif;font-size:clamp(36px,8vw,52px);font-weight:300;
+  color:var(--t2);letter-spacing:2px;padding:8px 0;
+  transition:color .3s;
+}
+.mob-links a:hover{color:var(--gold)}
+.mob-cta-wrap{margin-top:40px}
+.mob-bottom{
+  position:absolute;bottom:40px;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t4);
 }
 
-/* Animated grid lines */
-.hero-grid {
-  position: absolute; inset: 0;
+/* ════════════════════════════════════════
+   SHARED UTILITIES
+════════════════════════════════════════ */
+.w{max-width:1400px;margin:0 auto}
+.px{padding-left:60px;padding-right:60px}
+
+.lbl{
+  display:inline-flex;align-items:center;gap:14px;
+  font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);
+  margin-bottom:18px;
+}
+.lbl::before{content:'';width:28px;height:1px;background:var(--gold);flex-shrink:0}
+
+.h2{
+  font-family:'Cormorant',serif;
+  font-size:clamp(38px,4.2vw,64px);
+  font-weight:300;line-height:1.05;color:var(--t1);
+}
+.h2 em{font-style:italic;color:var(--gold)}
+
+.btn-g{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--gold);color:var(--navy-0);
+  padding:16px 44px;font-size:10.5px;letter-spacing:3px;
+  text-transform:uppercase;font-weight:500;font-family:'Jost',sans-serif;
+  border:none;transition:background .3s,transform .25s;cursor:none;
+}
+.btn-g:hover{background:var(--gold-light);transform:translateY(-3px)}
+.btn-o{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid rgba(224,197,143,.3);color:var(--gold);
+  padding:16px 44px;font-size:10.5px;letter-spacing:3px;
+  text-transform:uppercase;font-weight:400;font-family:'Jost',sans-serif;
+  transition:background .3s,border-color .3s,transform .25s;cursor:none;
+}
+.btn-o:hover{background:rgba(224,197,143,.07);border-color:var(--gold);transform:translateY(-3px)}
+.arr{width:15px;height:15px;flex-shrink:0;transition:transform .3s}
+a:hover .arr,.btn-g:hover .arr,.btn-o:hover .arr{transform:translateX(4px)}
+
+/* ════════════════════════════════════════
+   REVEAL
+════════════════════════════════════════ */
+.rv{opacity:0;transform:translateY(32px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv.on{opacity:1;transform:none}
+.rv-l{opacity:0;transform:translateX(-32px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv-l.on{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.18s}.d3{transition-delay:.26s}.d4{transition-delay:.34s}
+
+/* ════════════════════════════════════════
+   ██  HERO  ██
+   Editorial Split — Left content / Right blueprint panel
+════════════════════════════════════════ */
+#hero{
+  position:relative;
+  min-height:100svh;
+  display:grid;
+  grid-template-columns:1fr 420px;
+  overflow:hidden;
+}
+
+/* Background */
+.hero-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg, var(--navy-0) 0%, var(--navy-1) 60%, var(--navy-2) 100%);
+}
+.hero-grid-lines{
+  position:absolute;inset:0;
   background-image:
-    linear-gradient(rgba(224,197,143,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(224,197,143,0.04) 1px, transparent 1px);
-  background-size: 80px 80px;
-  animation: gridShift 20s linear infinite;
+    linear-gradient(rgba(224,197,143,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(224,197,143,.04) 1px,transparent 1px);
+  background-size:72px 72px;
+  animation:gridDrift 24s linear infinite;
 }
-@keyframes gridShift {
-  from { background-position: 0 0; }
-  to { background-position: 80px 80px; }
+@keyframes gridDrift{to{background-position:72px 72px}}
+
+.hero-glow{
+  position:absolute;
+  top:-20%;right:25%;
+  width:700px;height:700px;
+  background:radial-gradient(circle,rgba(224,197,143,.06) 0%,transparent 65%);
+  pointer-events:none;
 }
 
-.hero-gradient {
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 900px 600px at 65% 45%, rgba(224,197,143,0.055) 0%, transparent 70%),
-    radial-gradient(ellipse 700px 700px at 15% 80%, rgba(23,44,96,0.7) 0%, transparent 60%),
-    linear-gradient(160deg, var(--navy-0) 0%, var(--navy-1) 40%, var(--navy-2) 100%);
+/* LEFT content pane */
+.hero-left{
+  position:relative;z-index:3;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:140px 64px 80px;
 }
 
-/* Floating orbs */
-.orb {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  filter: blur(80px); opacity: 0.12;
+/* Vertical side label */
+.hero-side-label{
+  position:absolute;left:20px;top:50%;
+  transform:translateY(-50%) rotate(-90deg);
+  font-size:9px;letter-spacing:5px;text-transform:uppercase;
+  color:var(--t4);white-space:nowrap;
+  display:flex;align-items:center;gap:16px;
 }
-.orb-1 { width: 500px; height: 500px; background: var(--gold); top: -100px; right: -100px; animation: orbFloat 14s ease-in-out infinite; }
-.orb-2 { width: 350px; height: 350px; background: #1e5c9c; bottom: 0; left: -80px; animation: orbFloat 18s ease-in-out infinite reverse; }
-@keyframes orbFloat {
-  0%,100% { transform: translate(0,0); }
-  33% { transform: translate(30px,-40px); }
-  66% { transform: translate(-20px,20px); }
+.hero-side-label::before,
+.hero-side-label::after{content:'';width:32px;height:1px;background:var(--t4)}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:12px;
+  border:1px solid rgba(224,197,143,.2);
+  padding:9px 20px;margin-bottom:40px;
+  font-size:10px;letter-spacing:4.5px;text-transform:uppercase;color:var(--gold);
+  width:fit-content;
+  opacity:0;animation:rIn .8s .3s var(--ease) forwards;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+.hero-h1{
+  font-family:'Cormorant',serif;
+  font-size:clamp(60px,7.5vw,118px);
+  font-weight:300;line-height:.92;
+  letter-spacing:-2px;color:var(--t1);
+  opacity:0;animation:rIn 1s .5s var(--ease) forwards;
+}
+.hero-h1 .italic-gold{font-style:italic;color:var(--gold)}
+.hero-h1 .indent{display:block;margin-left:clamp(24px,4vw,72px)}
+
+.hero-desc-row{
+  margin-top:36px;
+  display:flex;align-items:flex-start;gap:24px;
+  opacity:0;animation:rIn .8s .75s var(--ease) forwards;
+}
+.hero-desc-bar{width:1px;min-height:64px;background:linear-gradient(to bottom,var(--gold),transparent);flex-shrink:0;margin-top:4px}
+.hero-desc-text{font-size:14px;line-height:1.9;color:var(--t2);max-width:400px}
+
+.hero-actions{
+  margin-top:48px;display:flex;flex-wrap:wrap;gap:14px;
+  opacity:0;animation:rIn .8s .95s var(--ease) forwards;
 }
 
-/* Decorative arc */
-.hero-arc {
-  position: absolute; right: -200px; top: 50%;
-  width: 700px; height: 700px;
-  border: 1px solid rgba(224,197,143,0.07);
-  border-radius: 50%;
-  transform: translateY(-50%);
+.hero-stat-row{
+  margin-top:64px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border-top:1px solid var(--border);
+  border-left:1px solid var(--border);
+  opacity:0;animation:rIn .7s 1.1s var(--ease) forwards;
 }
-.hero-arc::before {
-  content: ''; position: absolute; inset: 50px;
-  border: 1px solid rgba(224,197,143,0.05);
-  border-radius: 50%;
+.hstat{
+  padding:22px 24px;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.hstat-val{
+  font-family:'Cormorant',serif;font-size:36px;font-weight:300;
+  color:var(--gold);line-height:1;
+}
+.hstat-lbl{font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--t3);margin-top:6px}
+
+/* RIGHT blueprint pane */
+.hero-right{
+  position:relative;z-index:3;
+  background:rgba(20,36,72,.4);
+  border-left:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:140px 40px 80px;
+  overflow:hidden;
+  opacity:0;animation:rIn .9s .6s var(--ease) forwards;
+}
+.blueprint-wrap{
+  width:100%;max-width:320px;
+  border:1px solid rgba(224,197,143,.15);
+  padding:32px;position:relative;
+  background:rgba(224,197,143,.015);
+}
+.blueprint-wrap::before{
+  content:'';position:absolute;inset:8px;
+  border:1px solid rgba(224,197,143,.06);pointer-events:none;
+}
+.blueprint-wrap svg{width:100%;height:auto;opacity:.55}
+
+/* Property type list */
+.prop-list{
+  margin-top:32px;width:100%;
+  display:flex;flex-direction:column;gap:0;
+}
+.prop-list-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid var(--border);
+  font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--t3);
+  transition:color .3s;cursor:none;
+}
+.prop-list-item:hover{color:var(--gold)}
+.prop-list-item svg{width:12px;height:12px;opacity:0;transition:opacity .3s,transform .3s}
+.prop-list-item:hover svg{opacity:1;transform:translateX(4px)}
+
+/* Corner coords */
+.hero-coords{
+  position:absolute;bottom:24px;right:20px;
+  font-size:9px;letter-spacing:2px;color:var(--t4);
+  font-variant-numeric:tabular-nums;
 }
 
-.hero-content {
-  position: relative; z-index: 4;
-  text-align: center; max-width: 1100px; padding: 0 40px;
+/* Scroll indicator */
+.hero-scroll{
+  position:absolute;bottom:40px;left:64px;z-index:4;
+  display:flex;align-items:center;gap:14px;
+  opacity:0;animation:rIn .6s 1.4s var(--ease) forwards;
+}
+.hero-scroll span{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--t4)}
+.scroll-track{width:44px;height:1px;background:var(--t4);position:relative;overflow:hidden}
+.scroll-track::after{
+  content:'';position:absolute;inset-y:0;left:-100%;width:100%;
+  background:var(--gold);animation:scrollRun 2.2s ease-in-out infinite;
+}
+@keyframes scrollRun{0%{left:-100%}100%{left:100%}}
+
+@keyframes rIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* ════════════════════════════════════════
+   MARQUEE
+════════════════════════════════════════ */
+.marquee{
+  overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:rgba(224,197,143,.02);
+  padding:13px 0;position:relative;z-index:2;
+}
+.marquee-track{
+  display:flex;white-space:nowrap;
+  animation:marqueeRun 30s linear infinite;
+}
+.marquee-track span{
+  display:inline-flex;align-items:center;gap:20px;
+  padding:0 28px;font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--t4);flex-shrink:0;
+}
+.marquee-track span b{color:rgba(224,197,143,.35);font-weight:400}
+@keyframes marqueeRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ════════════════════════════════════════
+   NUMBERS
+════════════════════════════════════════ */
+#numbers{border-bottom:1px solid var(--border)}
+.numbers-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-left:1px solid var(--border);
+}
+.nitem{
+  padding:52px 40px;
+  border-right:1px solid var(--border);
+  text-align:center;
+}
+.nval{
+  font-family:'Cormorant',serif;font-size:64px;font-weight:300;
+  color:var(--gold);line-height:1;
+}
+.nval sup{font-size:28px;vertical-align:super}
+.nlbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-top:10px}
+
+/* ════════════════════════════════════════
+   ABOUT
+════════════════════════════════════════ */
+#about{padding:140px 60px}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:100px;align-items:center;
+}
+.about-media{position:relative}
+.about-frame{
+  aspect-ratio:3/4;
+  background:var(--navy-2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+}
+.about-frame::before{
+  content:'';position:absolute;inset:24px;
+  border:1px solid rgba(224,197,143,.06);pointer-events:none;
+}
+.about-frame svg{opacity:.07}
+.about-badge{
+  position:absolute;bottom:-24px;right:-24px;
+  background:var(--gold);color:var(--navy-0);
+  padding:24px 28px;text-align:center;z-index:2;
+}
+.about-badge .bnum{font-family:'Cormorant',serif;font-size:44px;font-weight:400;line-height:1;display:block}
+.about-badge .blbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:500;margin-top:4px;display:block;opacity:.75}
+.about-float{
+  position:absolute;top:32px;left:-24px;
+  background:var(--navy-1);border:1px solid rgba(224,197,143,.2);
+  padding:18px 22px;display:flex;align-items:center;gap:14px;z-index:2;
+}
+.float-num{font-family:'Cormorant',serif;font-size:26px;font-weight:300;color:var(--gold);line-height:1}
+.float-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-top:3px}
+
+.about-body .h2{margin-bottom:28px}
+.about-body p{font-size:14.5px;line-height:2;color:var(--t2);max-width:500px}
+.about-body p+p{margin-top:16px}
+.pillars{margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.pillar{
+  background:var(--navy-0);padding:26px 22px;
+  transition:background .3s;
+}
+.pillar:hover{background:rgba(224,197,143,.03)}
+.pillar svg{width:20px;height:20px;color:var(--gold);margin-bottom:12px}
+.pillar h4{font-family:'Cormorant',serif;font-size:19px;font-weight:400;color:var(--t1);margin-bottom:7px}
+.pillar p{font-size:12.5px;line-height:1.8;color:var(--t3)}
+
+/* ════════════════════════════════════════
+   WHY MANSIUM  (NEW SECTION)
+════════════════════════════════════════ */
+#why{
+  padding:120px 60px;
+  background:var(--navy-1);
+  position:relative;
+}
+#why::before,#why::after{
+  content:'';position:absolute;left:60px;right:60px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,197,143,.15),transparent);
+}
+#why::before{top:0}#why::after{bottom:0}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.why-text .h2{margin-bottom:20px}
+.why-text p{font-size:14.5px;line-height:2;color:var(--t2);max-width:480px;margin-bottom:36px}
+.compare-table{width:100%}
+.ct-head{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  font-size:9.5px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--t3);padding:0 0 12px;
+  border-bottom:1px solid var(--border);margin-bottom:0;
+}
+.ct-head span:last-child{color:var(--gold)}
+.ct-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  padding:16px 0;border-bottom:1px solid rgba(224,197,143,.06);
+  align-items:center;
+  transition:background .3s;
+}
+.ct-row:hover{background:rgba(224,197,143,.025)}
+.ct-row:last-child{border-bottom:none}
+.ct-feature{font-size:13px;color:var(--t2)}
+.ct-no{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t4)}
+.ct-no svg{width:14px;height:14px;color:#e05f5f;flex-shrink:0}
+.ct-yes{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2)}
+.ct-yes svg{width:14px;height:14px;color:var(--gold);flex-shrink:0}
+
+/* ════════════════════════════════════════
+   SERVICES
+════════════════════════════════════════ */
+#services{padding:140px 60px;position:relative}
+.svc-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:72px}
+.svc-head-aside{font-size:14px;line-height:1.9;color:var(--t2);max-width:300px}
+.svc-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+}
+.svc-card{
+  background:var(--navy-0);padding:50px 40px;
+  position:relative;overflow:hidden;
+  transition:background .4s;
+}
+.svc-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .5s var(--ease);
+}
+.svc-card:hover{background:rgba(224,197,143,.03)}
+.svc-card:hover::after{transform:scaleX(1)}
+.svc-n{
+  font-family:'Cormorant',serif;font-size:72px;font-weight:300;
+  color:rgba(224,197,143,.05);line-height:1;margin-bottom:20px;
+  transition:color .4s;
+}
+.svc-card:hover .svc-n{color:rgba(224,197,143,.1)}
+.svc-card svg{width:26px;height:26px;color:var(--gold);margin-bottom:20px}
+.svc-card h3{font-family:'Cormorant',serif;font-size:26px;font-weight:400;color:var(--t1);margin-bottom:14px}
+.svc-card p{font-size:13.5px;line-height:1.9;color:var(--t2)}
+
+/* ════════════════════════════════════════
+   FEATURED
+════════════════════════════════════════ */
+#featured{padding:0 60px 140px}
+.featured-inner{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--border);overflow:hidden;
+}
+.feat-visual{
+  min-height:520px;position:relative;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:linear-gradient(145deg,#0d2137,#0a3828);
+}
+.feat-visual-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%,rgba(224,197,143,.06),transparent 65%)}
+.feat-visual svg.big{position:absolute;opacity:.05;width:260px;height:260px}
+.feat-chips{position:absolute;bottom:28px;left:28px;display:flex;gap:8px}
+.chip{background:rgba(224,197,143,.1);border:1px solid rgba(224,197,143,.2);padding:7px 14px;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
+.feat-content{
+  padding:64px 56px;background:var(--navy-1);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.feat-loc{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:1px;color:var(--t3);margin:16px 0 28px}
+.feat-loc svg{width:13px;height:13px;flex-shrink:0}
+.feat-specs{display:flex;gap:28px;padding:24px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:32px}
+.fsp .v{font-family:'Cormorant',serif;font-size:34px;font-weight:300;color:var(--gold);display:block;line-height:1}
+.fsp .l{font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-top:5px}
+.feat-desc{font-size:14px;line-height:2;color:var(--t2);margin-bottom:40px}
+
+/* ════════════════════════════════════════
+   PROJECTS TEASER
+════════════════════════════════════════ */
+#proj-teaser{padding:140px 60px}
+.pt-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px}
+.pt-grid{
+  display:grid;grid-template-columns:1.4fr 1fr 1fr;
+  gap:20px;
+}
+.pc{
+  position:relative;overflow:hidden;
+  border:1px solid var(--border);background:var(--navy-2);
+  cursor:none;transition:border-color .4s;
+}
+.pc:hover{border-color:var(--border-hover)}
+.pc-thumb{width:100%;aspect-ratio:4/5;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pc.tall .pc-thumb{aspect-ratio:3/4.8}
+.pc-bg{position:absolute;inset:0;transition:transform .8s var(--ease)}
+.pc:hover .pc-bg{transform:scale(1.06)}
+.pc-bg-1{background:linear-gradient(155deg,#0d2137,#093024)}
+.pc-bg-2{background:linear-gradient(155deg,#0a0e2e,#1a0a2e)}
+.pc-bg-3{background:linear-gradient(155deg,#0a1a2e,#1a0e0a)}
+.pc-icon{position:absolute;opacity:.05;width:120px;height:120px}
+.pc-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,13,30,.97) 0%,rgba(6,13,30,.1) 55%,transparent 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:26px 24px;
+  transition:background .4s;
+}
+.pc:hover .pc-overlay{background:linear-gradient(to top,rgba(6,13,30,.99) 0%,rgba(6,13,30,.3) 55%,transparent 100%)}
+.pc-tag{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.pc-name{font-family:'Cormorant',serif;font-size:24px;font-weight:400;color:var(--t1);line-height:1.2;margin-bottom:4px}
+.pc-loc{font-size:11px;color:var(--t3);margin-bottom:16px;display:flex;align-items:center;gap:5px}
+.pc-loc svg{width:10px;height:10px}
+.pc-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(224,197,143,.3);
+  padding:10px 16px;background:rgba(224,197,143,.07);
+  font-family:'Jost',sans-serif;cursor:none;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s,background .2s;
+}
+.pc:hover .pc-btn{opacity:1;transform:translateY(0)}
+.pc-btn svg{width:12px;height:12px}
+
+/* ════════════════════════════════════════
+   LOCATIONS  (NEW SECTION)
+════════════════════════════════════════ */
+#locations{
+  padding:120px 60px;
+  background:var(--navy-2);
+  position:relative;overflow:hidden;
+}
+#locations::before,#locations::after{
+  content:'';position:absolute;left:60px;right:60px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,197,143,.15),transparent);
+}
+#locations::before{top:0}#locations::after{bottom:0}
+.loc-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px}
+.loc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.loc-card{
+  border:1px solid var(--border);
+  background:var(--navy-1);
+  padding:32px 28px;
+  position:relative;overflow:hidden;
+  transition:border-color .3s,background .3s;cursor:none;
+}
+.loc-card:hover{border-color:var(--border-hover);background:rgba(224,197,143,.03)}
+.loc-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.loc-card:hover::before{opacity:1}
+.loc-num{
+  font-family:'Cormorant',serif;font-size:56px;font-weight:300;
+  color:rgba(224,197,143,.06);line-height:1;margin-bottom:20px;
+  transition:color .3s;
+}
+.loc-card:hover .loc-num{color:rgba(224,197,143,.12)}
+.loc-city{font-family:'Cormorant',serif;font-size:24px;font-weight:400;color:var(--t1);margin-bottom:6px}
+.loc-country{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:20px}
+.loc-count{font-size:12.5px;color:var(--t2)}
+.loc-count span{color:var(--gold);font-family:'Cormorant',serif;font-size:18px}
+
+/* ════════════════════════════════════════
+   PROCESS
+════════════════════════════════════════ */
+#process{padding:140px 60px;background:var(--navy-1);position:relative}
+#process::before,#process::after{
+  content:'';position:absolute;left:60px;right:60px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,197,143,.12),transparent);
+}
+#process::before{top:0}#process::after{bottom:0}
+.proc-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:88px}
+.proc-aside{font-size:14px;line-height:1.9;color:var(--t2);max-width:280px}
+.proc-steps{display:grid;grid-template-columns:repeat(4,1fr);position:relative}
+.proc-connector{
+  position:absolute;top:35px;left:9%;right:9%;
+  display:flex;align-items:center;pointer-events:none;
+}
+.conn-l{flex:1;height:1px;background:rgba(224,197,143,.12)}
+.conn-d{width:6px;height:6px;border:1px solid rgba(224,197,143,.25);border-radius:50%;background:var(--navy-1);flex-shrink:0}
+.proc-step{padding:0 28px 0 0}
+.step-n{
+  width:70px;height:70px;
+  border:1px solid rgba(224,197,143,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant',serif;font-size:20px;font-weight:300;
+  color:rgba(224,197,143,.55);margin-bottom:32px;
+  background:var(--navy-1);position:relative;
+}
+.step-n::after{
+  content:'';position:absolute;inset:-1px;
+  background:linear-gradient(135deg,rgba(224,197,143,.15),transparent 55%);
+}
+.proc-step h4{font-family:'Cormorant',serif;font-size:22px;font-weight:400;color:var(--t1);margin-bottom:12px}
+.proc-step p{font-size:13.5px;line-height:1.9;color:var(--t2)}
+
+/* ════════════════════════════════════════
+   TESTIMONIAL
+════════════════════════════════════════ */
+#testimonial{padding:120px 60px;position:relative;overflow:hidden}
+.test-ring{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:560px;height:560px;border-radius:50%;
+  border:1px solid rgba(224,197,143,.04);pointer-events:none;
+}
+.test-ring::before{content:'';position:absolute;inset:70px;border-radius:50%;border:1px solid rgba(224,197,143,.04)}
+.test-inner{max-width:860px;margin:0 auto;text-align:center;position:relative;z-index:2}
+.qmark{
+  font-family:'Cormorant',serif;font-size:120px;font-weight:300;
+  color:rgba(224,197,143,.1);line-height:.7;display:block;margin-bottom:-16px;
+}
+.test-quote{
+  font-family:'Cormorant',serif;font-style:italic;
+  font-size:clamp(22px,3vw,36px);font-weight:300;
+  line-height:1.55;color:var(--t1);margin-bottom:44px;
+}
+.test-author{display:flex;align-items:center;justify-content:center;gap:20px}
+.t-line{width:40px;height:1px;background:rgba(224,197,143,.3)}
+.t-name{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
+.t-role{font-size:11px;letter-spacing:1.5px;color:var(--t3);margin-top:4px}
+
+/* ════════════════════════════════════════
+   CONTACT
+════════════════════════════════════════ */
+#contact{padding:140px 60px;background:var(--navy-1);position:relative}
+#contact::before{
+  content:'';position:absolute;top:0;left:60px;right:60px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,197,143,.15),transparent);
+}
+.contact-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:100px;align-items:start}
+.c-left .h2{margin-bottom:20px}
+.c-left p{font-size:14.5px;line-height:2;color:var(--t2);max-width:360px;margin-bottom:48px}
+.c-info{display:flex;flex-direction:column;gap:22px}
+.ci{display:flex;align-items:flex-start;gap:14px}
+.ci svg{width:15px;height:15px;color:var(--gold);margin-top:3px;flex-shrink:0}
+.ci-lbl{font-size:9.5px;letter-spacing:3px;text-transform:uppercase;color:var(--t3)}
+.ci-val{font-size:14px;color:var(--t2);margin-top:3px}
+
+.c-form{display:flex;flex-direction:column;gap:12px}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cf-g{display:flex;flex-direction:column}
+.cf-g label{font-size:9.5px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:9px}
+.cf-g input,.cf-g textarea,.cf-g select{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(224,197,143,.15);
+  color:var(--t1);padding:16px 18px;
+  font-family:'Jost',sans-serif;font-size:14px;font-weight:300;
+  outline:none;transition:border-color .3s,background .3s;
+  -webkit-appearance:none;appearance:none;
+}
+.cf-g select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b0a898' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;background-size:12px;padding-right:40px;
+}
+.cf-g select option{background:#091428;color:var(--t1)}
+.cf-g input:focus,.cf-g textarea:focus,.cf-g select:focus{border-color:rgba(224,197,143,.5);background:rgba(224,197,143,.025)}
+.cf-g input::placeholder,.cf-g textarea::placeholder{color:var(--t4)}
+.cf-g textarea{resize:none;height:128px}
+.c-form .btn-g{align-self:flex-start;margin-top:4px;border:none}
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+footer{border-top:1px solid var(--border);background:var(--navy-0);padding:0 60px}
+.foot-top{
+  display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;
+  gap:56px;padding:72px 0 56px;
+  border-bottom:1px solid var(--border);
+}
+.foot-brand img{height:30px;margin-bottom:20px}
+.foot-brand-fb{font-family:'Cormorant',serif;font-size:20px;font-weight:400;letter-spacing:7px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:block}
+.foot-brand p{font-size:13px;line-height:1.9;color:var(--t3);max-width:280px}
+.foot-col h5{font-size:9.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.foot-col ul a{font-size:13.5px;color:var(--t3);text-decoration:none;transition:color .3s;letter-spacing:.3px}
+.foot-col ul a:hover{color:var(--gold)}
+.foot-bot{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:24px 0;
+}
+.foot-copy{font-size:11px;letter-spacing:1px;color:var(--t4)}
+.foot-soc{display:flex;gap:12px}
+.foot-soc a{
+  width:36px;height:36px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .3s,background .3s;
+}
+.foot-soc a svg{width:13px;height:13px;color:var(--t3);transition:color .3s}
+.foot-soc a:hover{border-color:var(--gold);background:rgba(224,197,143,.06)}
+.foot-soc a:hover svg{color:var(--gold)}
+
+/* ════════════════════════════════════════
+   MOBILE STICKY CTA  (NEW)
+════════════════════════════════════════ */
+#mob-cta{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(6,13,30,.97);backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  padding:12px 20px;gap:10px;
+}
+#mob-cta a{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:14px;font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;
+}
+#mob-cta .mc-primary{background:var(--gold);color:var(--navy-0)}
+#mob-cta .mc-secondary{border:1px solid var(--border);color:var(--t2)}
+
+/* ════════════════════════════════════════
+   POPUP
+════════════════════════════════════════ */
+#popup-ov{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(3,7,18,.94);backdrop-filter:blur(20px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .4s var(--ease);
+}
+#popup-ov.open{opacity:1;pointer-events:all}
+.pop-win{
+  width:90vw;max-width:1260px;height:87vh;
+  background:var(--navy-1);border:1px solid rgba(224,197,143,.18);
+  display:flex;flex-direction:column;
+  transform:scale(.96) translateY(24px);
+  transition:transform .45s var(--ease);
+  box-shadow:0 80px 160px rgba(0,0,0,.75);
+}
+#popup-ov.open .pop-win{transform:scale(1) translateY(0)}
+.pop-bar{
+  height:50px;display:flex;align-items:center;gap:12px;padding:0 18px;flex-shrink:0;
+  background:rgba(6,13,30,.8);border-bottom:1px solid var(--border);
+}
+.pop-dots{display:flex;gap:7px}
+.pop-dots span{width:12px;height:12px;border-radius:50%}
+.pd-c{background:#ff5f57;cursor:pointer}.pd-m{background:#ffbd2e}.pd-x{background:#28ca41}
+.pop-url{
+  flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:5px;padding:0 12px;height:28px;
+  display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t3);font-family:'Jost',sans-serif;
+}
+.pop-ssl{width:11px;height:11px;color:#28ca41;flex-shrink:0}
+.pop-banner{
+  height:36px;flex-shrink:0;background:rgba(224,197,143,.025);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:9px;padding:0 18px;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);
+}
+.pop-banner svg{width:11px;height:11px;color:var(--gold)}
+.pop-body{flex:1;overflow:hidden}
+.pop-scroll{width:100%;height:100%;overflow-y:auto}
+.pop-scroll::-webkit-scrollbar{width:4px}
+.pop-scroll::-webkit-scrollbar-track{background:var(--navy-1)}
+.pop-scroll::-webkit-scrollbar-thumb{background:rgba(224,197,143,.2)}
+
+/* ─ Property Preview ─ */
+.pp{background:#070f20;color:#ece6d9;font-family:'Jost',sans-serif;font-weight:300;min-height:100%}
+.pp-hero{height:58vh;min-height:380px;position:relative;display:flex;align-items:flex-end;padding:48px 52px;overflow:hidden}
+.pp-hero-bg{position:absolute;inset:0}
+.pp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(224,197,143,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(224,197,143,.03) 1px,transparent 1px);background-size:60px 60px}
+.pp-grd{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,15,32,.97) 0%,rgba(7,15,32,.1) 52%,transparent 100%)}
+.pp-content{position:relative;z-index:2}
+.pp-badge{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(224,197,143,.22);padding:7px 16px;margin-bottom:16px;font-size:9.5px;letter-spacing:4px;text-transform:uppercase;color:#e0c58f}
+.pp-dot{width:5px;height:5px;background:#28ca41;border-radius:50%}
+.pp-title{font-family:'Cormorant',serif;font-size:clamp(44px,5.5vw,78px);font-weight:300;line-height:.93;color:#ece6d9}
+.pp-sub{font-size:12.5px;letter-spacing:1px;color:rgba(236,230,217,.5);margin-top:10px;display:flex;align-items:center;gap:7px}
+.pp-sub svg{width:11px;height:11px}
+.pp-price{position:absolute;top:48px;right:52px;z-index:2;background:#e0c58f;color:#070f20;padding:14px 24px;text-align:center}
+.pp-price .pa{font-family:'Cormorant',serif;font-size:28px;font-weight:500;line-height:1;display:block}
+.pp-price .pl{font-size:8px;letter-spacing:3px;text-transform:uppercase;font-weight:500;margin-top:3px;display:block;opacity:.75}
+.pp-body{padding:52px}
+.pp-specs{display:flex;gap:0;margin-bottom:52px;border:1px solid rgba(224,197,143,.1)}
+.pp-spec{padding:24px 28px;border-right:1px solid rgba(224,197,143,.1);text-align:center}
+.pp-spec:last-child{border-right:none}
+.pp-sv{font-family:'Cormorant',serif;font-size:38px;font-weight:300;color:#e0c58f;display:block;line-height:1}
+.pp-sl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(236,230,217,.35);margin-top:7px}
+.pp-two{display:grid;grid-template-columns:1.3fr 1fr;gap:52px;margin-bottom:52px}
+.pp-dt{font-family:'Cormorant',serif;font-size:30px;font-weight:300;color:#ece6d9;margin-bottom:18px}
+.pp-dd{font-size:14px;line-height:2;color:rgba(236,230,217,.6)}
+.pp-ft{font-size:9.5px;letter-spacing:4px;text-transform:uppercase;color:#e0c58f;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid rgba(224,197,143,.1)}
+.pp-fl{display:flex;flex-direction:column;gap:11px}
+.pp-f{display:flex;align-items:center;gap:11px;font-size:13px;color:rgba(236,230,217,.65)}
+.pp-f svg{width:11px;height:11px;color:#e0c58f;flex-shrink:0}
+.pp-ctas{display:flex;gap:12px;padding-top:36px;border-top:1px solid rgba(224,197,143,.1)}
+.pp-btn{padding:14px 32px;font-family:'Jost',sans-serif;font-size:10.5px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.pp-bp{background:#e0c58f;color:#070f20;border:none;font-weight:500}.pp-bp:hover{background:#f2dcb0}
+.pp-bg{background:none;border:1px solid rgba(224,197,143,.25);color:#e0c58f}.pp-bg:hover{border-color:#e0c58f;background:rgba(224,197,143,.07)}
+
+/* ════════════════════════════════════════
+   RESPONSIVE — TABLET  768px–1099px
+════════════════════════════════════════ */
+@media(max-width:1099px){
+
+  #nav{padding:22px 36px}
+  #nav.stuck{padding:14px 36px}
+  .nav-links{gap:28px}
+  .nav-links li:not(:last-child):nth-last-child(n+3){display:none}
+
+  /* Hero */
+  #hero{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .hero-left{padding:130px 48px 100px}
+  .hero-side-label{display:none}
+  .hero-h1{font-size:clamp(56px,9vw,100px)}
+  .hero-stat-row{grid-template-columns:repeat(3,1fr)}
+  .hero-scroll{left:48px}
+
+  /* Sections */
+  #about,#services,#featured,#proj-teaser,#why,#locations,#process,#contact,footer,#testimonial{padding-left:40px;padding-right:40px}
+  #contact::before,#why::before,#why::after,#process::before,#process::after{left:40px;right:40px}
+  .w{padding-left:0;padding-right:0}
+
+  .about-grid{grid-template-columns:1fr;gap:64px}
+  .about-media{max-width:420px}
+
+  .svc-head{flex-direction:column;align-items:flex-start;gap:20px}
+  .svc-grid{grid-template-columns:1fr 1fr}
+
+  .featured-inner{grid-template-columns:1fr}
+  .feat-visual{min-height:280px}
+
+  .why-grid{grid-template-columns:1fr;gap:52px}
+
+  .pt-grid{grid-template-columns:1fr 1fr;gap:16px}
+  .pc.tall .pc-thumb{aspect-ratio:4/5}
+  .pt-head{flex-direction:column;align-items:flex-start;gap:20px}
+
+  .loc-grid{grid-template-columns:repeat(2,1fr)}
+
+  .proc-steps{grid-template-columns:1fr 1fr;gap:44px}
+  .proc-connector{display:none}
+  .proc-head{flex-direction:column;align-items:flex-start;gap:20px}
+
+  .contact-grid{grid-template-columns:1fr;gap:60px}
+  .cf-row{grid-template-columns:1fr 1fr}
+
+  .foot-top{grid-template-columns:1fr 1fr;gap:40px}
+
+  .numbers-grid{grid-template-columns:repeat(2,1fr)}
 }
 
-.hero-tag {
-  display: inline-flex; align-items: center; gap: 12px;
-  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 36px;
-  border: 1px solid rgba(224,197,143,0.2); padding: 10px 22px;
-  opacity: 0; animation: riseIn .9s .3s var(--ease) forwards;
-}
-.hero-tag-dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; animation: blink 2s infinite; }
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+/* ════════════════════════════════════════
+   RESPONSIVE — MOBILE  ≤767px
+════════════════════════════════════════ */
+@media(max-width:767px){
 
-.hero-h1 {
-  font-family: 'Cormorant', serif;
-  font-size: clamp(68px, 9.5vw, 148px);
-  font-weight: 300; line-height: 0.9;
-  letter-spacing: -3px; color: var(--cream);
-  opacity: 0; animation: riseIn 1.1s .5s var(--ease) forwards;
-}
-.hero-h1 em { font-style: italic; color: var(--gold); }
-.hero-h1 .line2 { display: block; margin-left: 80px; }
+  /* Nav */
+  #nav{padding:18px 20px}
+  #nav.stuck{padding:14px 20px}
+  .nav-links{display:none}
+  .ham{display:flex}
 
-.hero-descriptor {
-  margin-top: 40px;
-  display: flex; align-items: center; justify-content: center; gap: 32px;
-  opacity: 0; animation: riseIn .8s .85s var(--ease) forwards;
-}
-.hero-descriptor p {
-  font-size: 13px; letter-spacing: 1.5px; line-height: 1.9;
-  color: var(--text-dim); max-width: 340px; text-align: left;
-}
-.hero-divider { width: 1px; height: 64px; background: rgba(224,197,143,0.2); flex-shrink: 0; }
+  /* Mobile menu */
+  #mob-menu{display:flex}
 
-.hero-actions {
-  margin-top: 56px; display: flex; gap: 16px;
-  justify-content: center; flex-wrap: wrap;
-  opacity: 0; animation: riseIn .8s 1.05s var(--ease) forwards;
-}
-.btn-gold {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: var(--gold); color: var(--navy-0);
-  padding: 18px 48px; font-size: 10.5px; letter-spacing: 3px;
-  text-transform: uppercase; font-weight: 500;
-  text-decoration: none; font-family: 'Jost', sans-serif;
-  transition: background .35s, transform .25s; cursor: none;
-}
-.btn-gold:hover { background: var(--gold-light); transform: translateY(-3px); }
-.btn-ghost {
-  display: inline-flex; align-items: center; gap: 10px;
-  border: 1px solid rgba(224,197,143,0.3); color: var(--gold);
-  padding: 18px 48px; font-size: 10.5px; letter-spacing: 3px;
-  text-transform: uppercase; font-weight: 400;
-  text-decoration: none; font-family: 'Jost', sans-serif;
-  transition: background .35s, border-color .35s, transform .25s; cursor: none;
-}
-.btn-ghost:hover { background: rgba(224,197,143,0.06); border-color: var(--gold); transform: translateY(-3px); }
-.btn-arrow {
-  width: 16px; height: 16px; transition: transform .3s;
-}
-a:hover .btn-arrow { transform: translateX(4px); }
+  /* Hero */
+  #hero{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .hero-side-label{display:none}
+  .hero-left{padding:110px 24px 80px}
+  .hero-badge{font-size:9px;letter-spacing:3px;padding:8px 14px;margin-bottom:28px}
+  .hero-h1{font-size:clamp(48px,13vw,80px);letter-spacing:-1px}
+  .hero-h1 .indent{margin-left:20px}
+  .hero-desc-row{flex-direction:column;gap:16px;margin-top:28px}
+  .hero-desc-bar{display:none}
+  .hero-desc-text{font-size:14px;max-width:100%}
+  .hero-actions{gap:10px;margin-top:36px}
+  .btn-g,.btn-o{padding:14px 28px;font-size:10px;letter-spacing:2.5px}
+  .hero-stat-row{grid-template-columns:repeat(3,1fr);margin-top:44px}
+  .hstat{padding:16px 14px}
+  .hstat-val{font-size:26px}
+  .hstat-lbl{font-size:8.5px;letter-spacing:1.5px}
+  .hero-scroll{bottom:24px;left:24px}
 
-.hero-scroll-ind {
-  position: absolute; bottom: 40px; left: 64px; z-index: 4;
-  display: flex; align-items: center; gap: 16px;
-  opacity: 0; animation: riseIn .6s 1.4s var(--ease) forwards;
-}
-.hero-scroll-ind span { font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--text-faint); }
-.scroll-ticker { width: 48px; height: 1px; background: var(--text-faint); position: relative; overflow: hidden; }
-.scroll-ticker::after {
-  content: ''; position: absolute; inset-y: 0; left: -100%;
-  width: 100%; background: var(--gold);
-  animation: tickerSlide 2s ease-in-out infinite;
-}
-@keyframes tickerSlide { 0% { left: -100%; } 100% { left: 100%; } }
+  /* Shared */
+  section,#about,#services,#featured,#proj-teaser,#why,#locations,#process,#contact,#testimonial{padding-left:20px;padding-right:20px}
+  #about{padding-top:80px;padding-bottom:80px}
+  #services,#proj-teaser,#why,#locations,#process,#contact{padding-top:80px;padding-bottom:80px}
+  #contact::before,#why::before,#why::after,#process::before,#process::after{left:20px;right:20px}
+  footer{padding-left:20px;padding-right:20px}
+  .featured-inner{padding:0}
+  #featured{padding-left:20px;padding-right:20px;padding-bottom:80px}
 
-.hero-counter {
-  position: absolute; bottom: 40px; right: 64px; z-index: 4;
-  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
-  opacity: 0; animation: riseIn .6s 1.4s var(--ease) forwards;
-}
-.hero-counter .num {
-  font-family: 'Cormorant', serif; font-size: 42px; font-weight: 300;
-  color: rgba(224,197,143,0.25); line-height: 1;
-}
-.hero-counter .label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-faint); }
+  .h2{font-size:clamp(34px,9vw,52px)}
+  .lbl{font-size:9.5px;letter-spacing:4px}
 
-@keyframes riseIn {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+  /* Numbers */
+  .numbers-grid{grid-template-columns:1fr 1fr;border-left:none}
+  .nitem{padding:32px 20px}
+  .nval{font-size:48px}
+
+  /* About */
+  .about-grid{grid-template-columns:1fr;gap:48px}
+  .about-frame{max-width:100%;aspect-ratio:4/3}
+  .about-float{left:0;top:16px}
+  .about-badge{right:0;bottom:-16px}
+  .about-badge .bnum{font-size:36px}
+  .pillars{grid-template-columns:1fr}
+
+  /* Why */
+  .why-grid{grid-template-columns:1fr;gap:40px}
+  .ct-head,.ct-row{grid-template-columns:.9fr 1fr 1fr;font-size:11px}
+  .ct-feature{font-size:12px}
+
+  /* Services */
+  .svc-head{flex-direction:column;align-items:flex-start;gap:16px}
+  .svc-grid{grid-template-columns:1fr;gap:1px}
+  .svc-card{padding:36px 28px}
+  .svc-n{font-size:56px}
+
+  /* Featured */
+  .featured-inner{grid-template-columns:1fr}
+  .feat-visual{min-height:240px}
+  .feat-content{padding:36px 28px}
+  .feat-specs{flex-wrap:wrap;gap:20px}
+
+  /* Projects teaser */
+  .pt-head{flex-direction:column;align-items:flex-start;gap:16px}
+  .pt-grid{grid-template-columns:1fr;gap:16px}
+  .pc.tall .pc-thumb{aspect-ratio:16/9}
+
+  /* Locations */
+  .loc-head{flex-direction:column;align-items:flex-start;gap:16px}
+  .loc-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .loc-card{padding:24px 20px}
+
+  /* Process */
+  .proc-head{flex-direction:column;align-items:flex-start;gap:16px;margin-bottom:56px}
+  .proc-steps{grid-template-columns:1fr;gap:36px}
+  .proc-connector{display:none}
+  .proc-step{padding:0}
+  .step-n{width:56px;height:56px;font-size:17px}
+
+  /* Testimonial */
+  .test-ring{width:300px;height:300px}
+  .test-quote{font-size:clamp(18px,5vw,26px)}
+
+  /* Contact */
+  .contact-grid{grid-template-columns:1fr;gap:48px}
+  .cf-row{grid-template-columns:1fr}
+  .c-form .btn-g{width:100%;justify-content:center}
+
+  /* Footer */
+  .foot-top{grid-template-columns:1fr;gap:36px;padding:48px 0 36px}
+  .foot-bot{flex-direction:column;gap:20px;text-align:center}
+
+  /* Popup */
+  .pop-win{width:96vw;height:90vh}
+  .pp-hero{padding:28px 24px;height:44vh}
+  .pp-price{top:24px;right:24px;padding:10px 16px}
+  .pp-price .pa{font-size:20px}
+  .pp-body{padding:28px 24px}
+  .pp-specs{flex-wrap:wrap}
+  .pp-two{grid-template-columns:1fr}
+  .pp-ctas{flex-wrap:wrap}
+  .pp-btn{padding:12px 20px;font-size:9.5px}
+
+  /* Mobile sticky CTA */
+  #mob-cta{display:flex}
+  body{padding-bottom:70px}
 }
 
-/* ─── SECTION UTILITIES ────────────────────────── */
-.w-max { max-width: 1440px; margin: 0 auto; }
-.pad-x { padding-left: 80px; padding-right: 80px; }
-
-.lbl {
-  display: inline-flex; align-items: center; gap: 14px;
-  font-size: 9.5px; letter-spacing: 5px; text-transform: uppercase; color: var(--gold);
-  margin-bottom: 20px;
-}
-.lbl::before { content: ''; width: 32px; height: 1px; background: var(--gold); flex-shrink: 0; }
-
-.headline {
-  font-family: 'Cormorant', serif;
-  font-size: clamp(38px, 4.5vw, 68px);
-  font-weight: 300; line-height: 1.05;
-  color: var(--cream);
-}
-.headline em { font-style: italic; color: var(--gold); }
-
-/* ─── REVEAL ANIM ─────────────────────────────── */
-.rv {
-  opacity: 0; transform: translateY(36px);
-  transition: opacity .9s var(--ease), transform .9s var(--ease);
-}
-.rv.on { opacity: 1; transform: translateY(0); }
-.rv-delay-1 { transition-delay: .1s; }
-.rv-delay-2 { transition-delay: .2s; }
-.rv-delay-3 { transition-delay: .3s; }
-.rv-delay-4 { transition-delay: .4s; }
-.rv-left { transform: translateX(-36px); }
-.rv-left.on { transform: translateX(0); }
-
-/* ─── NUMBERS BAR ──────────────────────────────── */
-#numbers {
-  padding: 0 80px;
-  border-top: 1px solid rgba(224,197,143,0.08);
-  border-bottom: 1px solid rgba(224,197,143,0.08);
-  background: rgba(224,197,143,0.02);
-}
-.numbers-grid {
-  max-width: 1440px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(4,1fr);
-}
-.num-item {
-  padding: 56px 40px;
-  border-right: 1px solid rgba(224,197,143,0.08);
-  display: flex; flex-direction: column; align-items: center; text-align: center;
-}
-.num-item:last-child { border-right: none; }
-.num-value {
-  font-family: 'Cormorant', serif; font-size: 72px; font-weight: 300;
-  color: var(--gold); line-height: 1;
-}
-.num-value sup { font-size: 32px; vertical-align: super; }
-.num-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-faint); margin-top: 12px; }
-
-/* ─── ABOUT ────────────────────────────────────── */
-#about {
-  padding: 160px 80px;
-}
-.about-wrap {
-  max-width: 1440px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 120px; align-items: center;
-}
-.about-media { position: relative; }
-.about-card-main {
-  aspect-ratio: 3/4;
-  background: var(--navy-2);
-  border: 1px solid rgba(224,197,143,0.12);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden; position: relative;
-}
-.about-card-main::before {
-  content: ''; position: absolute; inset: 28px;
-  border: 1px solid rgba(224,197,143,0.07);
-  pointer-events: none;
-}
-.about-card-main .inner-icon {
-  opacity: 0.06; display: flex; flex-direction: column; align-items: center; gap: 16px;
-}
-.about-card-badge {
-  position: absolute; bottom: -28px; right: -28px;
-  background: var(--gold); color: var(--navy-0);
-  padding: 28px 32px; text-align: center; z-index: 2;
-}
-.about-card-badge .bnum {
-  font-family: 'Cormorant', serif; font-size: 52px;
-  font-weight: 400; line-height: 1; display: block;
-}
-.about-card-badge .blbl {
-  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-  font-weight: 500; opacity: 0.75; margin-top: 4px; display: block;
-}
-.about-card-float {
-  position: absolute; top: 40px; left: -28px;
-  background: var(--navy-1); border: 1px solid rgba(224,197,143,0.18);
-  padding: 22px 26px; display: flex; align-items: center; gap: 14px;
-}
-.about-card-float .fi { width: 32px; height: 32px; }
-.about-card-float .ftext { display: flex; flex-direction: column; }
-.about-card-float .fnum { font-family: 'Cormorant', serif; font-size: 28px; font-weight: 300; color: var(--gold); line-height: 1; }
-.about-card-float .flbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); }
-
-.about-text .headline { margin-bottom: 32px; }
-.about-text p { font-size: 14.5px; line-height: 2.1; color: var(--text-dim); max-width: 520px; }
-.about-text p + p { margin-top: 20px; }
-.about-pillars { margin-top: 52px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(224,197,143,0.08); }
-.pillar {
-  padding: 28px 24px; background: var(--navy-0);
-  transition: background .3s;
-}
-.pillar:hover { background: rgba(224,197,143,0.03); }
-.pillar-icon { width: 22px; height: 22px; color: var(--gold); margin-bottom: 14px; }
-.pillar h4 { font-family: 'Cormorant', serif; font-size: 20px; font-weight: 400; color: var(--cream); margin-bottom: 8px; }
-.pillar p { font-size: 12.5px; line-height: 1.8; color: var(--text-faint); }
-
-/* ─── SERVICES ─────────────────────────────────── */
-#services {
-  padding: 160px 80px;
-  background: linear-gradient(180deg, var(--navy-1) 0%, var(--navy-0) 100%);
-  position: relative;
-}
-#services::before {
-  content: ''; position: absolute; top: 0; left: 80px; right: 80px; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(224,197,143,0.15), transparent);
-}
-.services-head {
-  max-width: 1440px; margin: 0 auto 80px;
-  display: flex; justify-content: space-between; align-items: flex-end;
-}
-.services-head .aside { max-width: 300px; font-size: 13px; line-height: 2; color: var(--text-faint); }
-.services-grid {
-  max-width: 1440px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 1px;
-  background: rgba(224,197,143,0.08);
-}
-.svc {
-  background: var(--navy-0); padding: 52px 44px;
-  position: relative; overflow: hidden;
-  transition: background .4s var(--ease);
-}
-.svc::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  transform: scaleX(0) translateX(-50%); transform-origin: left;
-  transition: transform .5s var(--ease);
-}
-.svc:hover { background: rgba(224,197,143,0.035); }
-.svc:hover::after { transform: scaleX(1) translateX(0); }
-.svc-num {
-  font-family: 'Cormorant', serif; font-size: 80px; font-weight: 300;
-  color: rgba(224,197,143,0.05); line-height: 1; margin-bottom: 24px;
-  transition: color .4s;
-}
-.svc:hover .svc-num { color: rgba(224,197,143,0.1); }
-.svc-icon { width: 28px; height: 28px; color: var(--gold); margin-bottom: 22px; }
-.svc h3 { font-family: 'Cormorant', serif; font-size: 28px; font-weight: 400; color: var(--cream); margin-bottom: 16px; }
-.svc p { font-size: 13px; line-height: 2; color: var(--text-dim); }
-
-/* ─── FEATURED PROPERTY (big promo block) ─────── */
-#featured {
-  padding: 0 80px 160px;
-}
-.featured-wrap {
-  max-width: 1440px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr;
-  border: 1px solid rgba(224,197,143,0.1);
-  overflow: hidden;
-}
-.featured-visual {
-  background: linear-gradient(135deg, #0d2137, #0a3828);
-  min-height: 600px; position: relative;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-.featured-visual-bg {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 40% 50%, rgba(224,197,143,0.07) 0%, transparent 60%);
-}
-.featured-icon-large {
-  position: absolute; opacity: 0.05;
-  width: 280px; height: 280px;
-}
-.featured-visual .chips {
-  position: absolute; bottom: 36px; left: 36px; display: flex; gap: 10px;
-}
-.chip {
-  background: rgba(224,197,143,0.1); border: 1px solid rgba(224,197,143,0.2);
-  padding: 8px 16px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--gold);
-}
-.featured-content {
-  padding: 72px 64px; background: var(--navy-1);
-  display: flex; flex-direction: column; justify-content: center;
-}
-.featured-content .lbl { margin-bottom: 28px; }
-.featured-content .headline { margin-bottom: 24px; }
-.featured-loc {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12px; letter-spacing: 1.5px; color: var(--text-dim);
-  margin-bottom: 32px;
-}
-.featured-specs {
-  display: flex; gap: 32px; margin-bottom: 40px;
-  padding: 28px 0; border-top: 1px solid rgba(224,197,143,0.1); border-bottom: 1px solid rgba(224,197,143,0.1);
-}
-.fspec .val { font-family: 'Cormorant', serif; font-size: 36px; font-weight: 300; color: var(--gold); display: block; line-height: 1; }
-.fspec .lbl2 { font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-faint); margin-top: 6px; }
-.featured-desc { font-size: 13.5px; line-height: 2; color: var(--text-dim); margin-bottom: 48px; }
-
-/* ─── PROJECTS TEASER ─────────────────────────── */
-#projects-teaser {
-  padding: 160px 80px;
-}
-.projects-teaser-head {
-  max-width: 1440px; margin: 0 auto 64px;
-  display: flex; justify-content: space-between; align-items: flex-end;
-}
-.projects-teaser-grid {
-  max-width: 1440px; margin: 0 auto;
-  display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 20px;
-}
-.pj-card {
-  position: relative; overflow: hidden; cursor: none;
-  border: 1px solid rgba(224,197,143,0.08); background: var(--navy-2);
-  transition: border-color .4s;
-}
-.pj-card:hover { border-color: rgba(224,197,143,0.28); }
-.pj-thumb {
-  width: 100%; aspect-ratio: 4/5; position: relative; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-}
-.pj-card.tall .pj-thumb { aspect-ratio: 3/4.8; }
-.pj-thumb-bg {
-  position: absolute; inset: 0; transition: transform .8s var(--ease);
-}
-.pj-card:hover .pj-thumb-bg { transform: scale(1.06); }
-.pj-thumb-bg-1 { background: linear-gradient(160deg, #0d2137 0%, #093024 100%); }
-.pj-thumb-bg-2 { background: linear-gradient(160deg, #0a0e2e 0%, #1a0a2e 100%); }
-.pj-thumb-bg-3 { background: linear-gradient(160deg, #0a1a2e 0%, #1a0e0a 100%); }
-.pj-thumb-icon {
-  position: absolute; opacity: 0.06;
-  width: 140px; height: 140px;
-}
-.pj-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(7,14,34,.96) 0%, rgba(7,14,34,.1) 55%, transparent 100%);
-  display: flex; flex-direction: column; justify-content: flex-end; padding: 28px 26px;
-  transition: background .4s;
-}
-.pj-card:hover .pj-overlay { background: linear-gradient(to top, rgba(7,14,34,.99) 0%, rgba(7,14,34,.3) 55%, transparent 100%); }
-.pj-tag { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-.pj-name { font-family: 'Cormorant', serif; font-size: 26px; font-weight: 400; color: var(--cream); line-height: 1.2; margin-bottom: 5px; }
-.pj-loc { font-size: 11px; letter-spacing: 1px; color: var(--text-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 6px; }
-.pj-loc svg { width: 10px; height: 10px; flex-shrink: 0; }
-.pj-btn {
-  display: inline-flex; align-items: center; gap: 9px;
-  font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--gold); border: 1px solid rgba(224,197,143,0.3);
-  padding: 11px 18px; background: rgba(224,197,143,0.07);
-  font-family: 'Jost', sans-serif; font-weight: 400;
-  cursor: none; opacity: 0; transform: translateY(12px);
-  transition: opacity .35s, transform .35s, background .25s;
-}
-.pj-card:hover .pj-btn { opacity: 1; transform: translateY(0); }
-.pj-btn:hover { background: rgba(224,197,143,0.16); border-color: var(--gold); }
-.pj-btn svg { width: 13px; height: 13px; }
-
-/* ─── PROCESS ──────────────────────────────────── */
-#process {
-  padding: 160px 80px;
-  background: var(--navy-1);
-  position: relative;
-}
-#process::before, #process::after {
-  content: ''; position: absolute; left: 80px; right: 80px; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(224,197,143,0.12), transparent);
-}
-#process::before { top: 0; }
-#process::after { bottom: 0; }
-.process-wrap { max-width: 1440px; margin: 0 auto; }
-.process-head { margin-bottom: 96px; display: flex; justify-content: space-between; align-items: flex-end; }
-.process-head .aside { max-width: 280px; font-size: 13px; line-height: 2; color: var(--text-faint); }
-.process-steps-grid {
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
-  position: relative;
-}
-.process-connector {
-  position: absolute; top: 36px; left: 8%; right: 8%;
-  display: flex; align-items: center;
-}
-.conn-line { flex: 1; height: 1px; background: rgba(224,197,143,0.15); }
-.conn-dot { width: 6px; height: 6px; border: 1px solid rgba(224,197,143,0.3); border-radius: 50%; background: var(--navy-1); flex-shrink: 0; }
-.proc-step { padding: 0 32px 0 0; }
-.step-idx {
-  width: 72px; height: 72px; border: 1px solid rgba(224,197,143,0.2);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Cormorant', serif; font-size: 22px; font-weight: 300;
-  color: rgba(224,197,143,0.6); margin-bottom: 36px;
-  position: relative; background: var(--navy-1);
-}
-.step-idx::after {
-  content: ''; position: absolute; inset: -1px;
-  background: linear-gradient(135deg, rgba(224,197,143,0.2) 0%, transparent 60%);
-  pointer-events: none;
-}
-.proc-step h4 { font-family: 'Cormorant', serif; font-size: 24px; font-weight: 400; color: var(--cream); margin-bottom: 14px; }
-.proc-step p { font-size: 13px; line-height: 2; color: var(--text-dim); }
-
-/* ─── TESTIMONIAL ──────────────────────────────── */
-#testimonial {
-  padding: 120px 80px;
-  background: var(--navy-0); position: relative; overflow: hidden;
-}
-.testimonial-bg {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px; height: 600px;
-  border-radius: 50%;
-  border: 1px solid rgba(224,197,143,0.04);
-  pointer-events: none;
-}
-.testimonial-bg::before {
-  content: ''; position: absolute; inset: 80px;
-  border-radius: 50%; border: 1px solid rgba(224,197,143,0.04);
-}
-.testimonial-wrap {
-  max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 2;
-}
-.quote-mark {
-  font-family: 'Cormorant', serif; font-size: 140px; font-weight: 300;
-  color: rgba(224,197,143,0.1); line-height: 0.7;
-  display: block; margin-bottom: -20px;
-}
-.testimonial-text {
-  font-family: 'Cormorant', serif; font-style: italic;
-  font-size: clamp(22px, 3.2vw, 38px); font-weight: 300;
-  line-height: 1.55; color: var(--cream);
-  margin-bottom: 48px;
-}
-.testimonial-author {
-  display: flex; align-items: center; justify-content: center; gap: 20px;
-}
-.author-line { width: 40px; height: 1px; background: rgba(224,197,143,0.3); }
-.author-info { text-align: center; }
-.author-name { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
-.author-role { font-size: 11px; letter-spacing: 1.5px; color: var(--text-faint); margin-top: 4px; }
-
-/* ─── CONTACT ──────────────────────────────────── */
-#contact {
-  padding: 160px 80px;
-  background: var(--navy-1);
-  position: relative;
-}
-#contact::before {
-  content: ''; position: absolute; top: 0; left: 80px; right: 80px; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(224,197,143,0.15), transparent);
-}
-.contact-inner {
-  max-width: 1440px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1.3fr; gap: 120px; align-items: start;
-}
-.contact-left .headline { margin-bottom: 24px; }
-.contact-left p { font-size: 14px; line-height: 2.1; color: var(--text-dim); max-width: 380px; margin-bottom: 52px; }
-.contact-info { display: flex; flex-direction: column; gap: 24px; }
-.ci-item { display: flex; align-items: flex-start; gap: 16px; }
-.ci-item svg { width: 16px; height: 16px; color: var(--gold); margin-top: 3px; flex-shrink: 0; }
-.ci-item div .ci-label { font-size: 9.5px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-faint); }
-.ci-item div .ci-val { font-size: 14px; color: var(--text); margin-top: 3px; }
-
-.contact-form { display: flex; flex-direction: column; gap: 14px; }
-.cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.cf-group { display: flex; flex-direction: column; }
-.cf-group label { font-size: 9.5px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; }
-.cf-group input, .cf-group textarea, .cf-group select {
-  background: rgba(255,255,255,0.035);
-  border: 1px solid rgba(224,197,143,0.15);
-  color: var(--cream); padding: 18px 20px;
-  font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 300;
-  outline: none; transition: border-color .3s, background .3s;
-  -webkit-appearance: none; appearance: none;
-}
-.cf-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(224,197,143,0.5)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; background-size: 12px; padding-right: 42px; }
-.cf-group select option { background: #0a1633; color: var(--cream); }
-.cf-group input:focus, .cf-group textarea:focus, .cf-group select:focus { border-color: rgba(224,197,143,0.5); background: rgba(224,197,143,0.03); }
-.cf-group input::placeholder, .cf-group textarea::placeholder { color: var(--text-faint); }
-.cf-group textarea { resize: none; height: 130px; }
-
-/* ─── FOOTER ───────────────────────────────────── */
-footer {
-  padding: 0 80px;
-  border-top: 1px solid rgba(224,197,143,0.08);
-  background: var(--navy-0);
-}
-.footer-top {
-  max-width: 1440px; margin: 0 auto;
-  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 60px; padding: 80px 0 60px;
-  border-bottom: 1px solid rgba(224,197,143,0.06);
-}
-.footer-brand img { height: 32px; margin-bottom: 24px; }
-.footer-brand p { font-size: 12.5px; line-height: 2; color: var(--text-faint); max-width: 280px; }
-.footer-col h5 { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
-.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-.footer-col ul a { font-size: 13px; color: var(--text-faint); text-decoration: none; transition: color .3s; letter-spacing: 0.5px; }
-.footer-col ul a:hover { color: var(--gold); }
-.footer-bottom {
-  max-width: 1440px; margin: 0 auto;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 28px 0;
-}
-.footer-bottom p { font-size: 11px; letter-spacing: 1px; color: var(--text-faint); }
-.footer-socials { display: flex; gap: 20px; }
-.footer-socials a { width: 36px; height: 36px; border: 1px solid rgba(224,197,143,0.15); display: flex; align-items: center; justify-content: center; transition: border-color .3s, background .3s; }
-.footer-socials a svg { width: 14px; height: 14px; color: var(--text-faint); transition: color .3s; }
-.footer-socials a:hover { border-color: var(--gold); background: rgba(224,197,143,0.06); }
-.footer-socials a:hover svg { color: var(--gold); }
-
-/* ─── POPUP ────────────────────────────────────── */
-#popup-overlay {
-  position: fixed; inset: 0; z-index: 500;
-  background: rgba(4,9,22,0.92); backdrop-filter: blur(20px);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity .4s var(--ease);
-}
-#popup-overlay.open { opacity: 1; pointer-events: all; }
-.popup-win {
-  width: 88vw; max-width: 1280px; height: 88vh;
-  background: var(--navy-1); border: 1px solid rgba(224,197,143,0.18);
-  display: flex; flex-direction: column;
-  transform: translateY(30px) scale(0.97);
-  transition: transform .45s var(--ease);
-  box-shadow: 0 80px 160px rgba(0,0,0,0.7), 0 0 0 1px rgba(224,197,143,0.05);
-}
-#popup-overlay.open .popup-win { transform: translateY(0) scale(1); }
-
-.popup-bar {
-  height: 52px; display: flex; align-items: center; gap: 14px;
-  padding: 0 20px; flex-shrink: 0;
-  background: rgba(7,14,34,0.8);
-  border-bottom: 1px solid rgba(224,197,143,0.1);
-}
-.pbar-circles { display: flex; gap: 7px; }
-.pbar-circles span {
-  width: 13px; height: 13px; border-radius: 50%;
-}
-.pbar-close { background: #ff5f57; cursor: pointer; transition: filter .2s; }
-.pbar-close:hover { filter: brightness(1.3); }
-.pbar-min { background: #ffbd2e; }
-.pbar-max { background: #28ca41; }
-.pbar-url {
-  flex: 1; background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(224,197,143,0.1); border-radius: 6px;
-  padding: 0 14px; height: 30px;
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12px; font-family: 'Jost', sans-serif; color: var(--text-faint); letter-spacing: 0.5px;
-}
-.pbar-ssl { width: 12px; height: 12px; color: #28ca41; flex-shrink: 0; }
-.popup-banner {
-  height: 38px; flex-shrink: 0;
-  background: rgba(224,197,143,0.03);
-  border-bottom: 1px solid rgba(224,197,143,0.08);
-  display: flex; align-items: center; gap: 10px;
-  padding: 0 20px; font-size: 10px; letter-spacing: 3px;
-  text-transform: uppercase; color: rgba(224,197,143,0.6);
-}
-.popup-banner svg { width: 12px; height: 12px; color: var(--gold); }
-.popup-body { flex: 1; overflow: hidden; position: relative; }
-.popup-scroll { width: 100%; height: 100%; overflow-y: auto; }
-.popup-scroll::-webkit-scrollbar { width: 4px; }
-.popup-scroll::-webkit-scrollbar-track { background: var(--navy-1); }
-.popup-scroll::-webkit-scrollbar-thumb { background: rgba(224,197,143,0.2); }
-
-/* ─── PROP PREVIEW ─────────────────────────────── */
-.pp { background: #080f26; color: #f0ebe0; font-family: 'Jost', sans-serif; font-weight: 300; min-height: 100%; }
-
-.pp-hero {
-  height: 65vh; min-height: 440px;
-  position: relative; display: flex; align-items: flex-end; padding: 52px 56px;
-  overflow: hidden;
-}
-.pp-hero-bg { position: absolute; inset: 0; }
-.pp-hero-grid {
-  position: absolute; inset: 0;
-  background-image: linear-gradient(rgba(224,197,143,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(224,197,143,0.03) 1px, transparent 1px);
-  background-size: 64px 64px;
-}
-.pp-hero-grd { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,15,38,.97) 0%, rgba(8,15,38,.15) 50%, transparent 100%); }
-.pp-content { position: relative; z-index: 2; }
-.pp-badge { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(224,197,143,0.25); padding: 8px 18px; margin-bottom: 18px; font-size: 9.5px; letter-spacing: 4px; text-transform: uppercase; color: #e0c58f; }
-.pp-badge-dot { width: 5px; height: 5px; background: #28ca41; border-radius: 50%; }
-.pp-title { font-family: 'Cormorant', serif; font-size: clamp(48px,6vw,80px); font-weight: 300; line-height: 0.92; color: #f0ebe0; }
-.pp-subtitle { font-size: 13px; letter-spacing: 1.5px; color: rgba(240,235,224,0.5); margin-top: 12px; display: flex; align-items: center; gap: 8px; }
-.pp-subtitle svg { width: 12px; height: 12px; }
-.pp-price-tag { position: absolute; top: 52px; right: 56px; z-index: 2; background: #e0c58f; color: #080f26; padding: 16px 28px; text-align: center; }
-.pp-price-tag .pamt { font-family: 'Cormorant', serif; font-size: 30px; font-weight: 500; line-height: 1; display: block; }
-.pp-price-tag .plbl { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; font-weight: 500; margin-top: 4px; display: block; opacity: 0.75; }
-
-.pp-body { padding: 56px; }
-.pp-specs-row { display: flex; gap: 0; margin-bottom: 56px; border: 1px solid rgba(224,197,143,0.12); }
-.pp-spec { padding: 28px 32px; border-right: 1px solid rgba(224,197,143,0.12); text-align: center; }
-.pp-spec:last-child { border-right: none; }
-.pp-spec-val { font-family: 'Cormorant', serif; font-size: 42px; font-weight: 300; color: #e0c58f; display: block; line-height: 1; }
-.pp-spec-lbl { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(240,235,224,0.35); margin-top: 8px; }
-
-.pp-two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 60px; margin-bottom: 60px; }
-.pp-desc-title { font-family: 'Cormorant', serif; font-size: 32px; font-weight: 300; color: #f0ebe0; margin-bottom: 20px; }
-.pp-desc-text { font-size: 14px; line-height: 2.1; color: rgba(240,235,224,0.6); }
-.pp-features-title { font-size: 9.5px; letter-spacing: 4px; text-transform: uppercase; color: #e0c58f; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(224,197,143,0.12); }
-.pp-features-list { display: flex; flex-direction: column; gap: 12px; }
-.pp-feature { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(240,235,224,0.65); }
-.pp-feature svg { width: 12px; height: 12px; color: #e0c58f; flex-shrink: 0; }
-
-.pp-cta-row { display: flex; gap: 14px; padding-top: 40px; border-top: 1px solid rgba(224,197,143,0.1); }
-.pp-cta-btn { padding: 16px 36px; font-family: 'Jost', sans-serif; font-size: 10.5px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all .3s; }
-.pp-cta-primary { background: #e0c58f; color: #080f26; border: none; font-weight: 500; }
-.pp-cta-primary:hover { background: #f2dcb0; }
-.pp-cta-ghost { background: none; border: 1px solid rgba(224,197,143,0.25); color: #e0c58f; }
-.pp-cta-ghost:hover { border-color: #e0c58f; background: rgba(224,197,143,0.07); }
-
-/* ─── RESPONSIVE ───────────────────────────────── */
-@media (max-width: 1100px) {
-  .pad-x, #nav, #numbers, #about, #services, #featured, #projects-teaser, #process, #testimonial, #contact, footer { padding-left: 40px; padding-right: 40px; }
-  #nav.stuck { padding-left: 40px; padding-right: 40px; }
-  .about-wrap, .contact-inner { grid-template-columns: 1fr; gap: 60px; }
-  .featured-wrap { grid-template-columns: 1fr; }
-  .featured-visual { min-height: 320px; }
-  .projects-teaser-grid { grid-template-columns: 1fr 1fr; }
-  .pj-card.tall .pj-thumb { aspect-ratio: 4/5; }
-  .process-steps-grid { grid-template-columns: 1fr 1fr; gap: 48px; }
-  .process-connector { display: none; }
-  .footer-top { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 720px) {
-  .nav-links { display: none; }
-  .numbers-grid { grid-template-columns: 1fr 1fr; }
-  .services-grid { grid-template-columns: 1fr; }
-  .services-head { flex-direction: column; align-items: flex-start; gap: 20px; }
-  .projects-teaser-grid { grid-template-columns: 1fr; }
-  .projects-teaser-head { flex-direction: column; align-items: flex-start; gap: 20px; }
-  .process-steps-grid { grid-template-columns: 1fr; }
-  .cf-row { grid-template-columns: 1fr; }
-  .pp-two-col { grid-template-columns: 1fr; }
-  .pp-specs-row { flex-wrap: wrap; }
-  .footer-top { grid-template-columns: 1fr; }
+/* ════════════════════════════════════════
+   PRINT / REDUCED-MOTION
+════════════════════════════════════════ */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 </style>
 </head>
 <body>
-<div id="noise"></div>
-<div id="cur-dot"></div>
-<div id="cur-ring"></div>
 
-<!-- ── NAV ─────────────────────────────────────── -->
+<div id="noise"></div>
+<div id="cur-d"></div>
+<div id="cur-r"></div>
+
+<!-- ══════════ MOBILE MENU ══════════ -->
+<div id="mob-menu">
+  <ul class="mob-links">
+    <li><a href="#about" onclick="closeMob()">About</a></li>
+    <li><a href="#services" onclick="closeMob()">Services</a></li>
+    <li><a href="projects.html" onclick="closeMob()">Portfolio</a></li>
+    <li><a href="#process" onclick="closeMob()">Process</a></li>
+    <li><a href="#contact" onclick="closeMob()">Contact</a></li>
+  </ul>
+  <div class="mob-cta-wrap">
+    <a href="#contact" class="btn-g" onclick="closeMob()">Start a Project</a>
+  </div>
+  <div class="mob-bottom">© 2025 Mansium · Istanbul</div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
 <nav id="nav">
   <a href="index.html">
-    <img src="logo.png" alt="Mansium" class="nav-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-    <span style="display:none;font-family:'Cormorant',serif;font-size:26px;font-weight:400;letter-spacing:7px;color:#e0c58f;text-transform:uppercase;">MANSIUM</span>
+    <img src="logo.png" alt="Mansium" class="nav-logo" onerror="this.style.display='none';document.querySelector('.nav-logo-fb').style.display='block'">
+    <span class="nav-logo-fb">MANSIUM</span>
   </a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="projects.html">Portfolio</a></li>
     <li><a href="#process">Process</a></li>
-    <li><a href="#contact" class="nav-cta">Start a Project</a></li>
+    <li><a href="#contact" class="nav-btn">Start a Project</a></li>
   </ul>
+  <button class="ham" id="ham" aria-label="Menu" onclick="toggleMob()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- ── HERO ─────────────────────────────────────── -->
+<!-- ══════════ HERO ══════════ -->
 <section id="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-gradient"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="hero-arc"></div>
-  <div class="hero-content">
-    <div class="hero-tag">
-      <div class="hero-tag-dot"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-glow"></div>
+
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div class="hero-side-label">
+      Luxury Real Estate Marketing
+    </div>
+
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
       Luxury Property Marketing
     </div>
+
     <h1 class="hero-h1">
       Your Property<br>
-      <em class="line2">Deserves</em><br>
+      <em class="italic-gold indent">Deserves</em><br>
       Its Own Stage
     </h1>
-    <div class="hero-descriptor">
-      <p>We craft bespoke digital experiences for the world's most exceptional properties — turning listings into landmark presentations.</p>
-      <div class="hero-divider"></div>
-      <p>Each project receives its own fully designed website, written narrative, and digital identity — nothing templated, ever.</p>
+
+    <div class="hero-desc-row">
+      <div class="hero-desc-bar"></div>
+      <p class="hero-desc-text">We craft fully bespoke digital experiences for the world's most exceptional properties — turning listings into landmark presentations that command attention and close deals.</p>
     </div>
+
     <div class="hero-actions">
-      <a href="projects.html" class="btn-gold">
+      <a href="projects.html" class="btn-g">
         View Portfolio
-        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#contact" class="btn-ghost">
-        Start a Project
-      </a>
+      <a href="#contact" class="btn-o">Start a Project</a>
+    </div>
+
+    <div class="hero-stat-row">
+      <div class="hstat">
+        <div class="hstat-val" data-count="47" data-suffix="+">0+</div>
+        <div class="hstat-lbl">Properties</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val">$2.1<small style="font-size:.55em">B</small></div>
+        <div class="hstat-lbl">Portfolio Value</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" data-count="96" data-suffix="%">0%</div>
+        <div class="hstat-lbl">Sell Rate</div>
+      </div>
     </div>
   </div>
-  <div class="hero-scroll-ind">
-    <span>Scroll</span>
-    <div class="scroll-ticker"></div>
+
+  <!-- RIGHT Blueprint Panel -->
+  <div class="hero-right">
+    <div class="blueprint-wrap">
+      <svg viewBox="0 0 280 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Villa blueprint line art -->
+        <rect x="40" y="280" width="200" height="70" stroke="#e0c58f" stroke-width="0.8"/>
+        <rect x="95" y="210" width="90" height="70" stroke="#e0c58f" stroke-width="0.8"/>
+        <path d="M20 280 L140 80 L260 280" stroke="#e0c58f" stroke-width="1"/>
+        <line x1="140" y1="80" x2="140" y2="140" stroke="#e0c58f" stroke-width="0.5" stroke-dasharray="4 3"/>
+        <rect x="60" y="295" width="30" height="40" stroke="#e0c58f" stroke-width="0.6"/>
+        <rect x="105" y="295" width="25" height="20" stroke="#e0c58f" stroke-width="0.6"/>
+        <rect x="150" y="295" width="25" height="20" stroke="#e0c58f" stroke-width="0.6"/>
+        <rect x="190" y="295" width="30" height="40" stroke="#e0c58f" stroke-width="0.6"/>
+        <rect x="113" y="315" width="54" height="35" stroke="#e0c58f" stroke-width="0.7"/>
+        <!-- Dimension lines -->
+        <line x1="30" y1="354" x2="250" y2="354" stroke="#e0c58f" stroke-width="0.4" stroke-dasharray="3 3"/>
+        <line x1="30" y1="350" x2="30" y2="358" stroke="#e0c58f" stroke-width="0.4"/>
+        <line x1="250" y1="350" x2="250" y2="358" stroke="#e0c58f" stroke-width="0.4"/>
+        <!-- Crosshairs -->
+        <circle cx="140" cy="200" r="3" stroke="#e0c58f" stroke-width="0.5"/>
+        <line x1="134" y1="200" x2="146" y2="200" stroke="#e0c58f" stroke-width="0.4"/>
+        <line x1="140" y1="194" x2="140" y2="206" stroke="#e0c58f" stroke-width="0.4"/>
+        <!-- Scale indicator -->
+        <rect x="190" y="220" width="50" height="18" stroke="#e0c58f" stroke-width="0.5"/>
+        <line x1="215" y1="220" x2="215" y2="238" stroke="#e0c58f" stroke-width="0.3"/>
+        <!-- Pool outline -->
+        <rect x="55" y="230" width="36" height="48" rx="18" stroke="#e0c58f" stroke-width="0.5" stroke-dasharray="3 2"/>
+      </svg>
+    </div>
+
+    <div class="prop-list">
+      <div class="prop-list-item">
+        Villa
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div class="prop-list-item">
+        Penthouse
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div class="prop-list-item">
+        Duplex
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div class="prop-list-item">
+        Mansion
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <div class="hero-coords">36.8969° N — 30.7133° E</div>
   </div>
-  <div class="hero-counter">
-    <span class="num">47<sup>+</sup></span>
-    <span class="label">Properties Launched</span>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-track"></div>
   </div>
 </section>
 
-<!-- ── MARQUEE ───────────────────────────────────── -->
-<div class="marquee-strip">
-  <div class="marquee-inner">
-    <span>Luxury Villas <b>◆</b></span>
-    <span>Penthouse Suites <b>◆</b></span>
-    <span>Duplex Residences <b>◆</b></span>
-    <span>Private Mansions <b>◆</b></span>
-    <span>Waterfront Estates <b>◆</b></span>
-    <span>Ultra-Luxury Properties <b>◆</b></span>
-    <span>Exclusive Portfolios <b>◆</b></span>
-    <span>Bespoke Websites <b>◆</b></span>
-    <span>Luxury Villas <b>◆</b></span>
-    <span>Penthouse Suites <b>◆</b></span>
-    <span>Duplex Residences <b>◆</b></span>
-    <span>Private Mansions <b>◆</b></span>
-    <span>Waterfront Estates <b>◆</b></span>
-    <span>Ultra-Luxury Properties <b>◆</b></span>
-    <span>Exclusive Portfolios <b>◆</b></span>
-    <span>Bespoke Websites <b>◆</b></span>
+<!-- ══════════ MARQUEE ══════════ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>Luxury Villas<b>◆</b></span><span>Penthouse Suites<b>◆</b></span><span>Duplex Residences<b>◆</b></span><span>Private Mansions<b>◆</b></span><span>Waterfront Estates<b>◆</b></span><span>Bespoke Websites<b>◆</b></span><span>Ultra-Luxury Properties<b>◆</b></span><span>Commission Based<b>◆</b></span>
+    <span>Luxury Villas<b>◆</b></span><span>Penthouse Suites<b>◆</b></span><span>Duplex Residences<b>◆</b></span><span>Private Mansions<b>◆</b></span><span>Waterfront Estates<b>◆</b></span><span>Bespoke Websites<b>◆</b></span><span>Ultra-Luxury Properties<b>◆</b></span><span>Commission Based<b>◆</b></span>
   </div>
 </div>
 
-<!-- ── NUMBERS ───────────────────────────────────── -->
+<!-- ══════════ NUMBERS ══════════ -->
 <section id="numbers">
-  <div class="numbers-grid">
-    <div class="num-item rv"><div class="num-value">47<sup>+</sup></div><div class="num-label">Properties Launched</div></div>
-    <div class="num-item rv rv-delay-1"><div class="num-value">$2.1<sup>B</sup></div><div class="num-label">Total Portfolio Value</div></div>
-    <div class="num-item rv rv-delay-2"><div class="num-value">96<sup>%</sup></div><div class="num-label">Successful Sell Rate</div></div>
-    <div class="num-item rv rv-delay-3"><div class="num-value">14</div><div class="num-label">Days Avg. to Offer</div></div>
+  <div class="w px">
+    <div class="numbers-grid">
+      <div class="nitem rv"><div class="nval" data-count="47" data-suffix="+">0<sup>+</sup></div><div class="nlbl">Properties Launched</div></div>
+      <div class="nitem rv d1"><div class="nval">$2.1<sup>B</sup></div><div class="nlbl">Portfolio Value</div></div>
+      <div class="nitem rv d2"><div class="nval" data-count="96" data-suffix="%">0<sup>%</sup></div><div class="nlbl">Sell Rate</div></div>
+      <div class="nitem rv d3"><div class="nval" data-count="14" data-suffix="">0</div><div class="nlbl">Days Avg. to Offer</div></div>
+    </div>
   </div>
 </section>
 
-<!-- ── ABOUT ─────────────────────────────────────── -->
+<!-- ══════════ ABOUT ══════════ -->
 <section id="about">
-  <div class="about-wrap w-max">
-    <div class="about-media rv rv-left">
-      <div class="about-card-main">
-        <div class="inner-icon">
-          <svg width="120" height="120" viewBox="0 0 80 80" fill="none"><path d="M10 68L40 12L70 68H10Z" stroke="#e0c58f" stroke-width="1"/><path d="M28 68V48h24v20" stroke="#e0c58f" stroke-width="1"/><path d="M36 48v12h8V48" stroke="#e0c58f" stroke-width="1"/></svg>
+  <div class="w px">
+    <div class="about-grid">
+      <div class="about-media rv-l">
+        <div class="about-frame">
+          <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+            <path d="M20 180L100 20L180 180H20Z" stroke="#e0c58f" stroke-width="1.5"/>
+            <path d="M68 180V140h64v40" stroke="#e0c58f" stroke-width="1.5"/>
+            <path d="M86 140v32h28V140" stroke="#e0c58f" stroke-width="1"/>
+            <circle cx="100" cy="80" r="4" fill="#e0c58f" opacity=".4"/>
+          </svg>
+        </div>
+        <div class="about-badge">
+          <span class="bnum">100%</span>
+          <span class="blbl">Bespoke</span>
+        </div>
+        <div class="about-float">
+          <div>
+            <div class="float-num">$2.1B</div>
+            <div class="float-lbl">Portfolio Value</div>
+          </div>
         </div>
       </div>
-      <div class="about-card-badge">
-        <span class="bnum">100%</span>
-        <span class="blbl">Bespoke</span>
-      </div>
-      <div class="about-card-float">
-        <svg class="fi" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#e0c58f" stroke-opacity="0.3"/><path d="M12 28V18l8-6 8 6v10M17 28v-6h6v6" stroke="#e0c58f" stroke-width="1.2"/></svg>
-        <div class="ftext">
-          <span class="fnum">$2.1B</span>
-          <span class="flbl">Portfolio Value</span>
-        </div>
-      </div>
-    </div>
-    <div class="about-text rv">
-      <div class="lbl">About Mansium</div>
-      <h2 class="headline">We Don't List.<br><em>We Launch.</em></h2>
-      <p>Mansium was born from a single conviction — luxury properties deserve more than a grid thumbnail and a phone number. Every villa, penthouse, and duplex we take on receives its own fully crafted digital identity, built to captivate serious buyers from the very first scroll.</p>
-      <p>We work exclusively with premium real estate. If it isn't extraordinary, we aren't the right partner. That selectivity is what keeps our portfolio — and our clients' results — exceptional.</p>
-      <div class="about-pillars">
-        <div class="pillar">
-          <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <h4>Exclusivity</h4>
-          <p>We take on only the properties worth showcasing at this level.</p>
-        </div>
-        <div class="pillar">
-          <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-          <h4>Precision</h4>
-          <p>Every website is hand-crafted, never templated.</p>
-        </div>
-        <div class="pillar">
-          <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <h4>Integrity</h4>
-          <p>We succeed only when your property sells.</p>
-        </div>
-        <div class="pillar">
-          <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <h4>Vision</h4>
-          <p>We transform architecture into digital emotion.</p>
+
+      <div class="about-body rv">
+        <div class="lbl">About Mansium</div>
+        <h2 class="h2">We Don't List.<br><em>We Launch.</em></h2>
+        <p>Mansium was born from a single conviction — luxury properties deserve more than a grid thumbnail and a phone number. Every villa, penthouse, and duplex we take on receives its own fully crafted digital identity, built to captivate serious buyers from the very first scroll.</p>
+        <p>We work exclusively with premium real estate. If it isn't extraordinary, we aren't the right partner. That selectivity is what keeps our portfolio — and our clients' results — exceptional.</p>
+        <div class="pillars">
+          <div class="pillar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <h4>Exclusivity</h4>
+            <p>We take on only the properties worth showcasing at this level.</p>
+          </div>
+          <div class="pillar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            <h4>Precision</h4>
+            <p>Every website is hand-crafted, never templated or recycled.</p>
+          </div>
+          <div class="pillar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <h4>Integrity</h4>
+            <p>We succeed only when your property sells.</p>
+          </div>
+          <div class="pillar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <h4>Vision</h4>
+            <p>We transform architecture into digital emotion.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── SERVICES ───────────────────────────────────── -->
+<!-- ══════════ WHY MANSIUM (NEW) ══════════ -->
+<section id="why">
+  <div class="w px">
+    <div class="why-grid">
+      <div class="why-text rv-l">
+        <div class="lbl">The Mansium Difference</div>
+        <h2 class="h2">Why a Mansium<br><em>Website?</em></h2>
+        <p>Traditional real estate listings treat every property the same — a photo, a price, a phone number. We believe exceptional properties deserve exceptional presentation.</p>
+        <a href="#contact" class="btn-g" style="border:none">
+          Get Started
+          <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="rv d2">
+        <div class="compare-table">
+          <div class="ct-head">
+            <span>Feature</span>
+            <span>Traditional</span>
+            <span>Mansium</span>
+          </div>
+          <div class="ct-row">
+            <div class="ct-feature">Custom Website</div>
+            <div class="ct-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>No</div>
+            <div class="ct-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Always</div>
+          </div>
+          <div class="ct-row">
+            <div class="ct-feature">Bespoke Copywriting</div>
+            <div class="ct-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>No</div>
+            <div class="ct-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Included</div>
+          </div>
+          <div class="ct-row">
+            <div class="ct-feature">Visual Direction</div>
+            <div class="ct-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>No</div>
+            <div class="ct-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Included</div>
+          </div>
+          <div class="ct-row">
+            <div class="ct-feature">Own Domain</div>
+            <div class="ct-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>No</div>
+            <div class="ct-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Yes</div>
+          </div>
+          <div class="ct-row">
+            <div class="ct-feature">Mobile Optimised</div>
+            <div class="ct-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>Rarely</div>
+            <div class="ct-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Always</div>
+          </div>
+          <div class="ct-row">
+            <div class="ct-feature">Analytics & Leads</div>
+            <div class="ct-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>No</div>
+            <div class="ct-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Real-time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SERVICES ══════════ -->
 <section id="services">
-  <div class="services-head w-max rv">
-    <div>
-      <div class="lbl">What We Offer</div>
-      <h2 class="headline">A Complete<br><em>Digital Presence</em></h2>
+  <div class="w px">
+    <div class="svc-head rv">
+      <div>
+        <div class="lbl">What We Offer</div>
+        <h2 class="h2">A Complete<br><em>Digital Presence</em></h2>
+      </div>
+      <p class="svc-head-aside">Every service is tailored exclusively around luxury real estate — nothing generic, nothing recycled.</p>
     </div>
-    <p class="aside">Every service is tailored exclusively around luxury real estate — nothing generic, nothing recycled.</p>
-  </div>
-  <div class="services-grid w-max">
-    <div class="svc rv"><div class="svc-num">01</div>
-      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="1"/><path d="M8 21h8M12 17v4"/></svg>
-      <h3>Bespoke Property Website</h3>
-      <p>A fully custom, responsive website built specifically for your property. Stunning galleries, immersive full-screen layouts, and copy that sells the lifestyle — not just the square footage.</p>
-    </div>
-    <div class="svc rv rv-delay-1"><div class="svc-num">02</div>
-      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      <h3>Strategic Presentation</h3>
-      <p>We structure every page with a buyer journey in mind — emotional hooks, key features, location storytelling, and a seamless path to inquiry that converts curiosity into contact.</p>
-    </div>
-    <div class="svc rv rv-delay-2"><div class="svc-num">03</div>
-      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-      <h3>Visual Direction</h3>
-      <p>We guide the visual story of each property — from photography brief recommendations to video integration, virtual tours, and aerial drone embed support.</p>
-    </div>
-    <div class="svc rv"><div class="svc-num">04</div>
-      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      <h3>Premium Copywriting</h3>
-      <p>Words that evoke, not just describe. Every line of content is written to speak to high-net-worth buyers who expect an experience — from the headline to the fine print.</p>
-    </div>
-    <div class="svc rv rv-delay-1"><div class="svc-num">05</div>
-      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
-      <h3>Mobile-First Design</h3>
-      <p>Luxury buyers browse everywhere. Every property site we build is flawlessly optimized across desktop, tablet, and mobile — without sacrificing a single design detail.</p>
-    </div>
-    <div class="svc rv rv-delay-2"><div class="svc-num">06</div>
-      <svg class="svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      <h3>Analytics & Lead Capture</h3>
-      <p>Built-in inquiry forms, WhatsApp integration, analytics dashboards, and real-time visitor tracking — so you always know who's looking at your property and when.</p>
+    <div class="svc-grid">
+      <div class="svc-card rv">
+        <div class="svc-n">01</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="1"/><path d="M8 21h8M12 17v4"/></svg>
+        <h3>Bespoke Property Website</h3>
+        <p>A fully custom, responsive website built specifically for your property. Stunning galleries, immersive full-screen layouts, and copy that sells the lifestyle — not just the square footage.</p>
+      </div>
+      <div class="svc-card rv d1">
+        <div class="svc-n">02</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <h3>Strategic Presentation</h3>
+        <p>We structure every page with a buyer journey in mind — emotional hooks, key features, location storytelling, and a seamless path to inquiry that converts curiosity into contact.</p>
+      </div>
+      <div class="svc-card rv d2">
+        <div class="svc-n">03</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <h3>Visual Direction</h3>
+        <p>We guide the visual story of each property — from photography brief recommendations to video integration, virtual tours, and aerial drone embed support.</p>
+      </div>
+      <div class="svc-card rv">
+        <div class="svc-n">04</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <h3>Premium Copywriting</h3>
+        <p>Words that evoke, not just describe. Every line is written to speak to high-net-worth buyers who expect an experience — from the headline to the fine print.</p>
+      </div>
+      <div class="svc-card rv d1">
+        <div class="svc-n">05</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+        <h3>Mobile-First Design</h3>
+        <p>Luxury buyers browse everywhere. Every property site we build is flawlessly optimized across desktop, tablet, and mobile — without sacrificing a single design detail.</p>
+      </div>
+      <div class="svc-card rv d2">
+        <div class="svc-n">06</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <h3>Analytics & Lead Capture</h3>
+        <p>Built-in inquiry forms, WhatsApp integration, analytics dashboards, and real-time visitor tracking — so you always know who's looking at your property and when.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── FEATURED ───────────────────────────────────── -->
+<!-- ══════════ FEATURED ══════════ -->
 <section id="featured">
-  <div class="featured-wrap w-max rv">
-    <div class="featured-visual">
-      <div class="featured-visual-bg"></div>
-      <svg class="featured-icon-large" viewBox="0 0 200 200" fill="none"><path d="M20 180L100 20L180 180H20Z" stroke="#e0c58f" stroke-width="1.5"/><path d="M70 180V130h60v50" stroke="#e0c58f" stroke-width="1.5"/><path d="M88 130v30h24V130" stroke="#e0c58f" stroke-width="1.5"/><line x1="100" y1="20" x2="100" y2="80" stroke="#e0c58f" stroke-width="1"/><circle cx="100" cy="80" r="3" fill="#e0c58f" opacity="0.5"/></svg>
-      <div class="chips">
-        <div class="chip">Villa</div>
-        <div class="chip">Featured</div>
-        <div class="chip">Available</div>
-      </div>
-    </div>
-    <div class="featured-content">
-      <div class="lbl">Featured Project</div>
-      <h2 class="headline">Azur Vista<br><em>Villa</em></h2>
-      <div class="featured-loc">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Bodrum, Muğla — Turkey
-      </div>
-      <div class="featured-specs">
-        <div class="fspec"><span class="val">5</span><span class="lbl2">Bedrooms</span></div>
-        <div class="fspec"><span class="val">620</span><span class="lbl2">Sqm</span></div>
-        <div class="fspec"><span class="val">€4.85M</span><span class="lbl2">Asking Price</span></div>
-      </div>
-      <p class="featured-desc">Perched above the Aegean Sea with panoramic views stretching to the Greek islands, Azur Vista Villa is a masterwork of contemporary Mediterranean architecture. Stone, timber, and glass unite across 620 square metres of seamless indoor-outdoor living.</p>
-      <button class="btn-gold" onclick="openPopup('villa')" style="border:none;cursor:none;align-self:flex-start;">
-        Preview Property Website
-        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- ── PROJECTS TEASER ───────────────────────────── -->
-<section id="projects-teaser">
-  <div class="projects-teaser-head w-max rv">
-    <div>
-      <div class="lbl">Our Portfolio</div>
-      <h2 class="headline">Recently<br><em>Launched</em></h2>
-    </div>
-    <a href="projects.html" class="btn-ghost">
-      View All Projects
-      <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-  <div class="projects-teaser-grid w-max">
-    <div class="pj-card tall rv" onclick="openPopup('villa')">
-      <div class="pj-thumb">
-        <div class="pj-thumb-bg pj-thumb-bg-1"></div>
-        <svg class="pj-thumb-icon" viewBox="0 0 100 100" fill="none"><path d="M10 90L50 10L90 90H10Z" stroke="#e0c58f" stroke-width="0.8"/><path d="M35 90V65h30v25" stroke="#e0c58f" stroke-width="0.8"/></svg>
-        <div class="pj-overlay">
-          <div class="pj-tag">Villa · Exclusive</div>
-          <div class="pj-name">Azur Vista Villa</div>
-          <div class="pj-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bodrum, Turkey</div>
-          <button class="pj-btn" onclick="openPopup('villa')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-            Preview Website
-          </button>
+  <div class="w px">
+    <div class="featured-inner rv">
+      <div class="feat-visual">
+        <div class="feat-visual-bg"></div>
+        <svg class="big" viewBox="0 0 200 200" fill="none"><path d="M20 180L100 20L180 180H20Z" stroke="#e0c58f" stroke-width="1"/><path d="M70 180V135h60v45" stroke="#e0c58f" stroke-width="1"/></svg>
+        <div class="feat-chips">
+          <div class="chip">Villa</div>
+          <div class="chip">Featured</div>
+          <div class="chip">Available</div>
         </div>
       </div>
-    </div>
-    <div class="pj-card rv rv-delay-1" onclick="openPopup('penthouse')">
-      <div class="pj-thumb">
-        <div class="pj-thumb-bg pj-thumb-bg-2"></div>
-        <svg class="pj-thumb-icon" viewBox="0 0 100 100" fill="none"><rect x="25" y="15" width="50" height="75" stroke="#e0c58f" stroke-width="0.8"/><rect x="35" y="25" width="12" height="12" stroke="#e0c58f" stroke-width="0.6"/><rect x="53" y="25" width="12" height="12" stroke="#e0c58f" stroke-width="0.6"/><rect x="40" y="70" width="20" height="20" stroke="#e0c58f" stroke-width="0.6"/></svg>
-        <div class="pj-overlay">
-          <div class="pj-tag">Penthouse · Ultra-Luxury</div>
-          <div class="pj-name">The Horizon Suite</div>
-          <div class="pj-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Istanbul, Turkey</div>
-          <button class="pj-btn" onclick="openPopup('penthouse')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-            Preview Website
-          </button>
+      <div class="feat-content">
+        <div class="lbl">Featured Project</div>
+        <h2 class="h2">Azur Vista<br><em>Villa</em></h2>
+        <div class="feat-loc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Bodrum, Muğla — Turkey
         </div>
-      </div>
-    </div>
-    <div class="pj-card rv rv-delay-2" onclick="openPopup('duplex')">
-      <div class="pj-thumb">
-        <div class="pj-thumb-bg pj-thumb-bg-3"></div>
-        <svg class="pj-thumb-icon" viewBox="0 0 100 100" fill="none"><rect x="20" y="20" width="60" height="60" stroke="#e0c58f" stroke-width="0.8"/><line x1="20" y1="50" x2="80" y2="50" stroke="#e0c58f" stroke-width="0.8"/><rect x="32" y="32" width="14" height="10" stroke="#e0c58f" stroke-width="0.6"/><rect x="54" y="32" width="14" height="10" stroke="#e0c58f" stroke-width="0.6"/><rect x="40" y="58" width="20" height="14" stroke="#e0c58f" stroke-width="0.6"/></svg>
-        <div class="pj-overlay">
-          <div class="pj-tag">Duplex · Premium</div>
-          <div class="pj-name">Meridian Duplex</div>
-          <div class="pj-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Dubai, UAE</div>
-          <button class="pj-btn" onclick="openPopup('duplex')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-            Preview Website
-          </button>
+        <div class="feat-specs">
+          <div class="fsp"><span class="v">5</span><span class="l">Bedrooms</span></div>
+          <div class="fsp"><span class="v">620</span><span class="l">Sqm</span></div>
+          <div class="fsp"><span class="v">€4.85M</span><span class="l">Asking Price</span></div>
         </div>
+        <p class="feat-desc">Perched above the Aegean Sea with panoramic views stretching to the Greek islands, Azur Vista Villa is a masterwork of contemporary Mediterranean architecture. Stone, timber, and glass unite across 620 square metres of seamless indoor-outdoor living.</p>
+        <button class="btn-g" onclick="openPopup('villa-azur')" style="border:none;cursor:none">
+          Preview Property Website
+          <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+        </button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── PROCESS ───────────────────────────────────── -->
+<!-- ══════════ PROJECTS TEASER ══════════ -->
+<section id="proj-teaser">
+  <div class="w px">
+    <div class="pt-head rv">
+      <div>
+        <div class="lbl">Our Portfolio</div>
+        <h2 class="h2">Recently<br><em>Launched</em></h2>
+      </div>
+      <a href="projects.html" class="btn-o">
+        View All 12 Projects
+        <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="pt-grid">
+      <div class="pc tall rv" onclick="openPopup('villa-azur')">
+        <div class="pc-thumb">
+          <div class="pc-bg pc-bg-1"></div>
+          <svg class="pc-icon" viewBox="0 0 100 100" fill="none"><path d="M10 90L50 10L90 90H10Z" stroke="#e0c58f" stroke-width=".8"/><path d="M35 90V65h30v25" stroke="#e0c58f" stroke-width=".8"/></svg>
+          <div class="pc-overlay">
+            <div class="pc-tag">Villa · Exclusive</div>
+            <div class="pc-name">Azur Vista Villa</div>
+            <div class="pc-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bodrum, Turkey</div>
+            <button class="pc-btn" onclick="event.stopPropagation();openPopup('villa-azur')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+              Preview Website
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="pc rv d1" onclick="openPopup('penthouse-horizon')">
+        <div class="pc-thumb">
+          <div class="pc-bg pc-bg-2"></div>
+          <svg class="pc-icon" viewBox="0 0 100 100" fill="none"><rect x="25" y="15" width="50" height="75" stroke="#e0c58f" stroke-width=".8"/><rect x="35" y="25" width="12" height="12" stroke="#e0c58f" stroke-width=".6"/><rect x="53" y="25" width="12" height="12" stroke="#e0c58f" stroke-width=".6"/><rect x="40" y="70" width="20" height="20" stroke="#e0c58f" stroke-width=".6"/></svg>
+          <div class="pc-overlay">
+            <div class="pc-tag">Penthouse · Ultra-Luxury</div>
+            <div class="pc-name">The Horizon Suite</div>
+            <div class="pc-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Istanbul, Turkey</div>
+            <button class="pc-btn" onclick="event.stopPropagation();openPopup('penthouse-horizon')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+              Preview Website
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="pc rv d2" onclick="openPopup('duplex-meridian')">
+        <div class="pc-thumb">
+          <div class="pc-bg pc-bg-3"></div>
+          <svg class="pc-icon" viewBox="0 0 100 100" fill="none"><rect x="20" y="20" width="60" height="60" stroke="#e0c58f" stroke-width=".8"/><line x1="20" y1="50" x2="80" y2="50" stroke="#e0c58f" stroke-width=".8"/><rect x="30" y="28" width="16" height="12" stroke="#e0c58f" stroke-width=".6"/><rect x="54" y="28" width="16" height="12" stroke="#e0c58f" stroke-width=".6"/><rect x="40" y="58" width="20" height="14" stroke="#e0c58f" stroke-width=".6"/></svg>
+          <div class="pc-overlay">
+            <div class="pc-tag">Duplex · Premium</div>
+            <div class="pc-name">Meridian Duplex</div>
+            <div class="pc-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Dubai, UAE</div>
+            <button class="pc-btn" onclick="event.stopPropagation();openPopup('duplex-meridian')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+              Preview Website
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LOCATIONS (NEW) ══════════ -->
+<section id="locations">
+  <div class="w px">
+    <div class="loc-head rv">
+      <div>
+        <div class="lbl">Where We Work</div>
+        <h2 class="h2">Global Reach,<br><em>Local Mastery</em></h2>
+      </div>
+      <p style="font-size:14px;line-height:1.9;color:var(--t2);max-width:280px">We operate in the world's most prestigious real estate markets, with deep knowledge of each.</p>
+    </div>
+    <div class="loc-grid">
+      <div class="loc-card rv">
+        <div class="loc-num">01</div>
+        <div class="loc-city">Istanbul</div>
+        <div class="loc-country">Turkey</div>
+        <div class="loc-count"><span>14</span> properties launched</div>
+      </div>
+      <div class="loc-card rv d1">
+        <div class="loc-num">02</div>
+        <div class="loc-city">Bodrum</div>
+        <div class="loc-country">Turkey</div>
+        <div class="loc-count"><span>9</span> properties launched</div>
+      </div>
+      <div class="loc-card rv d2">
+        <div class="loc-num">03</div>
+        <div class="loc-city">Dubai</div>
+        <div class="loc-country">United Arab Emirates</div>
+        <div class="loc-count"><span>16</span> properties launched</div>
+      </div>
+      <div class="loc-card rv d3">
+        <div class="loc-num">04</div>
+        <div class="loc-city">Antalya</div>
+        <div class="loc-country">Turkey</div>
+        <div class="loc-count"><span>8</span> properties launched</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROCESS ══════════ -->
 <section id="process">
-  <div class="process-wrap">
-    <div class="process-head rv">
+  <div class="w px">
+    <div class="proc-head rv">
       <div>
         <div class="lbl">How It Works</div>
-        <h2 class="headline">From Brief to<br><em>Live in Days</em></h2>
+        <h2 class="h2">From Brief to<br><em>Live in Days</em></h2>
       </div>
-      <p class="aside">A streamlined, boutique process built around urgency, quality, and results.</p>
+      <p class="proc-aside">A streamlined boutique process built around urgency, quality, and results.</p>
     </div>
-    <div class="process-steps-grid">
-      <div class="process-connector">
-        <div class="conn-dot"></div><div class="conn-line"></div>
-        <div class="conn-dot"></div><div class="conn-line"></div>
-        <div class="conn-dot"></div><div class="conn-line"></div>
-        <div class="conn-dot"></div>
+    <div class="proc-steps">
+      <div class="proc-connector">
+        <div class="conn-d"></div><div class="conn-l"></div>
+        <div class="conn-d"></div><div class="conn-l"></div>
+        <div class="conn-d"></div><div class="conn-l"></div>
+        <div class="conn-d"></div>
       </div>
-      <div class="proc-step rv"><div class="step-idx">01</div><h4>Discovery Call</h4><p>We learn your property, your timeline, your target buyer. No intake forms — just a real conversation about what makes your property extraordinary.</p></div>
-      <div class="proc-step rv rv-delay-1"><div class="step-idx">02</div><h4>Creative Direction</h4><p>We define the aesthetic, the tone, and the story arc that will make your property unforgettable online. Every property gets a unique visual identity.</p></div>
-      <div class="proc-step rv rv-delay-2"><div class="step-idx">03</div><h4>Build & Review</h4><p>We build your custom property website and walk you through every detail before it goes live. Your feedback shapes the final product.</p></div>
-      <div class="proc-step rv rv-delay-3"><div class="step-idx">04</div><h4>Launch & Sell</h4><p>Your property goes live with its own domain, fully optimized and ready to convert serious high-net-worth buyers into real inquiries.</p></div>
+      <div class="proc-step rv">
+        <div class="step-n">01</div>
+        <h4>Discovery Call</h4>
+        <p>We learn your property, timeline, and target buyer. No intake forms — just a real conversation about what makes it extraordinary.</p>
+      </div>
+      <div class="proc-step rv d1">
+        <div class="step-n">02</div>
+        <h4>Creative Direction</h4>
+        <p>We define the aesthetic, tone, and story arc that will make your property unforgettable. Every property gets a unique visual identity.</p>
+      </div>
+      <div class="proc-step rv d2">
+        <div class="step-n">03</div>
+        <h4>Build & Review</h4>
+        <p>We build your custom property website and walk you through every detail before launch. Your feedback shapes the final product.</p>
+      </div>
+      <div class="proc-step rv d3">
+        <div class="step-n">04</div>
+        <h4>Launch & Sell</h4>
+        <p>Your property goes live with its own domain, fully optimized and ready to convert high-net-worth buyers into real inquiries.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── TESTIMONIAL ───────────────────────────────── -->
+<!-- ══════════ TESTIMONIAL ══════════ -->
 <section id="testimonial">
-  <div class="testimonial-bg"></div>
-  <div class="testimonial-wrap rv">
-    <span class="quote-mark">"</span>
-    <p class="testimonial-text">Mansium didn't just build a website for our villa — they created a world around it. Within three weeks of launch, we had five serious inquiries from qualified buyers across two continents. The property sold above asking price.</p>
-    <div class="testimonial-author">
-      <div class="author-line"></div>
-      <div class="author-info">
-        <div class="author-name">Altan Yıldız</div>
-        <div class="author-role">Property Developer — Istanbul</div>
-      </div>
-      <div class="author-line"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CONTACT ───────────────────────────────────── -->
-<section id="contact">
-  <div class="contact-inner w-max">
-    <div class="contact-left rv rv-left">
-      <div class="lbl">Let's Talk</div>
-      <h2 class="headline">Ready to Give<br>Your Property a<br><em>Digital Stage?</em></h2>
-      <p>Tell us about your property. We'll be in touch within 24 hours to discuss whether it's the right fit for a Mansium campaign.</p>
-      <div class="contact-info">
-        <div class="ci-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          <div><div class="ci-label">Phone</div><div class="ci-val">+90 (212) 000 0000</div></div>
-        </div>
-        <div class="ci-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <div><div class="ci-label">Email</div><div class="ci-val">hello@mansium.co</div></div>
-        </div>
-        <div class="ci-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <div><div class="ci-label">Based In</div><div class="ci-val">Istanbul, Turkey</div></div>
-        </div>
-      </div>
-    </div>
-    <div class="rv rv-delay-2">
-      <form class="contact-form" onsubmit="return false;">
-        <div class="cf-row">
-          <div class="cf-group">
-            <label>Your Name</label>
-            <input type="text" placeholder="Ahmet Yılmaz">
-          </div>
-          <div class="cf-group">
-            <label>Email Address</label>
-            <input type="email" placeholder="hello@example.com">
-          </div>
-        </div>
-        <div class="cf-row">
-          <div class="cf-group">
-            <label>Phone</label>
-            <input type="tel" placeholder="+90 xxx xxx xx xx">
-          </div>
-          <div class="cf-group">
-            <label>Property Type</label>
-            <select>
-              <option value="" disabled selected>Select type</option>
-              <option>Villa</option><option>Penthouse</option>
-              <option>Duplex</option><option>Mansion</option>
-              <option>Luxury Apartment</option><option>Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="cf-group">
-          <label>About Your Property</label>
-          <textarea placeholder="Tell us about your property — location, size, asking price, and what makes it special..."></textarea>
-        </div>
+  <div class="test-ring"></div>
+  <div class="w px">
+    <div class="test-inner rv">
+      <span class="qmark">"</span>
+      <p class="test-quote">Mansium didn't just build a website for our villa — they created a world around it. Within three weeks of launch, we had five serious inquiries from qualified buyers across two continents. The property sold above asking price.</p>
+      <div class="test-author">
+        <div class="t-line"></div>
         <div>
-          <button type="submit" class="btn-gold" style="border:none;cursor:none;">
-            Send Inquiry
-            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
+          <div class="t-name">Altan Yıldız</div>
+          <div class="t-role">Property Developer — Istanbul</div>
         </div>
-      </form>
+        <div class="t-line"></div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── FOOTER ────────────────────────────────────── -->
-<footer>
-  <div class="footer-top w-max">
-    <div class="footer-brand">
-      <img src="logo.png" alt="Mansium" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-      <span style="display:none;font-family:'Cormorant',serif;font-size:22px;font-weight:400;letter-spacing:7px;color:#e0c58f;text-transform:uppercase;display:block;margin-bottom:24px;">MANSIUM</span>
-      <p>We craft bespoke digital experiences for the world's most exceptional properties. Luxury is not an option — it is the standard.</p>
-    </div>
-    <div class="footer-col">
-      <h5>Navigation</h5>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="projects.html">Portfolio</a></li>
-        <li><a href="#process">Process</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h5>Services</h5>
-      <ul>
-        <li><a href="#services">Property Websites</a></li>
-        <li><a href="#services">Copywriting</a></li>
-        <li><a href="#services">Visual Direction</a></li>
-        <li><a href="#services">Lead Capture</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h5>Property Types</h5>
-      <ul>
-        <li><a href="projects.html">Villas</a></li>
-        <li><a href="projects.html">Penthouses</a></li>
-        <li><a href="projects.html">Duplexes</a></li>
-        <li><a href="projects.html">Mansions</a></li>
-      </ul>
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact">
+  <div class="w px">
+    <div class="contact-grid">
+      <div class="c-left rv-l">
+        <div class="lbl">Let's Talk</div>
+        <h2 class="h2">Ready to Give<br>Your Property a<br><em>Digital Stage?</em></h2>
+        <p>Tell us about your property. We'll be in touch within 24 hours to discuss whether it's the right fit for a Mansium campaign.</p>
+        <div class="c-info">
+          <div class="ci">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <div><div class="ci-lbl">Phone</div><div class="ci-val">+90 (212) 000 0000</div></div>
+          </div>
+          <div class="ci">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <div><div class="ci-lbl">Email</div><div class="ci-val">hello@mansium.co</div></div>
+          </div>
+          <div class="ci">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><div class="ci-lbl">Based In</div><div class="ci-val">Istanbul, Turkey</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="rv d1">
+        <form class="c-form" onsubmit="return false">
+          <div class="cf-row">
+            <div class="cf-g"><label>Name</label><input type="text" placeholder="Ahmet Yılmaz"></div>
+            <div class="cf-g"><label>Email</label><input type="email" placeholder="hello@example.com"></div>
+          </div>
+          <div class="cf-row">
+            <div class="cf-g"><label>Phone</label><input type="tel" placeholder="+90 xxx xxx xx xx"></div>
+            <div class="cf-g">
+              <label>Property Type</label>
+              <select>
+                <option value="" disabled selected>Select type</option>
+                <option>Villa</option><option>Penthouse</option>
+                <option>Duplex</option><option>Mansion</option>
+                <option>Luxury Apartment</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="cf-g"><label>About Your Property</label><textarea placeholder="Location, size, asking price, and what makes it special..."></textarea></div>
+          <button type="submit" class="btn-g">
+            Send Inquiry
+            <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+      </div>
     </div>
   </div>
-  <div class="footer-bottom w-max">
-    <p>© 2025 Mansium. All rights reserved. — Istanbul, Turkey</p>
-    <div class="footer-socials">
-      <a href="#" aria-label="Instagram">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-      </a>
-      <a href="#" aria-label="LinkedIn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-      </a>
-      <a href="#" aria-label="Twitter/X">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l16 16M4 20L20 4"/></svg>
-      </a>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="w px">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img src="logo.png" alt="Mansium" onerror="this.style.display='none';document.querySelector('.foot-brand-fb').style.display='block'">
+        <span class="foot-brand-fb" style="display:none">MANSIUM</span>
+        <p>We craft bespoke digital experiences for the world's most exceptional properties. Luxury is not an option — it is the standard.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Navigate</h5>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="projects.html">Portfolio</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#services">Property Websites</a></li>
+          <li><a href="#services">Copywriting</a></li>
+          <li><a href="#services">Visual Direction</a></li>
+          <li><a href="#services">Lead Capture</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Properties</h5>
+        <ul>
+          <li><a href="projects.html">Villas</a></li>
+          <li><a href="projects.html">Penthouses</a></li>
+          <li><a href="projects.html">Duplexes</a></li>
+          <li><a href="projects.html">Mansions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <p>© 2025 Mansium. All rights reserved. — Istanbul, Turkey</p>
+      <div class="foot-soc">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l16 16M4 20L20 4"/></svg></a>
+      </div>
     </div>
   </div>
 </footer>
 
-<!-- ── POPUP ─────────────────────────────────────── -->
-<div id="popup-overlay" onclick="handleOverlayClick(event)">
-  <div class="popup-win" id="popup-win">
-    <div class="popup-bar">
-      <div class="pbar-circles">
-        <span class="pbar-close" onclick="closePopup()"></span>
-        <span class="pbar-min"></span>
-        <span class="pbar-max"></span>
+<!-- ══════════ MOBILE STICKY CTA ══════════ -->
+<div id="mob-cta">
+  <a href="projects.html" class="mc-secondary">Portfolio</a>
+  <a href="#contact" class="mc-primary">Start a Project</a>
+</div>
+
+<!-- ══════════ POPUP ══════════ -->
+<div id="popup-ov" onclick="handleOvClick(event)">
+  <div class="pop-win" id="pop-win">
+    <div class="pop-bar">
+      <div class="pop-dots">
+        <span class="pd-c" onclick="closePopup()"></span>
+        <span class="pd-m"></span>
+        <span class="pd-x"></span>
       </div>
-      <div class="pbar-url">
-        <svg class="pbar-ssl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        <span id="popup-url-text">mansium.co/properties/...</span>
+      <div class="pop-url">
+        <svg class="pop-ssl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span id="pop-url-txt">mansium.co/properties/...</span>
       </div>
     </div>
-    <div class="popup-banner" id="popup-banner">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/></svg>
+    <div class="pop-banner" id="pop-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="11" height="11"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/></svg>
       Live Website Preview — Powered by Mansium
     </div>
-    <div class="popup-body">
-      <div class="popup-scroll" id="popup-content"></div>
+    <div class="pop-body">
+      <div class="pop-scroll" id="pop-content"></div>
     </div>
   </div>
 </div>
 
 <script>
-// ── CURSOR
-const curDot = document.getElementById('cur-dot');
-const curRing = document.getElementById('cur-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; curDot.style.cssText = `left:${mx}px;top:${my}px`; });
-(function animRing() { rx += (mx-rx)*.1; ry += (my-ry)*.1; curRing.style.cssText = `left:${rx}px;top:${ry}px`; requestAnimationFrame(animRing); })();
-document.querySelectorAll('a,button,.pj-card,.svc,.pillar').forEach(el => { el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover')); el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover')); });
-
-// ── NAV SCROLL
-window.addEventListener('scroll', () => { document.getElementById('nav').classList.toggle('stuck', scrollY > 60); });
-
-// ── REVEAL
-const rvEl = document.querySelectorAll('.rv');
-const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }); }, { threshold: 0.08 });
-rvEl.forEach(el => obs.observe(el));
-
-// ── PROPERTIES DATA
-const props = {
-  villa: {
-    url: 'mansium.co/properties/azur-vista-villa',
-    banner: 'Azur Vista Villa · Bodrum, Turkey',
-    label: 'Villa · Mediterranean',
-    status: 'Available',
-    price: '€4,850,000', priceLbl: 'Asking Price',
-    name: 'Azur Vista Villa',
-    sub: 'Bodrum, Muğla — Turkey',
-    bg: 'linear-gradient(160deg, #0d2137 0%, #093024 100%)',
-    specs: [{v:'5',l:'Bedrooms'},{v:'6',l:'Bathrooms'},{v:'620',l:'Sqm'},{v:'1',l:'Pool'}],
-    descTitle: 'Mediterranean Excellence',
-    desc: 'Perched above the Aegean Sea with panoramic views stretching to the Greek islands, Azur Vista Villa is a masterwork of contemporary Mediterranean architecture. Stone, timber, and glass unite across 620 square metres of seamless indoor-outdoor living — where every room frames an incomparable horizon.',
-    features: ['Infinity pool overlooking the Aegean','Private cinema room','Smart home automation throughout','Landscaped olive terraces','Triple garage with EV charging','Rooftop entertainment deck','Chef\'s kitchen with La Cornue range','Underfloor heating throughout'],
-  },
-  penthouse: {
-    url: 'mansium.co/properties/horizon-suite',
-    banner: 'The Horizon Suite · Istanbul, Turkey',
-    label: 'Penthouse · Ultra-Luxury',
-    status: 'Exclusive Listing',
-    price: '$12,500,000', priceLbl: 'Asking Price',
-    name: 'The Horizon Suite',
-    sub: 'Levent, Istanbul — Turkey',
-    bg: 'linear-gradient(160deg, #0a0e2e 0%, #1a0a2e 100%)',
-    specs: [{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'780',l:'Sqm'},{v:'52',l:'Floor'}],
-    descTitle: 'Above The City',
-    desc: 'Rising above Istanbul\'s financial district on the 52nd floor, The Horizon Suite redefines urban luxury. Floor-to-ceiling glass walls dissolve the boundary between the living space and a breathtaking 360° panorama — the Bosphorus, the Princes\' Islands, and two continents, all yours.',
-    features: ['52nd floor panoramic terrace','Private heated plunge pool','Bosphorus & city dual aspect','Wine cellar with climate control','24/7 concierge & security','Home theatre with Dolby Atmos','Two private parking spaces','Hotel-style master bathroom'],
-  },
-  duplex: {
-    url: 'mansium.co/properties/meridian-duplex',
-    banner: 'Meridian Duplex · Dubai, UAE',
-    label: 'Duplex · Premium',
-    status: 'Under Offer',
-    price: 'AED 28,000,000', priceLbl: 'Asking Price',
-    name: 'Meridian Duplex',
-    sub: 'Downtown Dubai — UAE',
-    bg: 'linear-gradient(160deg, #0a1a2e 0%, #1a0e0a 100%)',
-    specs: [{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'520',l:'Sqm'},{v:'2',l:'Floors'}],
-    descTitle: 'Art of Living',
-    desc: 'At the intersection of design and desire, Meridian Duplex occupies two full floors in one of Downtown Dubai\'s most sought-after towers. Italian marble, bespoke millwork, and museum-quality lighting create an atmosphere that feels more like a private art residence than an apartment.',
-    features: ['Double-height living area','Private rooftop with Burj views','Bulthaup chef\'s kitchen','Italian Arabescato marble throughout','Custom Fendi Casa furnishings','Dedicated study & library','Temperature-controlled wine wall','Butler service available'],
-  },
-};
-
-function openPopup(type) {
-  const p = props[type];
-  document.getElementById('popup-url-text').textContent = p.url;
-  document.getElementById('popup-banner').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/></svg>${p.banner}`;
-
-  const feats = p.features.map(f => `<div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>${f}</div>`).join('');
-  const specsHTML = p.specs.map(s => `<div class="pp-spec"><span class="pp-spec-val">${s.v}</span><span class="pp-spec-lbl">${s.l}</span></div>`).join('');
-
-  document.getElementById('popup-content').innerHTML = `
-    <div class="pp">
-      <div class="pp-hero" style="background:${p.bg}">
-        <div class="pp-hero-bg"></div>
-        <div class="pp-hero-grid"></div>
-        <div class="pp-hero-grd"></div>
-        <div class="pp-content">
-          <div class="pp-badge"><div class="pp-badge-dot"></div>${p.label}</div>
-          <div class="pp-title">${p.name}</div>
-          <div class="pp-subtitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${p.sub}</div>
-        </div>
-        <div class="pp-price-tag"><span class="pamt">${p.price}</span><span class="plbl">${p.priceLbl}</span></div>
-      </div>
-      <div class="pp-body">
-        <div class="pp-specs-row">${specsHTML}</div>
-        <div class="pp-two-col">
-          <div>
-            <div class="pp-desc-title">${p.descTitle}</div>
-            <p class="pp-desc-text">${p.desc}</p>
-          </div>
-          <div>
-            <div class="pp-features-title">Property Highlights</div>
-            <div class="pp-features-list">${feats}</div>
-          </div>
-        </div>
-        <div class="pp-cta-row">
-          <button class="pp-cta-btn pp-cta-primary">Request a Viewing</button>
-          <button class="pp-cta-btn pp-cta-ghost">Download Brochure</button>
-          <button class="pp-cta-btn pp-cta-ghost">Contact Agent</button>
-        </div>
-      </div>
-    </div>
-  `;
-  document.getElementById('popup-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+/* ── CURSOR ──────────────── */
+const cd=document.getElementById('cur-d'),cr=document.getElementById('cur-r');
+if(cd&&cr){
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.cssText=`left:${mx}px;top:${my}px`});
+  (function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cr.style.cssText=`left:${rx}px;top:${ry}px`;requestAnimationFrame(loop)})();
+  document.querySelectorAll('a,button,.pc,.svc-card,.pillar,.loc-card,.ct-row,.prop-list-item').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+  });
 }
 
-function closePopup() { document.getElementById('popup-overlay').classList.remove('open'); document.body.style.overflow = ''; }
-function handleOverlayClick(e) { if (e.target === document.getElementById('popup-overlay')) closePopup(); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+/* ── NAV ─────────────────── */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('stuck',scrollY>64),{passive:true});
+
+/* ── MOBILE MENU ─────────── */
+function toggleMob(){
+  const h=document.getElementById('ham'),m=document.getElementById('mob-menu');
+  h.classList.toggle('open');m.classList.toggle('open');
+  document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+}
+function closeMob(){
+  document.getElementById('ham').classList.remove('open');
+  document.getElementById('mob-menu').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ── REVEAL ──────────────── */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')})},{threshold:0.08});
+document.querySelectorAll('.rv,.rv-l').forEach(el=>obs.observe(el));
+
+/* ── COUNT-UP ────────────── */
+function countUp(el){
+  const target=+el.dataset.count,suffix=el.dataset.suffix||'';
+  const sup=el.querySelector('sup');
+  let current=0;
+  const step=Math.ceil(target/40);
+  const timer=setInterval(()=>{
+    current=Math.min(current+step,target);
+    el.textContent=current+suffix;
+    if(sup){el.appendChild(sup)}
+    if(current>=target)clearInterval(timer);
+  },30);
+}
+const countObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting&&!e.target.dataset.counted){e.target.dataset.counted='1';countUp(e.target)}});
+},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>countObs.observe(el));
+
+/* ── POPUP DATA ──────────── */
+const P={
+  'villa-azur':{url:'mansium.co/properties/azur-vista-villa',banner:'Azur Vista Villa · Bodrum, Turkey',label:'Villa · Mediterranean',price:'€4,850,000',name:'Azur Vista Villa',loc:'Bodrum, Muğla — Turkey',bg:'linear-gradient(155deg,#0d2137,#093024)',specs:[{v:'5',l:'Bedrooms'},{v:'6',l:'Bathrooms'},{v:'620',l:'Sqm'},{v:'1',l:'Pool'}],dt:'Mediterranean Excellence',dd:'Perched above the Aegean Sea with panoramic views stretching to the Greek islands, Azur Vista Villa is a masterwork of contemporary Mediterranean architecture. Stone, timber, and glass unite across 620 square metres of seamless indoor-outdoor living.',feats:['Infinity pool overlooking the Aegean','Private cinema room','Smart home automation','Landscaped olive terraces','Triple garage with EV charging','Rooftop entertainment deck','Chef\'s kitchen with La Cornue range']},
+  'penthouse-horizon':{url:'mansium.co/properties/horizon-suite',banner:'The Horizon Suite · Istanbul, Turkey',label:'Penthouse · Ultra-Luxury',price:'$12,500,000',name:'The Horizon Suite',loc:'Levent, Istanbul — Turkey',bg:'linear-gradient(155deg,#0a0e2e,#1a0a2e)',specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'780',l:'Sqm'},{v:'52',l:'Floor'}],dt:'Above The City',dd:'Rising above Istanbul\'s financial district on the 52nd floor, The Horizon Suite redefines urban luxury. Floor-to-ceiling glass walls dissolve the boundary between the living space and a breathtaking 360° panorama — the Bosphorus, the Princes\' Islands, and two continents.',feats:['52nd floor panoramic terrace','Private heated plunge pool','Bosphorus & city dual aspect','Wine cellar with climate control','24/7 concierge & security','Home theatre with Dolby Atmos','Hotel-style master bathroom']},
+  'duplex-meridian':{url:'mansium.co/properties/meridian-duplex',banner:'Meridian Duplex · Dubai, UAE',label:'Duplex · Premium',price:'AED 28,000,000',name:'Meridian Duplex',loc:'Downtown Dubai — UAE',bg:'linear-gradient(155deg,#0a1a2e,#1a0e0a)',specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'520',l:'Sqm'},{v:'2',l:'Floors'}],dt:'Art of Living',dd:'At the intersection of design and desire, Meridian Duplex occupies two full floors in one of Downtown Dubai\'s most sought-after towers. Italian marble, bespoke millwork, and museum-quality lighting create an atmosphere that feels more like a private art residence.',feats:['Double-height living area','Private rooftop with Burj views','Bulthaup chef\'s kitchen','Italian Arabescato marble throughout','Custom Fendi Casa furnishings','Temperature-controlled wine wall','Butler service available']},
+};
+
+function openPopup(id){
+  const p=P[id];if(!p)return;
+  document.getElementById('pop-url-txt').textContent=p.url;
+  document.getElementById('pop-banner').innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="11" height="11"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/></svg>${p.banner}`;
+  const feats=p.feats.map(f=>`<div class="pp-f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>${f}</div>`).join('');
+  const specs=p.specs.map(s=>`<div class="pp-spec"><span class="pp-sv">${s.v}</span><span class="pp-sl">${s.l}</span></div>`).join('');
+  document.getElementById('pop-content').innerHTML=`<div class="pp"><div class="pp-hero" style="background:${p.bg}"><div class="pp-hero-bg"></div><div class="pp-grid"></div><div class="pp-grd"></div><div class="pp-content"><div class="pp-badge"><div class="pp-dot"></div>${p.label}</div><div class="pp-title">${p.name}</div><div class="pp-sub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${p.loc}</div></div><div class="pp-price"><span class="pa">${p.price}</span><span class="pl">Asking Price</span></div></div><div class="pp-body"><div class="pp-specs">${specs}</div><div class="pp-two"><div><div class="pp-dt">${p.dt}</div><p class="pp-dd">${p.dd}</p></div><div><div class="pp-ft">Property Highlights</div><div class="pp-fl">${feats}</div></div></div><div class="pp-ctas"><button class="pp-btn pp-bp">Request a Viewing</button><button class="pp-btn pp-bg">Download Brochure</button><button class="pp-btn pp-bg">Contact Agent</button></div></div></div>`;
+  document.getElementById('popup-ov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePopup(){document.getElementById('popup-ov').classList.remove('open');document.body.style.overflow='';}
+function handleOvClick(e){if(e.target===document.getElementById('popup-ov'))closePopup()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePopup()});
 </script>
 </body>
 </html>
