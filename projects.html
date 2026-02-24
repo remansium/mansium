@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Mansium Luxury Property Marketing</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:       #e0c58f;
+  --gold-light: #f2dcb0;
+  --gold-dim:   rgba(224,197,143,0.12);
+  --gold-mid:   rgba(224,197,143,0.35);
+  --navy:       #112250;
+  --navy-0:     #070e22;
+  --navy-1:     #0a1633;
+  --navy-2:     #0e1d44;
+  --navy-3:     #172c60;
+  --cream:      #f5f0e8;
+  --text:       rgba(245,240,232,0.9);
+  --text-dim:   rgba(245,240,232,0.45);
+  --text-faint: rgba(245,240,232,0.2);
+  --ease:       cubic-bezier(0.16,1,0.3,1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--navy-0); color: var(--text);
+  font-family: 'Jost', sans-serif; font-weight: 300;
+  overflow-x: hidden; cursor: none;
+}
+
+/* ─── CURSOR ─────────────────────────── */
+#cur-dot { position:fixed; width:8px; height:8px; background:var(--gold); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; }
+#cur-ring { position:fixed; width:42px; height:42px; border:1px solid rgba(224,197,143,0.6); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .25s var(--ease), height .25s var(--ease), border-color .25s; }
+body.cursor-hover #cur-ring { width:64px; height:64px; border-color:var(--gold); }
+
+#noise { position:fixed; inset:0; pointer-events:none; z-index:2; opacity:0.028; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E"); background-repeat:repeat; background-size:300px 300px; }
+
+/* ─── NAV ─────────────────────────────── */
+#nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:28px 64px;
+  background:rgba(7,14,34,0.88); backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(224,197,143,0.08);
+}
+.nav-logo { height:32px; display:block; }
+.nav-links { display:flex; align-items:center; gap:44px; list-style:none; }
+.nav-links a { font-size:10.5px; letter-spacing:3.5px; text-transform:uppercase; color:var(--text-dim); text-decoration:none; font-weight:400; transition:color .3s; position:relative; }
+.nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold); transition:width .35s var(--ease); }
+.nav-links a:hover, .nav-links a.active { color:var(--gold); }
+.nav-links a:hover::after, .nav-links a.active::after { width:100%; }
+.nav-cta { border:1px solid var(--gold-mid) !important; color:var(--gold) !important; padding:12px 28px; letter-spacing:2.5px !important; transition:background .35s, color .35s, border-color .35s !important; }
+.nav-cta::after { display:none !important; }
+.nav-cta:hover { background:var(--gold) !important; color:var(--navy-0) !important; border-color:var(--gold) !important; }
+
+/* ─── PAGE HERO ─────────────────────────── */
+#page-hero {
+  padding: 180px 80px 100px;
+  position: relative; overflow: hidden;
+}
+.page-hero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, var(--navy-0) 0%, var(--navy-1) 60%, var(--navy-2) 100%);
+}
+.page-hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(224,197,143,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(224,197,143,0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.page-hero-glow {
+  position: absolute; top: -200px; right: -200px;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,197,143,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-hero-inner {
+  max-width: 1440px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  position: relative; z-index: 2;
+}
+.page-hero-left .breadcrumb {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 24px;
+}
+.breadcrumb a { color: var(--text-faint); text-decoration: none; transition: color .3s; }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb svg { width: 10px; height: 10px; }
+.page-title {
+  font-family: 'Cormorant', serif;
+  font-size: clamp(56px, 7vw, 104px);
+  font-weight: 300; line-height: 0.9; color: var(--cream);
+}
+.page-title em { font-style: italic; color: var(--gold); }
+.page-hero-right {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 16px;
+  padding-bottom: 8px;
+}
+.project-count {
+  font-family: 'Cormorant', serif; font-size: 80px; font-weight: 300;
+  color: rgba(224,197,143,0.12); line-height: 1;
+}
+.page-hero-desc {
+  font-size: 13.5px; line-height: 2; color: var(--text-dim);
+  max-width: 320px; text-align: right;
+}
+
+/* ─── FILTERS ───────────────────────────── */
+#filters {
+  padding: 0 80px;
+  border-bottom: 1px solid rgba(224,197,143,0.08);
+  position: sticky; top: 80px; z-index: 100;
+  background: rgba(7,14,34,0.95); backdrop-filter: blur(20px);
+}
+.filters-inner {
+  max-width: 1440px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0;
+}
+.filter-tabs { display: flex; }
+.filter-tab {
+  padding: 22px 28px; font-size: 10px; letter-spacing: 3.5px;
+  text-transform: uppercase; color: var(--text-faint); background: none;
+  border: none; border-bottom: 2px solid transparent;
+  font-family: 'Jost', sans-serif; font-weight: 400;
+  cursor: none; transition: color .3s, border-color .3s;
+}
+.filter-tab:hover { color: var(--text-dim); }
+.filter-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.filter-count {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-faint); padding: 22px 0;
+}
+.filter-count span { color: var(--gold); }
+
+/* ─── PROJECTS GRID ─────────────────────── */
+#grid-section { padding: 64px 80px 120px; }
+.projects-grid {
+  max-width: 1440px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ─── PROJECT CARD ──────────────────────── */
+.project-card {
+  border: 1px solid rgba(224,197,143,0.08);
+  overflow: hidden; cursor: none;
+  background: var(--navy-2);
+  transition: border-color .4s var(--ease), transform .4s var(--ease);
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease), border-color .3s;
+}
+.project-card.visible { opacity: 1; transform: translateY(0); }
+.project-card:hover { border-color: rgba(224,197,143,0.3); }
+.project-card.hidden { display: none; }
+
+.card-thumb {
+  width: 100%; aspect-ratio: 16/10;
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-thumb-bg {
+  position: absolute; inset: 0;
+  transition: transform .8s var(--ease);
+}
+.project-card:hover .card-thumb-bg { transform: scale(1.06); }
+.card-thumb-icon {
+  position: absolute; opacity: 0.05;
+  width: 110px; height: 110px;
+}
+.card-thumb-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(7,14,34,.9) 0%, transparent 60%);
+}
+.card-status {
+  position: absolute; top: 16px; right: 16px; z-index: 2;
+  padding: 6px 14px; font-size: 8.5px; letter-spacing: 3px;
+  text-transform: uppercase; font-weight: 500;
+}
+.status-available { background: rgba(40,202,65,0.15); border: 1px solid rgba(40,202,65,0.3); color: #28ca41; }
+.status-sold { background: rgba(224,197,143,0.1); border: 1px solid rgba(224,197,143,0.25); color: var(--gold); }
+.status-offer { background: rgba(255,189,46,0.1); border: 1px solid rgba(255,189,46,0.25); color: #ffbd2e; }
+
+.card-body { padding: 28px; }
+.card-type { font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+.card-name { font-family: 'Cormorant', serif; font-size: 28px; font-weight: 400; color: var(--cream); line-height: 1.1; margin-bottom: 8px; }
+.card-loc {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; color: var(--text-faint); margin-bottom: 20px;
+}
+.card-loc svg { width: 11px; height: 11px; flex-shrink: 0; }
+.card-specs {
+  display: flex; gap: 20px; padding: 18px 0;
+  border-top: 1px solid rgba(224,197,143,0.08);
+  border-bottom: 1px solid rgba(224,197,143,0.08);
+  margin-bottom: 20px;
+}
+.cspec { display: flex; align-items: center; gap: 7px; }
+.cspec svg { width: 13px; height: 13px; color: rgba(224,197,143,0.5); }
+.cspec span { font-size: 12px; color: var(--text-dim); }
+.card-footer { display: flex; align-items: center; justify-content: space-between; }
+.card-price { font-family: 'Cormorant', serif; font-size: 22px; font-weight: 400; color: var(--gold); }
+.card-preview-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase;
+  border: 1px solid rgba(224,197,143,0.25); color: var(--gold);
+  padding: 10px 18px; background: rgba(224,197,143,0.05);
+  font-family: 'Jost', sans-serif; cursor: none;
+  transition: background .3s, border-color .3s;
+}
+.card-preview-btn:hover { background: rgba(224,197,143,0.12); border-color: var(--gold); }
+.card-preview-btn svg { width: 12px; height: 12px; }
+
+/* ─── EMPTY STATE ───────────────────────── */
+#empty-state {
+  max-width: 1440px; margin: 0 auto;
+  display: none; text-align: center; padding: 80px 40px;
+}
+#empty-state svg { width: 56px; height: 56px; color: rgba(224,197,143,0.2); margin-bottom: 24px; }
+#empty-state h3 { font-family: 'Cormorant', serif; font-size: 32px; font-weight: 300; color: var(--text-dim); }
+
+/* ─── POPUP (same as index) ─────────────── */
+#popup-overlay { position:fixed; inset:0; z-index:500; background:rgba(4,9,22,0.92); backdrop-filter:blur(20px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .4s var(--ease); }
+#popup-overlay.open { opacity:1; pointer-events:all; }
+.popup-win { width:88vw; max-width:1280px; height:88vh; background:var(--navy-1); border:1px solid rgba(224,197,143,0.18); display:flex; flex-direction:column; transform:translateY(30px) scale(0.97); transition:transform .45s var(--ease); box-shadow:0 80px 160px rgba(0,0,0,0.7); }
+#popup-overlay.open .popup-win { transform:translateY(0) scale(1); }
+.popup-bar { height:52px; display:flex; align-items:center; gap:14px; padding:0 20px; flex-shrink:0; background:rgba(7,14,34,0.8); border-bottom:1px solid rgba(224,197,143,0.1); }
+.pbar-circles { display:flex; gap:7px; }
+.pbar-circles span { width:13px; height:13px; border-radius:50%; }
+.pbar-close { background:#ff5f57; cursor:pointer; transition:filter .2s; }
+.pbar-close:hover { filter:brightness(1.3); }
+.pbar-min { background:#ffbd2e; } .pbar-max { background:#28ca41; }
+.pbar-url { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(224,197,143,0.1); border-radius:6px; padding:0 14px; height:30px; display:flex; align-items:center; gap:8px; font-size:12px; font-family:'Jost',sans-serif; color:var(--text-faint); }
+.pbar-ssl { width:12px; height:12px; color:#28ca41; flex-shrink:0; }
+.popup-banner { height:38px; flex-shrink:0; background:rgba(224,197,143,0.03); border-bottom:1px solid rgba(224,197,143,0.08); display:flex; align-items:center; gap:10px; padding:0 20px; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(224,197,143,0.6); }
+.popup-banner svg { width:12px; height:12px; color:var(--gold); }
+.popup-body { flex:1; overflow:hidden; }
+.popup-scroll { width:100%; height:100%; overflow-y:auto; }
+.popup-scroll::-webkit-scrollbar { width:4px; }
+.popup-scroll::-webkit-scrollbar-track { background:var(--navy-1); }
+.popup-scroll::-webkit-scrollbar-thumb { background:rgba(224,197,143,0.2); }
+
+/* ─── PROP PREVIEW ──────────────────────── */
+.pp { background:#080f26; color:#f0ebe0; font-family:'Jost',sans-serif; font-weight:300; min-height:100%; }
+.pp-hero { height:60vh; min-height:400px; position:relative; display:flex; align-items:flex-end; padding:52px 56px; overflow:hidden; }
+.pp-hero-bg { position:absolute; inset:0; }
+.pp-hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(224,197,143,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(224,197,143,0.03) 1px, transparent 1px); background-size:64px 64px; }
+.pp-hero-grd { position:absolute; inset:0; background:linear-gradient(to top, rgba(8,15,38,.97) 0%, rgba(8,15,38,.15) 50%, transparent 100%); }
+.pp-content { position:relative; z-index:2; }
+.pp-badge { display:inline-flex; align-items:center; gap:10px; border:1px solid rgba(224,197,143,0.25); padding:8px 18px; margin-bottom:18px; font-size:9.5px; letter-spacing:4px; text-transform:uppercase; color:#e0c58f; }
+.pp-badge-dot { width:5px; height:5px; background:#28ca41; border-radius:50%; }
+.pp-title { font-family:'Cormorant',serif; font-size:clamp(48px,6vw,80px); font-weight:300; line-height:0.92; color:#f0ebe0; }
+.pp-subtitle { font-size:13px; letter-spacing:1.5px; color:rgba(240,235,224,0.5); margin-top:12px; display:flex; align-items:center; gap:8px; }
+.pp-subtitle svg { width:12px; height:12px; }
+.pp-price-tag { position:absolute; top:52px; right:56px; z-index:2; background:#e0c58f; color:#080f26; padding:16px 28px; text-align:center; }
+.pp-price-tag .pamt { font-family:'Cormorant',serif; font-size:30px; font-weight:500; line-height:1; display:block; }
+.pp-price-tag .plbl { font-size:8px; letter-spacing:3px; text-transform:uppercase; font-weight:500; margin-top:4px; display:block; opacity:0.75; }
+.pp-body { padding:56px; }
+.pp-specs-row { display:flex; gap:0; margin-bottom:56px; border:1px solid rgba(224,197,143,0.12); }
+.pp-spec { padding:28px 32px; border-right:1px solid rgba(224,197,143,0.12); text-align:center; }
+.pp-spec:last-child { border-right:none; }
+.pp-spec-val { font-family:'Cormorant',serif; font-size:42px; font-weight:300; color:#e0c58f; display:block; line-height:1; }
+.pp-spec-lbl { font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(240,235,224,0.35); margin-top:8px; }
+.pp-two-col { display:grid; grid-template-columns:1.4fr 1fr; gap:60px; margin-bottom:60px; }
+.pp-desc-title { font-family:'Cormorant',serif; font-size:32px; font-weight:300; color:#f0ebe0; margin-bottom:20px; }
+.pp-desc-text { font-size:14px; line-height:2.1; color:rgba(240,235,224,0.6); }
+.pp-features-title { font-size:9.5px; letter-spacing:4px; text-transform:uppercase; color:#e0c58f; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid rgba(224,197,143,0.12); }
+.pp-features-list { display:flex; flex-direction:column; gap:12px; }
+.pp-feature { display:flex; align-items:center; gap:12px; font-size:13px; color:rgba(240,235,224,0.65); }
+.pp-feature svg { width:12px; height:12px; color:#e0c58f; flex-shrink:0; }
+.pp-cta-row { display:flex; gap:14px; padding-top:40px; border-top:1px solid rgba(224,197,143,0.1); }
+.pp-cta-btn { padding:16px 36px; font-family:'Jost',sans-serif; font-size:10.5px; letter-spacing:3px; text-transform:uppercase; cursor:pointer; transition:all .3s; }
+.pp-cta-primary { background:#e0c58f; color:#080f26; border:none; font-weight:500; }
+.pp-cta-primary:hover { background:#f2dcb0; }
+.pp-cta-ghost { background:none; border:1px solid rgba(224,197,143,0.25); color:#e0c58f; }
+.pp-cta-ghost:hover { border-color:#e0c58f; background:rgba(224,197,143,0.07); }
+
+/* ─── CTA STRIP ─────────────────────────── */
+#cta-strip {
+  padding: 100px 80px;
+  background: var(--navy-1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#cta-strip::before, #cta-strip::after {
+  content: ''; position: absolute; left: 80px; right: 80px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(224,197,143,0.15), transparent);
+}
+#cta-strip::before { top: 0; } #cta-strip::after { bottom: 0; }
+.cta-strip-inner { max-width: 680px; margin: 0 auto; position: relative; z-index: 2; }
+.cta-bg-text {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  font-family: 'Cormorant', serif; font-size: 200px; font-weight: 300;
+  color: rgba(224,197,143,0.025); white-space: nowrap; pointer-events: none;
+}
+.cta-strip-inner .lbl { justify-content: center; margin-bottom: 20px; }
+.cta-h { font-family: 'Cormorant', serif; font-size: clamp(36px,4.5vw,62px); font-weight: 300; color: var(--cream); margin-bottom: 20px; }
+.cta-h em { font-style: italic; color: var(--gold); }
+.cta-p { font-size: 14px; line-height: 2; color: var(--text-dim); margin-bottom: 48px; }
+.cta-actions { display: flex; gap: 16px; justify-content: center; }
+
+/* ─── FOOTER (minimal) ──────────────────── */
+footer {
+  border-top: 1px solid rgba(224,197,143,0.08);
+  padding: 36px 80px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--navy-0);
+}
+.footer-logo-text { font-family: 'Cormorant', serif; font-size: 20px; font-weight: 400; letter-spacing: 7px; color: var(--gold); text-transform: uppercase; }
+.footer-copy { font-size: 11px; letter-spacing: 1px; color: var(--text-faint); }
+.footer-back a { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-faint); text-decoration: none; transition: color .3s; }
+.footer-back a:hover { color: var(--gold); }
+.footer-back a svg { width: 12px; height: 12px; }
+
+/* ─── RESPONSIVE ─────────────────────────── */
+@media (max-width: 1100px) {
+  #page-hero, #filters, #grid-section, #cta-strip, footer { padding-left: 40px; padding-right: 40px; }
+  .page-hero-inner { flex-direction: column; align-items: flex-start; gap: 32px; }
+  .page-hero-right { align-items: flex-start; }
+  .page-hero-desc { text-align: left; }
+  .projects-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 720px) {
+  .nav-links { display: none; }
+  .projects-grid { grid-template-columns: 1fr; }
+  #filters { padding: 0 24px; }
+  .filter-tabs { overflow-x: auto; }
+  .filter-tab { padding: 18px 18px; font-size: 9px; }
+  .pp-two-col { grid-template-columns: 1fr; }
+  .pp-specs-row { flex-wrap: wrap; }
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+</head>
+<body>
+<div id="noise"></div>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="index.html">
+    <img src="logo.png" alt="Mansium" class="nav-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span style="display:none;font-family:'Cormorant',serif;font-size:24px;font-weight:400;letter-spacing:7px;color:#e0c58f;text-transform:uppercase;">MANSIUM</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="projects.html" class="active">Portfolio</a></li>
+    <li><a href="index.html#process">Process</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Start a Project</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HERO -->
+<section id="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-glow"></div>
+  <div class="page-hero-inner">
+    <div class="page-hero-left">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        Portfolio
+      </div>
+      <h1 class="page-title">Our<br><em>Portfolio</em></h1>
+    </div>
+    <div class="page-hero-right">
+      <div class="project-count" id="total-count">12</div>
+      <p class="page-hero-desc">Every project is a fully bespoke digital experience, built to present luxury real estate at its absolute finest.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FILTERS -->
+<div id="filters">
+  <div class="filters-inner">
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="villa">Villas</button>
+      <button class="filter-tab" data-filter="penthouse">Penthouses</button>
+      <button class="filter-tab" data-filter="duplex">Duplexes</button>
+      <button class="filter-tab" data-filter="mansion">Mansions</button>
+      <button class="filter-tab" data-filter="available">Available</button>
+      <button class="filter-tab" data-filter="sold">Sold</button>
+    </div>
+    <div class="filter-count">Showing <span id="showing-count">12</span> properties</div>
+  </div>
+</div>
+
+<!-- GRID -->
+<section id="grid-section">
+  <div class="projects-grid" id="projects-grid">
+    <!-- Cards injected by JS -->
+  </div>
+  <div id="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <h3>No properties in this category yet.</h3>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta-strip">
+  <div class="cta-bg-text">MANSIUM</div>
+  <div class="cta-strip-inner">
+    <div class="lbl">Ready to Begin</div>
+    <h2 class="cta-h">Have a Property<br>Worth <em>Showcasing?</em></h2>
+    <p class="cta-p">We accept a limited number of new projects each quarter. If your property is exceptional, we'd love to hear about it.</p>
+    <div class="cta-actions">
+      <a href="index.html#contact" class="btn-gold">Submit Your Property</a>
+      <a href="index.html" class="btn-ghost">Back to Home</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo-text">Mansium</div>
+  <div class="footer-copy">© 2025 Mansium · Istanbul, Turkey</div>
+  <div class="footer-back"><a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Home</a></div>
+</footer>
+
+<!-- POPUP -->
+<div id="popup-overlay" onclick="handleOverlayClick(event)">
+  <div class="popup-win">
+    <div class="popup-bar">
+      <div class="pbar-circles">
+        <span class="pbar-close" onclick="closePopup()"></span>
+        <span class="pbar-min"></span><span class="pbar-max"></span>
+      </div>
+      <div class="pbar-url">
+        <svg class="pbar-ssl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span id="popup-url-text">mansium.co/properties/...</span>
+      </div>
+    </div>
+    <div class="popup-banner" id="popup-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/></svg>
+      Live Website Preview — Powered by Mansium
+    </div>
+    <div class="popup-body">
+      <div class="popup-scroll" id="popup-content"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.btn-gold { display:inline-flex; align-items:center; gap:10px; background:var(--gold); color:var(--navy-0); padding:18px 48px; font-size:10.5px; letter-spacing:3px; text-transform:uppercase; font-weight:500; text-decoration:none; font-family:'Jost',sans-serif; transition:background .35s, transform .25s; cursor:none; border:none; }
+.btn-gold:hover { background:var(--gold-light); transform:translateY(-3px); }
+.btn-ghost { display:inline-flex; align-items:center; gap:10px; border:1px solid rgba(224,197,143,0.3); color:var(--gold); padding:18px 48px; font-size:10.5px; letter-spacing:3px; text-transform:uppercase; font-weight:400; text-decoration:none; font-family:'Jost',sans-serif; transition:background .35s, border-color .35s, transform .25s; cursor:none; }
+.btn-ghost:hover { background:rgba(224,197,143,0.06); border-color:var(--gold); transform:translateY(-3px); }
+</style>
+
+<script>
+// ── CURSOR
+const curDot = document.getElementById('cur-dot');
+const curRing = document.getElementById('cur-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; curDot.style.cssText = `left:${mx}px;top:${my}px`; });
+(function animRing() { rx += (mx-rx)*.1; ry += (my-ry)*.1; curRing.style.cssText = `left:${rx}px;top:${ry}px`; requestAnimationFrame(animRing); })();
+
+// ── PROJECTS DATA
+const allProjects = [
+  { id:'villa-azur', type:'villa', status:'available', name:'Azur Vista Villa', location:'Bodrum, Turkey', price:'€4,850,000', beds:5, baths:6, sqm:620, bg:'linear-gradient(155deg,#0d2137,#093024)', popup:'villa-azur' },
+  { id:'penthouse-horizon', type:'penthouse', status:'exclusive', name:'The Horizon Suite', location:'Istanbul, Turkey', price:'$12,500,000', beds:4, baths:5, sqm:780, bg:'linear-gradient(155deg,#0a0e2e,#1a0a2e)', popup:'penthouse-horizon' },
+  { id:'duplex-meridian', type:'duplex', status:'offer', name:'Meridian Duplex', location:'Dubai, UAE', price:'AED 28,000,000', beds:4, baths:5, sqm:520, bg:'linear-gradient(155deg,#0a1a2e,#1a0e0a)', popup:'duplex-meridian' },
+  { id:'villa-sarande', type:'villa', status:'sold', name:'Villa Sarande', location:'Çeşme, Turkey', price:'€3,200,000', beds:4, baths:5, sqm:480, bg:'linear-gradient(155deg,#0d2030,#0a2820)', popup:'villa-sarande' },
+  { id:'mansion-bosphorus', type:'mansion', status:'available', name:'Bosphorus Mansion', location:'Bebek, Istanbul', price:'$22,000,000', beds:8, baths:9, sqm:1240, bg:'linear-gradient(155deg,#0a1428,#1a1428)', popup:'mansion-bosphorus' },
+  { id:'penthouse-azure', type:'penthouse', status:'sold', name:'Azure Sky Penthouse', location:'Maslak, Istanbul', price:'$8,900,000', beds:3, baths:4, sqm:610, bg:'linear-gradient(155deg,#080d28,#0a1438)', popup:'penthouse-azure' },
+  { id:'villa-palm', type:'villa', status:'available', name:'Palm Vista Estate', location:'Palm Jumeirah, Dubai', price:'AED 45,000,000', beds:6, baths:7, sqm:950, bg:'linear-gradient(155deg,#0a1828,#1a1010)', popup:'villa-palm' },
+  { id:'duplex-skyline', type:'duplex', status:'sold', name:'Skyline Duplex', location:'Şişli, Istanbul', price:'$6,400,000', beds:3, baths:4, sqm:440, bg:'linear-gradient(155deg,#0e1830,#181020)', popup:'duplex-skyline' },
+  { id:'mansion-sapphire', type:'mansion', status:'offer', name:'Sapphire Estate', location:'Kemer, Antalya', price:'€18,500,000', beds:10, baths:12, sqm:1800, bg:'linear-gradient(155deg,#0a1428,#0a2418)', popup:'mansion-sapphire' },
+  { id:'penthouse-cloud', type:'penthouse', status:'available', name:'Cloud Nine Penthouse', location:'DIFC, Dubai', price:'AED 19,500,000', beds:4, baths:5, sqm:700, bg:'linear-gradient(155deg,#080a24,#1a0a20)', popup:'penthouse-cloud' },
+  { id:'villa-aegean', type:'villa', status:'sold', name:'Aegean Pearl Villa', location:'Fethiye, Turkey', price:'€2,750,000', beds:4, baths:4, sqm:380, bg:'linear-gradient(155deg,#0d2034,#0a2c24)', popup:'villa-aegean' },
+  { id:'duplex-grand', type:'duplex', status:'available', name:'Grand Avenue Duplex', location:'Nişantaşı, Istanbul', price:'$9,200,000', beds:4, baths:5, sqm:560, bg:'linear-gradient(155deg,#100e28,#1a100e)', popup:'duplex-grand' },
+];
+
+// SVG icons for card thumbnails
+const svgIcons = {
+  villa: `<svg class="card-thumb-icon" viewBox="0 0 100 100" fill="none"><path d="M10 90L50 10L90 90H10Z" stroke="#e0c58f" stroke-width="0.8"/><path d="M35 90V65h30v25" stroke="#e0c58f" stroke-width="0.8"/><path d="M43 65v20h14V65" stroke="#e0c58f" stroke-width="0.6"/></svg>`,
+  penthouse: `<svg class="card-thumb-icon" viewBox="0 0 100 100" fill="none"><rect x="25" y="15" width="50" height="75" stroke="#e0c58f" stroke-width="0.8"/><rect x="35" y="25" width="12" height="12" stroke="#e0c58f" stroke-width="0.6"/><rect x="53" y="25" width="12" height="12" stroke="#e0c58f" stroke-width="0.6"/><rect x="35" y="45" width="12" height="12" stroke="#e0c58f" stroke-width="0.6"/><rect x="53" y="45" width="12" height="12" stroke="#e0c58f" stroke-width="0.6"/><rect x="40" y="70" width="20" height="20" stroke="#e0c58f" stroke-width="0.6"/></svg>`,
+  duplex: `<svg class="card-thumb-icon" viewBox="0 0 100 100" fill="none"><rect x="20" y="20" width="60" height="60" stroke="#e0c58f" stroke-width="0.8"/><line x1="20" y1="50" x2="80" y2="50" stroke="#e0c58f" stroke-width="0.8"/><rect x="30" y="28" width="16" height="12" stroke="#e0c58f" stroke-width="0.6"/><rect x="54" y="28" width="16" height="12" stroke="#e0c58f" stroke-width="0.6"/><rect x="40" y="58" width="20" height="14" stroke="#e0c58f" stroke-width="0.6"/></svg>`,
+  mansion: `<svg class="card-thumb-icon" viewBox="0 0 100 100" fill="none"><path d="M10 80L30 40h40L90 80H10Z" stroke="#e0c58f" stroke-width="0.8"/><rect x="20" y="55" width="60" height="25" stroke="#e0c58f" stroke-width="0.6"/><rect x="30" y="60" width="10" height="12" stroke="#e0c58f" stroke-width="0.5"/><rect x="60" y="60" width="10" height="12" stroke="#e0c58f" stroke-width="0.5"/><rect x="44" y="60" width="12" height="20" stroke="#e0c58f" stroke-width="0.5"/><line x1="50" y1="40" x2="50" y2="10" stroke="#e0c58f" stroke-width="0.8"/></svg>`,
+};
+
+function getStatusClass(s) {
+  if (s === 'available') return 'status-available';
+  if (s === 'sold') return 'status-sold';
+  return 'status-offer';
+}
+function getStatusLabel(s) {
+  if (s === 'available') return 'Available';
+  if (s === 'sold') return 'Sold';
+  if (s === 'exclusive') return 'Exclusive';
+  return 'Under Offer';
+}
+
+function renderCards(list) {
+  const grid = document.getElementById('projects-grid');
+  const empty = document.getElementById('empty-state');
+  const countEl = document.getElementById('showing-count');
+  grid.innerHTML = '';
+
+  if (list.length === 0) {
+    empty.style.display = 'block';
+    countEl.textContent = '0';
+    return;
+  }
+  empty.style.display = 'none';
+  countEl.textContent = list.length;
+
+  list.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    card.setAttribute('data-type', p.type);
+    card.setAttribute('data-status', p.status);
+    card.innerHTML = `
+      <div class="card-thumb" style="cursor:none;">
+        <div class="card-thumb-bg" style="background:${p.bg};"></div>
+        ${svgIcons[p.type] || svgIcons.villa}
+        <div class="card-thumb-overlay"></div>
+        <div class="card-status ${getStatusClass(p.status)}">${getStatusLabel(p.status)}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-type">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-loc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${p.location}
+        </div>
+        <div class="card-specs">
+          <div class="cspec">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>${p.beds} Beds</span>
+          </div>
+          <div class="cspec">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h16M4 12a2 2 0 01-2-2V6h20v4a2 2 0 01-2 2M6 12v8M18 12v8"/></svg>
+            <span>${p.baths} Baths</span>
+          </div>
+          <div class="cspec">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 3H3v7h18V3zM21 14H3v7h18v-7z"/></svg>
+            <span>${p.sqm} Sqm</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">${p.price}</div>
+          <button class="card-preview-btn" onclick="openPopupById('${p.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+            Preview
+          </button>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', (e) => { if (!e.target.closest('.card-preview-btn')) openPopupById(p.id); });
+    grid.appendChild(card);
+    setTimeout(() => { card.classList.add('visible'); }, 60 + i * 60);
+  });
+
+  // re-attach cursor hover
+  document.querySelectorAll('.project-card, .card-preview-btn, a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
+}
+
+// Filter logic
+let currentFilter = 'all';
+function applyFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === f));
+  const filtered = f === 'all' ? allProjects :
+    f === 'available' ? allProjects.filter(p => p.status === 'available') :
+    f === 'sold' ? allProjects.filter(p => p.status === 'sold') :
+    allProjects.filter(p => p.type === f);
+  renderCards(filtered);
+}
+
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => applyFilter(tab.dataset.filter));
+});
+
+// Init
+renderCards(allProjects);
+document.getElementById('total-count').textContent = allProjects.length;
+
+// ── POPUP DATA
+const popupData = {
+  'villa-azur': { url:'mansium.co/properties/azur-vista-villa', banner:'Azur Vista Villa · Bodrum, Turkey', label:'Villa · Mediterranean', price:'€4,850,000', name:'Azur Vista Villa', sub:'Bodrum, Muğla — Turkey', bg:'linear-gradient(160deg,#0d2137,#093024)', specs:[{v:'5',l:'Bedrooms'},{v:'6',l:'Bathrooms'},{v:'620',l:'Sqm'},{v:'1',l:'Pool'}], descTitle:'Mediterranean Excellence', desc:'Perched above the Aegean Sea with panoramic views stretching to the Greek islands, Azur Vista Villa is a masterwork of contemporary Mediterranean architecture. Stone, timber, and glass unite across 620 square metres of seamless indoor-outdoor living.', features:['Infinity pool overlooking the Aegean','Private cinema room','Smart home automation','Landscaped olive terraces','Triple garage with EV charging','Rooftop entertainment deck'] },
+  'penthouse-horizon': { url:'mansium.co/properties/horizon-suite', banner:'The Horizon Suite · Istanbul, Turkey', label:'Penthouse · Ultra-Luxury', price:'$12,500,000', name:'The Horizon Suite', sub:'Levent, Istanbul — Turkey', bg:'linear-gradient(160deg,#0a0e2e,#1a0a2e)', specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'780',l:'Sqm'},{v:'52',l:'Floor'}], descTitle:'Above The City', desc:'Rising above Istanbul\'s financial district on the 52nd floor, The Horizon Suite redefines urban luxury. Floor-to-ceiling glass walls dissolve the boundary between the living space and a breathtaking 360° panorama.', features:['52nd floor panoramic terrace','Private heated plunge pool','Bosphorus & city dual aspect','Wine cellar','24/7 concierge','Home theatre with Dolby Atmos'] },
+  'duplex-meridian': { url:'mansium.co/properties/meridian-duplex', banner:'Meridian Duplex · Dubai, UAE', label:'Duplex · Premium', price:'AED 28,000,000', name:'Meridian Duplex', sub:'Downtown Dubai — UAE', bg:'linear-gradient(160deg,#0a1a2e,#1a0e0a)', specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'520',l:'Sqm'},{v:'2',l:'Floors'}], descTitle:'Art of Living', desc:'At the intersection of design and desire, Meridian Duplex occupies two full floors in one of Downtown Dubai\'s most sought-after towers. Italian marble, bespoke millwork, and museum-quality lighting.', features:['Double-height living area','Rooftop with Burj views','Bulthaup kitchen','Italian marble throughout','Fendi Casa furnishings','Dedicated study & library'] },
+  'villa-sarande': { url:'mansium.co/properties/villa-sarande', banner:'Villa Sarande · Çeşme, Turkey', label:'Villa · Aegean', price:'€3,200,000', name:'Villa Sarande', sub:'Çeşme, İzmir — Turkey', bg:'linear-gradient(160deg,#0d2030,#0a2820)', specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'480',l:'Sqm'},{v:'1',l:'Pool'}], descTitle:'Aegean Serenity', desc:'Nestled on the Çeşme peninsula with direct views of the Aegean, Villa Sarande combines traditional Aegean stone architecture with contemporary interior design. A private retreat of exceptional character.', features:['Sea-view infinity pool','Private beach access','Wine cellar','Landscaped garden','Smart home system','Outdoor kitchen & terrace'] },
+  'mansion-bosphorus': { url:'mansium.co/properties/bosphorus-mansion', banner:'Bosphorus Mansion · Bebek, Istanbul', label:'Mansion · Ultra-Prestigious', price:'$22,000,000', name:'Bosphorus Mansion', sub:'Bebek, Istanbul — Turkey', bg:'linear-gradient(160deg,#0a1428,#1a1428)', specs:[{v:'8',l:'Bedrooms'},{v:'9',l:'Bathrooms'},{v:'1240',l:'Sqm'},{v:'3',l:'Floors'}], descTitle:'Historic Grandeur', desc:'Standing on the European shores of the Bosphorus in the prestigious Bebek neighbourhood, this waterfront mansion is one of Istanbul\'s most extraordinary private residences. Historic Ottoman architectural elements meet contemporary luxury.', features:['Private Bosphorus waterfront','Private dock & boat berth','Ottoman ceiling details','Hamam & wellness centre','Indoor pool','Private staff quarters'] },
+  'penthouse-azure': { url:'mansium.co/properties/azure-sky', banner:'Azure Sky · Maslak, Istanbul', label:'Penthouse · Luxury', price:'$8,900,000', name:'Azure Sky Penthouse', sub:'Maslak, Istanbul — Turkey', bg:'linear-gradient(160deg,#080d28,#0a1438)', specs:[{v:'3',l:'Bedrooms'},{v:'4',l:'Bathrooms'},{v:'610',l:'Sqm'},{v:'48',l:'Floor'}], descTitle:'City & Sky', desc:'Occupying the entire 48th floor of Maslak\'s most prestigious tower, Azure Sky Penthouse offers an uninterrupted panorama of Istanbul spanning from the Bosphorus to the Marmara Sea.', features:['360° city panorama','Private terrace 180sqm','Smart home automation','Double garage','Concierge 24/7','Custom Italian kitchen'] },
+  'villa-palm': { url:'mansium.co/properties/palm-vista', banner:'Palm Vista Estate · Dubai', label:'Villa · Waterfront', price:'AED 45,000,000', name:'Palm Vista Estate', sub:'Palm Jumeirah, Dubai — UAE', bg:'linear-gradient(160deg,#0a1828,#1a1010)', specs:[{v:'6',l:'Bedrooms'},{v:'7',l:'Bathrooms'},{v:'950',l:'Sqm'},{v:'1',l:'Pool'}], descTitle:'Palm Perfection', desc:'Located on the iconic Palm Jumeirah, Palm Vista Estate sits on a prime frond with direct beach access and panoramic views of the Dubai skyline. Every detail has been curated for ultra-high-net-worth living.', features:['Private beach access','Infinity pool facing Dubai Marina','Home cinema','6-car garage','Smart villa automation','Dedicated staff accommodation'] },
+  'duplex-skyline': { url:'mansium.co/properties/skyline-duplex', banner:'Skyline Duplex · Istanbul', label:'Duplex · Contemporary', price:'$6,400,000', name:'Skyline Duplex', sub:'Şişli, Istanbul — Turkey', bg:'linear-gradient(160deg,#0e1830,#181020)', specs:[{v:'3',l:'Bedrooms'},{v:'4',l:'Bathrooms'},{v:'440',l:'Sqm'},{v:'2',l:'Floors'}], descTitle:'Urban Elegance', desc:'A stunning contemporary duplex in the heart of Şişli, Skyline Duplex spans two floors with a sweeping wraparound terrace offering panoramic city views. Minimalist architecture meets maximum luxury.', features:['Wraparound city-view terrace','Double-height lounge','German kitchen system','Private parking x2','Building concierge','Floor-to-ceiling glazing'] },
+  'mansion-sapphire': { url:'mansium.co/properties/sapphire-estate', banner:'Sapphire Estate · Antalya', label:'Mansion · Resort-Style', price:'€18,500,000', name:'Sapphire Estate', sub:'Kemer, Antalya — Turkey', bg:'linear-gradient(160deg,#0a1428,#0a2418)', specs:[{v:'10',l:'Bedrooms'},{v:'12',l:'Bathrooms'},{v:'1800',l:'Sqm'},{v:'3',l:'Pools'}], descTitle:'Resort Without Boundaries', desc:'Sapphire Estate spans 1,800 square metres across a private 8,000 sqm plot in the mountains above Kemer, with stunning views of the Taurus Mountains and Mediterranean Sea. A world of unparalleled privacy and luxury.', features:['Three swimming pools','Private tennis court','Cinema & games room','Helipad','Full spa & gym complex','Guest house on property'] },
+  'penthouse-cloud': { url:'mansium.co/properties/cloud-nine', banner:'Cloud Nine · DIFC, Dubai', label:'Penthouse · Financial District', price:'AED 19,500,000', name:'Cloud Nine Penthouse', sub:'DIFC, Dubai — UAE', bg:'linear-gradient(160deg,#080a24,#1a0a20)', specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'700',l:'Sqm'},{v:'55',l:'Floor'}], descTitle:'At The Top', desc:'Positioned at the pinnacle of DIFC\'s most sought-after residential tower, Cloud Nine Penthouse offers the ultimate in Dubai luxury living. Custom architecture, rare materials, and a private rooftop terrace complete the picture.', features:['Private rooftop 200sqm','Burj Khalifa & sea views','Custom marble interiors','Private elevator','Smart home throughout','3 private parking bays'] },
+  'villa-aegean': { url:'mansium.co/properties/aegean-pearl', banner:'Aegean Pearl · Fethiye, Turkey', label:'Villa · Coastal', price:'€2,750,000', name:'Aegean Pearl Villa', sub:'Fethiye, Muğla — Turkey', bg:'linear-gradient(160deg,#0d2034,#0a2c24)', specs:[{v:'4',l:'Bedrooms'},{v:'4',l:'Bathrooms'},{v:'380',l:'Sqm'},{v:'1',l:'Pool'}], descTitle:'Turquoise Coast Living', desc:'Surrounded by pine trees on the Turquoise Coast, Aegean Pearl Villa is a boutique retreat of rare natural beauty. The property sits above Fethiye bay with spectacular views of the archipelago.', features:['Panoramic sea terrace','Heated plunge pool','Private garden','Sea kayak access','Traditional stone walls','Alfresco dining area'] },
+  'duplex-grand': { url:'mansium.co/properties/grand-avenue', banner:'Grand Avenue Duplex · Istanbul', label:'Duplex · Prime District', price:'$9,200,000', name:'Grand Avenue Duplex', sub:'Nişantaşı, Istanbul — Turkey', bg:'linear-gradient(160deg,#100e28,#1a100e)', specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'560',l:'Sqm'},{v:'2',l:'Floors'}], descTitle:'Nişantaşı Prestige', desc:'In Istanbul\'s most prestigious address, Grand Avenue Duplex occupies two floors of a newly completed boutique building on Abdi İpekçi Avenue. Italian craftsmanship, natural stone, and bespoke joinery throughout.', features:['Abdi İpekçi Avenue address','Bespoke Italian millwork','Natural stone floors','Private parking x2','Wine cellar','Rooftop access with Bosphorus views'] },
+};
+
+function openPopupById(id) {
+  const p = popupData[id];
+  if (!p) return;
+  document.getElementById('popup-url-text').textContent = p.url;
+  document.getElementById('popup-banner').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/></svg>${p.banner}`;
+  const feats = p.features.map(f => `<div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>${f}</div>`).join('');
+  const specsHTML = p.specs.map(s => `<div class="pp-spec"><span class="pp-spec-val">${s.v}</span><span class="pp-spec-lbl">${s.l}</span></div>`).join('');
+  document.getElementById('popup-content').innerHTML = `
+    <div class="pp">
+      <div class="pp-hero" style="background:${p.bg}">
+        <div class="pp-hero-bg"></div><div class="pp-hero-grid"></div><div class="pp-hero-grd"></div>
+        <div class="pp-content">
+          <div class="pp-badge"><div class="pp-badge-dot"></div>${p.label}</div>
+          <div class="pp-title">${p.name}</div>
+          <div class="pp-subtitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${p.sub}</div>
+        </div>
+        <div class="pp-price-tag"><span class="pamt">${p.price}</span><span class="plbl">Asking Price</span></div>
+      </div>
+      <div class="pp-body">
+        <div class="pp-specs-row">${specsHTML}</div>
+        <div class="pp-two-col">
+          <div><div class="pp-desc-title">${p.descTitle}</div><p class="pp-desc-text">${p.desc}</p></div>
+          <div><div class="pp-features-title">Property Highlights</div><div class="pp-features-list">${feats}</div></div>
+        </div>
+        <div class="pp-cta-row">
+          <button class="pp-cta-btn pp-cta-primary">Request a Viewing</button>
+          <button class="pp-cta-btn pp-cta-ghost">Download Brochure</button>
+          <button class="pp-cta-btn pp-cta-ghost">Contact Agent</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('popup-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePopup() { document.getElementById('popup-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+function handleOverlayClick(e) { if (e.target === document.getElementById('popup-overlay')) closePopup(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+</script>
+</body>
+</html>
