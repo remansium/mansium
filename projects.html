@@ -3,598 +3,252 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio — Mansium Luxury Property Marketing</title>
+<title>Portfolio — Mansium Luxury</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --gold:#e0c58f;--gold-light:#f2dcb0;--gold-dark:#c4a468;
-  --navy-0:#060d1e;--navy-1:#091428;--navy-2:#0d1c38;--navy-3:#142448;
-  --t1:#ece6d9;--t2:#b0a898;--t3:#7d7568;--t4:#524e46;
-  --border:rgba(224,197,143,.12);--border-hover:rgba(224,197,143,.35);
-  --ease:cubic-bezier(.16,1,.3,1);
+/* (TOKENS & BASE & NOISE) */
+:root {
+  --gold: #e0c58f; --gold-light: #f2dcb0; --gold-dark: #c4a468;
+  --navy-0: #060d1e; --navy-1: #091428; --navy-2: #0d1c38; --navy-3: #142448;
+  --t1: #ece6d9; --t2: #b0a898; --t3: #7d7568; --t4: #524e46;
+  --border: rgba(224,197,143,0.12); --border-hover: rgba(224,197,143,0.35);
+  --ease: cubic-bezier(0.16,1,0.3,1);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--navy-0);color:var(--t1);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none;line-height:1.6}
-img{display:block;max-width:100%}
-a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:none}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--navy-0); color: var(--t1); font-family: 'Jost', sans-serif; font-weight: 300; overflow-x: hidden; cursor: none; line-height: 1.6; }
+a { text-decoration: none; color: inherit; cursor: none; }
+button { font-family: inherit; cursor: none; outline: none; border: none; background: transparent; }
 
-/* CURSOR */
-@media(pointer:fine){
-  #cur-d{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
-  #cur-r{position:fixed;width:44px;height:44px;border:1px solid rgba(224,197,143,.55);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease),border-color .3s}
-  body.ch #cur-r{width:68px;height:68px;border-color:var(--gold)}
+@media(pointer: fine) {
+  #cur-d { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: opacity .2s; }
+  #cur-r { position: fixed; width: 44px; height: 44px; border: 1px solid rgba(224,197,143,.55); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width .3s var(--ease), height .3s var(--ease), border-color .3s; }
+  body.ch #cur-r { width: 68px; height: 68px; border-color: var(--gold); background: rgba(224,197,143,0.05); }
 }
-@media(pointer:coarse){body{cursor:auto}#cur-d,#cur-r{display:none}}
+@media(pointer: coarse) { body { cursor: auto; } #cur-d, #cur-r { display: none; } }
+#noise { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .025; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
-#noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
+/* NAVIGATION */
+#nav { position: fixed; top: 0; left: 0; right: 0; z-index: 300; display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; background: rgba(6,13,30,.95); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+.nav-logo-link { display: flex; align-items: center; }
+.nav-logo-img { height: 32px; width: auto; display: block; }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a { font-size: 10.5px; letter-spacing: 3.5px; text-transform: uppercase; color: var(--t3); transition: color .3s; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-btn { border: 1px solid rgba(224,197,143,.3); color: var(--gold); padding: 11px 26px; transition: all .3s; }
+.nav-btn:hover { background: var(--gold); color: var(--navy-0); border-color: var(--gold); }
 
-/* ─ NAV ─ */
-#nav{
-  position:fixed;top:0;left:0;right:0;z-index:300;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:20px 60px;
-  background:rgba(6,13,30,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border-bottom:1px solid var(--border);
+/* HEADER & GRIDS */
+.portfolio-header { padding: 180px 60px 80px; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(to bottom, var(--navy-1), var(--navy-0)); position: relative; z-index: 2;}
+.sec-subtitle { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: block; }
+.sec-title { font-family: 'Cormorant', serif; font-size: clamp(36px, 5vw, 72px); font-weight: 300; line-height: 1; margin-bottom: 24px; color: var(--t1); }
+.sec-title i { font-style: italic; color: var(--gold); }
+.projects-section { padding: 80px 60px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 40px; }
+.card { position: relative; height: 500px; border: 1px solid var(--border); background: var(--navy-2); display: flex; align-items: flex-end; padding: 40px; overflow: hidden; transition: border-color 0.4s var(--ease); }
+.card:hover { border-color: var(--gold); }
+.card-bg { position: absolute; inset: 0; transition: transform 0.8s var(--ease); opacity: 0.6; background-size: cover !important; background-position: center !important; }
+.card:hover .card-bg { transform: scale(1.05); opacity: 0.8; }
+.card-content { position: relative; z-index: 2; width: 100%; }
+.card-badge { display: inline-block; padding: 6px 12px; border: 1px solid rgba(224,197,143,.3); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; backdrop-filter: blur(4px); background: rgba(6,13,30,0.5); }
+.card-title { font-family: 'Cormorant', serif; font-size: 32px; color: var(--t1); margin-bottom: 8px; }
+.card-loc { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--t2); margin-bottom: 24px; }
+.card-btn { display: flex; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--border); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); transition: color .3s; }
+
+/* CTA EKLENDİ */
+.cta-section { padding: 120px 60px; text-align: center; background: var(--navy-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.btn-large { display: inline-block; margin-top: 30px; padding: 16px 40px; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 3px; font-size: 11px; transition: all 0.3s; }
+.btn-large:hover { background: var(--gold); color: var(--navy-0); }
+
+/* POP-UP (MODAL) */
+#pop { position: fixed; inset: 0; z-index: 9000; background: rgba(6,13,30,.98); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease); }
+#pop.active { opacity: 1; pointer-events: all; }
+.pop-c { width: 100%; max-width: 1200px; height: 90vh; border: 1px solid var(--border); background: var(--navy-0); position: relative; display: flex; flex-direction: column; transform: translateY(30px); transition: transform 0.5s var(--ease); overflow-y: auto; }
+#pop.active .pop-c { transform: translateY(0); }
+.pop-x { position: absolute; top: 20px; right: 20px; z-index: 10; font-size: 10px; letter-spacing: 3px; color: var(--t1); text-transform: uppercase; background: rgba(6,13,30,.8); border: 1px solid var(--border); padding: 10px 20px; transition: all .3s; }
+.pop-x:hover { color: var(--gold); border-color: var(--gold); }
+.pp-hero { position: relative; padding: 100px 60px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; justify-content: flex-end; min-height: 50vh; }
+.pp-badge { display: inline-flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+.pp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+.pp-title { font-family: 'Cormorant', serif; font-size: clamp(32px, 6vw, 80px); line-height: 1; color: var(--t1); margin-bottom: 15px; }
+.pp-loc { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--t2); margin-bottom: 30px; }
+.pp-price-wrap { position: absolute; right: 60px; bottom: 60px; text-align: right; }
+.pp-price { font-family: 'Cormorant', serif; font-size: clamp(28px, 4vw, 40px); color: var(--gold); line-height: 1; }
+.pp-price-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--t3); }
+.pp-body { padding: 60px; display: grid; grid-template-columns: 2fr 1fr; gap: 60px; }
+.pp-specs { display: flex; flex-wrap: wrap; gap: 40px; border-bottom: 1px solid var(--border); padding-bottom: 40px; margin-bottom: 40px; }
+.pp-spec-item { display: flex; flex-direction: column; gap: 5px; }
+.pp-spec-val { font-family: 'Cormorant', serif; font-size: 28px; color: var(--t1); }
+.pp-spec-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--t3); }
+.pp-desc p { color: var(--t2); font-size: 15px; line-height: 1.8; margin-bottom: 20px; }
+.pp-features { list-style: none; margin-top: 30px; }
+.pp-features li { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 12px; letter-spacing: 1px; color: var(--t2); display: flex; align-items: center; gap: 10px; }
+.pp-features li::before { content: '✦'; color: var(--gold); font-size: 10px; }
+.pp-ctas { display: flex; flex-direction: column; gap: 15px; }
+.pp-btn { padding: 18px; text-align: center; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; transition: all .3s; }
+.pp-btn.primary { background: var(--gold); color: var(--navy-0); font-weight: 500; }
+.pp-btn.primary:hover { background: var(--gold-light); }
+
+/* GALERİ CSS */
+.pp-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 40px; }
+.pp-gallery img { width: 100%; height: 220px; object-fit: cover; border: 1px solid var(--border); border-radius: 4px; transition: transform 0.4s var(--ease), border-color 0.4s; }
+.pp-gallery img:hover { transform: scale(1.03); border-color: var(--gold); }
+.pop-c::-webkit-scrollbar { width: 6px; }
+.pop-c::-webkit-scrollbar-track { background: var(--navy-0); }
+.pop-c::-webkit-scrollbar-thumb { background: rgba(224,197,143,.3); border-radius: 10px; }
+
+/* MOBİL İÇİN */
+@media(max-width: 1024px) { .pp-body { grid-template-columns: 1fr; } .pp-price-wrap { position: relative; right: auto; bottom: auto; text-align: left; margin-top: 20px; } }
+@media(max-width: 768px) {
+  .portfolio-header, .projects-section, .cta-section, .pp-hero, .pp-body { padding-left: 30px; padding-right: 30px; }
+  .grid { grid-template-columns: 1fr; }
+  #nav { padding: 20px 30px; }
+  .nav-links { display: none; }
 }
-.nav-logo{height:32px;display:block}
-.nav-logo-fb{display:none;font-family:'Cormorant',serif;font-size:22px;font-weight:400;letter-spacing:8px;color:var(--gold);text-transform:uppercase}
-.nav-links{display:flex;align-items:center;gap:36px;list-style:none}
-.nav-links a{font-size:10.5px;letter-spacing:3.5px;text-transform:uppercase;color:var(--t3);font-weight:400;position:relative;transition:color .3s}
-.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .35s var(--ease)}
-.nav-links a:hover,.nav-links a.active{color:var(--gold)}
-.nav-links a:hover::after,.nav-links a.active::after{width:100%}
-.nav-btn{border:1px solid rgba(224,197,143,.3);color:var(--gold)!important;padding:10px 24px;letter-spacing:2.5px!important;transition:background .3s,color .3s!important}
-.nav-btn::after{display:none!important}
-.nav-btn:hover{background:var(--gold)!important;color:var(--navy-0)!important}
-
-/* Hamburger */
-.ham{display:none;flex-direction:column;justify-content:center;width:44px;height:44px;gap:6px;background:none;border:none;padding:10px;cursor:none}
-.ham span{display:block;height:1px;background:var(--t1);transition:transform .35s var(--ease),opacity .25s,width .3s}
-.ham span:nth-child(2){width:75%;margin-left:auto}
-.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.ham.open span:nth-child(2){opacity:0;width:0}
-.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-
-/* Mobile overlay */
-#mob-menu{position:fixed;inset:0;z-index:250;background:rgba(6,13,30,.98);backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:translateX(100%);transition:transform .5s var(--ease);pointer-events:none}
-#mob-menu.open{transform:translateX(0);pointer-events:all}
-.mob-links{list-style:none;text-align:center;display:flex;flex-direction:column;gap:8px}
-.mob-links a{display:block;font-family:'Cormorant',serif;font-size:clamp(36px,8vw,52px);font-weight:300;color:var(--t2);letter-spacing:2px;padding:8px 0;transition:color .3s}
-.mob-links a:hover{color:var(--gold)}
-.mob-cta-wrap{margin-top:40px}
-.mob-bottom{position:absolute;bottom:40px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t4)}
-
-/* ─ SHARED ─ */
-.w{max-width:1400px;margin:0 auto}
-.px{padding-left:60px;padding-right:60px}
-.lbl{display:inline-flex;align-items:center;gap:14px;font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.lbl::before{content:'';width:28px;height:1px;background:var(--gold);flex-shrink:0}
-.h2{font-family:'Cormorant',serif;font-size:clamp(38px,4.2vw,64px);font-weight:300;line-height:1.05;color:var(--t1)}
-.h2 em{font-style:italic;color:var(--gold)}
-.btn-g{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:var(--navy-0);padding:15px 40px;font-size:10.5px;letter-spacing:3px;text-transform:uppercase;font-weight:500;font-family:'Jost',sans-serif;border:none;transition:background .3s,transform .25s;cursor:none}
-.btn-g:hover{background:var(--gold-light);transform:translateY(-3px)}
-.btn-o{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(224,197,143,.3);color:var(--gold);padding:15px 40px;font-size:10.5px;letter-spacing:3px;text-transform:uppercase;font-weight:400;font-family:'Jost',sans-serif;transition:background .3s,border-color .3s,transform .25s;cursor:none}
-.btn-o:hover{background:rgba(224,197,143,.07);border-color:var(--gold);transform:translateY(-3px)}
-.arr{width:14px;height:14px;flex-shrink:0;transition:transform .3s}
-a:hover .arr,.btn-g:hover .arr,.btn-o:hover .arr{transform:translateX(4px)}
-
-/* REVEAL */
-.rv{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
-.rv.on{opacity:1;transform:none}
-.d1{transition-delay:.1s}.d2{transition-delay:.18s}.d3{transition-delay:.26s}
-
-/* ─ PAGE HERO ─ */
-#phero{
-  padding:140px 60px 88px;
-  position:relative;overflow:hidden;
-}
-.ph-bg{position:absolute;inset:0;background:linear-gradient(145deg,var(--navy-0) 0%,var(--navy-1) 55%,var(--navy-2) 100%)}
-.ph-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(224,197,143,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(224,197,143,.035) 1px,transparent 1px);background-size:72px 72px}
-.ph-glow{position:absolute;top:-200px;right:-150px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(224,197,143,.05),transparent 65%);pointer-events:none}
-.ph-inner{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:2;flex-wrap:wrap;gap:32px}
-.ph-bc{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t4);margin-bottom:22px}
-.ph-bc a{color:var(--t4);transition:color .3s}.ph-bc a:hover{color:var(--gold)}
-.ph-bc svg{width:10px;height:10px}
-.ph-title{font-family:'Cormorant',serif;font-size:clamp(52px,7vw,100px);font-weight:300;line-height:.92;color:var(--t1)}
-.ph-title em{font-style:italic;color:var(--gold)}
-.ph-right{display:flex;flex-direction:column;align-items:flex-end;gap:12px;padding-bottom:8px}
-.ph-big-num{font-family:'Cormorant',serif;font-size:80px;font-weight:300;color:rgba(224,197,143,.1);line-height:1}
-.ph-desc{font-size:14px;line-height:1.9;color:var(--t2);max-width:300px;text-align:right}
-
-/* ─ FILTER BAR ─ */
-#filterbar{
-  position:sticky;top:72px;z-index:100;
-  border-bottom:1px solid var(--border);
-  background:rgba(6,13,30,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-}
-.fb-inner{
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:0;
-}
-.fb-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.fb-tabs::-webkit-scrollbar{display:none}
-.fb-tab{
-  padding:20px 24px;font-size:10px;letter-spacing:3.5px;text-transform:uppercase;
-  color:var(--t3);background:none;border:none;border-bottom:2px solid transparent;
-  font-family:'Jost',sans-serif;font-weight:400;cursor:none;
-  transition:color .3s,border-color .3s;white-space:nowrap;flex-shrink:0;
-}
-.fb-tab:hover{color:var(--t2)}
-.fb-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.fb-meta{
-  padding:0 28px;font-size:10px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--t3);white-space:nowrap;
-}
-.fb-meta span{color:var(--gold)}
-
-/* ─ GRID ─ */
-#grid-sec{padding:56px 60px 120px}
-.pg{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:20px;
-}
-
-/* ─ PROJECT CARD ─ */
-.card{
-  border:1px solid var(--border);overflow:hidden;cursor:none;
-  background:var(--navy-2);
-  transition:border-color .4s var(--ease),transform .4s var(--ease);
-  opacity:0;transform:translateY(24px);
-}
-.card.vis{opacity:1;transform:translateY(0)}
-.card:hover{border-color:var(--border-hover);transform:translateY(-4px)}
-.card.hidden{display:none}
-
-.c-thumb{width:100%;aspect-ratio:16/10;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.c-bg{position:absolute;inset:0;transition:transform .8s var(--ease)}
-.card:hover .c-bg{transform:scale(1.06)}
-.c-icon{position:absolute;opacity:.05;width:100px;height:100px}
-.c-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,13,30,.9),transparent 60%)}
-.c-status{
-  position:absolute;top:14px;right:14px;z-index:2;
-  padding:5px 12px;font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;
-}
-.s-av{background:rgba(40,202,65,.12);border:1px solid rgba(40,202,65,.28);color:#28ca41}
-.s-sold{background:rgba(224,197,143,.1);border:1px solid rgba(224,197,143,.22);color:var(--gold)}
-.s-offer{background:rgba(255,189,46,.1);border:1px solid rgba(255,189,46,.22);color:#ffbd2e}
-.s-ex{background:rgba(180,140,240,.1);border:1px solid rgba(180,140,240,.22);color:#b48cf0}
-
-.c-body{padding:24px 24px 20px}
-.c-type{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-.c-name{font-family:'Cormorant',serif;font-size:26px;font-weight:400;color:var(--t1);line-height:1.1;margin-bottom:6px}
-.c-loc{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--t3);margin-bottom:18px}
-.c-loc svg{width:11px;height:11px;flex-shrink:0}
-.c-specs{display:flex;gap:16px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:16px;flex-wrap:wrap}
-.cs{display:flex;align-items:center;gap:6px}
-.cs svg{width:13px;height:13px;color:rgba(224,197,143,.45)}
-.cs span{font-size:12px;color:var(--t2)}
-.c-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.c-price{font-family:'Cormorant',serif;font-size:20px;font-weight:400;color:var(--gold)}
-.c-prev{
-  display:inline-flex;align-items:center;gap:7px;
-  font-size:9.5px;letter-spacing:2px;text-transform:uppercase;
-  border:1px solid rgba(224,197,143,.22);color:var(--gold);
-  padding:9px 16px;background:rgba(224,197,143,.05);
-  font-family:'Jost',sans-serif;cursor:none;
-  transition:background .3s,border-color .3s;white-space:nowrap;
-}
-.c-prev:hover{background:rgba(224,197,143,.12);border-color:var(--gold)}
-.c-prev svg{width:12px;height:12px}
-
-/* ─ EMPTY ─ */
-#empty-state{display:none;text-align:center;padding:80px 40px;max-width:1400px;margin:0 auto}
-#empty-state svg{width:48px;height:48px;color:var(--t4);margin:0 auto 20px}
-#empty-state p{font-family:'Cormorant',serif;font-size:28px;font-weight:300;color:var(--t3)}
-
-/* ─ CTA STRIP ─ */
-#cta{
-  padding:100px 60px;background:var(--navy-1);
-  text-align:center;position:relative;overflow:hidden;
-}
-#cta::before,#cta::after{content:'';position:absolute;left:60px;right:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(224,197,143,.15),transparent)}
-#cta::before{top:0}#cta::after{bottom:0}
-.cta-bg-word{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant',serif;font-size:180px;font-weight:300;color:rgba(224,197,143,.02);white-space:nowrap;pointer-events:none}
-.cta-inner{max-width:640px;margin:0 auto;position:relative;z-index:2}
-.cta-inner .lbl{justify-content:center}
-.cta-h{font-family:'Cormorant',serif;font-size:clamp(34px,4.2vw,58px);font-weight:300;color:var(--t1);margin-bottom:16px}
-.cta-h em{font-style:italic;color:var(--gold)}
-.cta-p{font-size:14.5px;line-height:2;color:var(--t2);margin-bottom:44px}
-.cta-acts{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-
-/* ─ FOOTER ─ */
-footer{border-top:1px solid var(--border);padding:28px 60px;display:flex;justify-content:space-between;align-items:center;background:var(--navy-0);flex-wrap:wrap;gap:16px}
-.foot-logo{display:flex;align-items:center;gap:16px}
-.foot-logo img{height:26px}
-.foot-logo-fb{font-family:'Cormorant',serif;font-size:18px;font-weight:400;letter-spacing:7px;color:var(--gold);text-transform:uppercase;display:none}
-.foot-copy{font-size:11px;letter-spacing:1px;color:var(--t4)}
-.foot-back a{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);transition:color .3s}
-.foot-back a:hover{color:var(--gold)}
-.foot-back a svg{width:12px;height:12px}
-
-/* ─ MOBILE CTA ─ */
-#mob-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(6,13,30,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:10px 16px;gap:10px}
-#mob-cta a{flex:1;display:flex;align-items:center;justify-content:center;padding:13px;font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;font-family:'Jost',sans-serif}
-.mc-p{background:var(--gold);color:var(--navy-0)}
-.mc-s{border:1px solid var(--border);color:var(--t2)}
-
-/* ─ POPUP ─ */
-#pop-ov{position:fixed;inset:0;z-index:500;background:rgba(3,7,18,.94);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
-#pop-ov.open{opacity:1;pointer-events:all}
-.pop-win{width:90vw;max-width:1260px;height:87vh;background:var(--navy-1);border:1px solid rgba(224,197,143,.18);display:flex;flex-direction:column;transform:scale(.96) translateY(24px);transition:transform .45s var(--ease);box-shadow:0 80px 160px rgba(0,0,0,.75)}
-#pop-ov.open .pop-win{transform:scale(1) translateY(0)}
-.pop-bar{height:50px;display:flex;align-items:center;gap:12px;padding:0 18px;flex-shrink:0;background:rgba(6,13,30,.8);border-bottom:1px solid var(--border)}
-.pop-dots{display:flex;gap:7px}
-.pop-dots span{width:12px;height:12px;border-radius:50%}
-.pd-c{background:#ff5f57;cursor:pointer}.pd-m{background:#ffbd2e}.pd-x{background:#28ca41}
-.pop-url{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:5px;padding:0 12px;height:28px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t3);font-family:'Jost',sans-serif}
-.pop-ssl{width:11px;height:11px;color:#28ca41;flex-shrink:0}
-.pop-banner{height:36px;flex-shrink:0;background:rgba(224,197,143,.025);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;padding:0 18px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3)}
-.pop-banner svg{width:11px;height:11px;color:var(--gold)}
-.pop-body{flex:1;overflow:hidden}
-.pop-scroll{width:100%;height:100%;overflow-y:auto}
-.pop-scroll::-webkit-scrollbar{width:4px}
-.pop-scroll::-webkit-scrollbar-track{background:var(--navy-1)}
-.pop-scroll::-webkit-scrollbar-thumb{background:rgba(224,197,143,.2)}
-
-.pp{background:#070f20;color:#ece6d9;font-family:'Jost',sans-serif;font-weight:300;min-height:100%}
-.pp-hero{height:56vh;min-height:360px;position:relative;display:flex;align-items:flex-end;padding:44px 48px;overflow:hidden}
-.pp-hero-bg{position:absolute;inset:0}
-.pp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(224,197,143,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(224,197,143,.03) 1px,transparent 1px);background-size:60px 60px}
-.pp-grd{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,15,32,.97) 0%,rgba(7,15,32,.1) 52%,transparent 100%)}
-.pp-content{position:relative;z-index:2}
-.pp-badge{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(224,197,143,.22);padding:7px 16px;margin-bottom:16px;font-size:9.5px;letter-spacing:4px;text-transform:uppercase;color:#e0c58f}
-.pp-dot{width:5px;height:5px;background:#28ca41;border-radius:50%}
-.pp-title{font-family:'Cormorant',serif;font-size:clamp(42px,5.5vw,76px);font-weight:300;line-height:.93;color:#ece6d9}
-.pp-sub{font-size:12px;letter-spacing:1px;color:rgba(236,230,217,.5);margin-top:10px;display:flex;align-items:center;gap:7px}
-.pp-sub svg{width:11px;height:11px}
-.pp-price{position:absolute;top:44px;right:48px;z-index:2;background:#e0c58f;color:#070f20;padding:14px 22px;text-align:center}
-.pp-price .pa{font-family:'Cormorant',serif;font-size:26px;font-weight:500;line-height:1;display:block}
-.pp-price .pl{font-size:8px;letter-spacing:3px;text-transform:uppercase;font-weight:500;margin-top:3px;display:block;opacity:.75}
-.pp-body{padding:48px}
-.pp-specs{display:flex;gap:0;margin-bottom:48px;border:1px solid rgba(224,197,143,.1)}
-.pp-spec{padding:22px 26px;border-right:1px solid rgba(224,197,143,.1);text-align:center}
-.pp-spec:last-child{border-right:none}
-.pp-sv{font-family:'Cormorant',serif;font-size:36px;font-weight:300;color:#e0c58f;display:block;line-height:1}
-.pp-sl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(236,230,217,.35);margin-top:7px}
-.pp-two{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;margin-bottom:48px}
-.pp-dt{font-family:'Cormorant',serif;font-size:28px;font-weight:300;color:#ece6d9;margin-bottom:16px}
-.pp-dd{font-size:14px;line-height:2;color:rgba(236,230,217,.6)}
-.pp-ft{font-size:9.5px;letter-spacing:4px;text-transform:uppercase;color:#e0c58f;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid rgba(224,197,143,.1)}
-.pp-fl{display:flex;flex-direction:column;gap:11px}
-.pp-f{display:flex;align-items:center;gap:11px;font-size:13px;color:rgba(236,230,217,.65)}
-.pp-f svg{width:11px;height:11px;color:#e0c58f;flex-shrink:0}
-.pp-ctas{display:flex;gap:12px;padding-top:32px;border-top:1px solid rgba(224,197,143,.1);flex-wrap:wrap}
-.pp-btn{padding:14px 30px;font-family:'Jost',sans-serif;font-size:10.5px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s}
-.pp-bp{background:#e0c58f;color:#070f20;border:none;font-weight:500}.pp-bp:hover{background:#f2dcb0}
-.pp-bg{background:none;border:1px solid rgba(224,197,143,.25);color:#e0c58f}.pp-bg:hover{border-color:#e0c58f;background:rgba(224,197,143,.07)}
-
-/* ═══════════════════
-   RESPONSIVE
-═══════════════════ */
-@media(max-width:1099px){
-  #nav,#phero,#filterbar .px,#grid-sec,#cta,footer{padding-left:40px;padding-right:40px}
-  #cta::before,#cta::after{left:40px;right:40px}
-  .pg{grid-template-columns:repeat(2,1fr)}
-  .ph-right{align-items:flex-start}
-  .ph-desc{text-align:left}
-  .nav-links li:not(:last-child):nth-last-child(n+3){display:none}
-}
-
-@media(max-width:767px){
-  /* Nav */
-  #nav{padding:16px 20px}
-  .nav-links{display:none}
-  .ham{display:flex}
-  #mob-menu{display:flex}
-
-  /* Page hero */
-  #phero{padding:110px 20px 64px}
-  .ph-inner{flex-direction:column;align-items:flex-start;gap:24px}
-  .ph-title{font-size:clamp(48px,12vw,72px)}
-  .ph-right{align-items:flex-start}
-  .ph-big-num{font-size:56px}
-  .ph-desc{text-align:left;max-width:100%;font-size:13.5px}
-
-  /* Filter */
-  .fb-inner{flex-direction:column;align-items:flex-start}
-  .fb-tabs{width:100%;padding:0 20px}
-  .fb-tab{padding:16px 16px;font-size:9.5px;letter-spacing:2.5px}
-  .fb-meta{padding:10px 20px;border-top:1px solid var(--border);width:100%;font-size:9.5px}
-
-  /* Grid */
-  #grid-sec{padding:40px 20px 80px}
-  .pg{grid-template-columns:1fr;gap:16px}
-
-  /* Cards */
-  .c-thumb{aspect-ratio:16/9}
-  .c-name{font-size:22px}
-  .c-specs{gap:12px}
-  .c-foot{flex-direction:row}
-
-  /* CTA */
-  #cta{padding:72px 20px}
-  #cta::before,#cta::after{left:20px;right:20px}
-  .cta-bg-word{font-size:80px}
-  .cta-acts{flex-direction:column;align-items:center}
-  .btn-g,.btn-o{width:100%;justify-content:center;max-width:320px}
-
-  /* Footer */
-  footer{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:12px}
-
-  /* Popup */
-  .pop-win{width:96vw;height:90vh}
-  .pp-hero{padding:24px 20px;height:42vh}
-  .pp-price{top:20px;right:20px;padding:10px 14px}
-  .pp-price .pa{font-size:18px}
-  .pp-body{padding:24px 20px}
-  .pp-specs{flex-wrap:wrap}
-  .pp-two{grid-template-columns:1fr}
-  .pp-ctas{flex-wrap:wrap}
-  .pp-btn{padding:12px 18px;font-size:9.5px}
-
-  /* Mobile sticky cta */
-  #mob-cta{display:flex}
-  body{padding-bottom:68px}
-}
-
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
+
 <div id="noise"></div>
 <div id="cur-d"></div>
 <div id="cur-r"></div>
 
-<!-- MOBILE MENU -->
-<div id="mob-menu">
-  <ul class="mob-links">
-    <li><a href="index.html" onclick="closeMob()">Home</a></li>
-    <li><a href="index.html#about" onclick="closeMob()">About</a></li>
-    <li><a href="index.html#services" onclick="closeMob()">Services</a></li>
-    <li><a href="projects.html" onclick="closeMob()">Portfolio</a></li>
-    <li><a href="index.html#contact" onclick="closeMob()">Contact</a></li>
-  </ul>
-  <div class="mob-cta-wrap"><a href="index.html#contact" class="btn-g" onclick="closeMob()">Start a Project</a></div>
-  <div class="mob-bottom">© 2025 Mansium · Istanbul</div>
-</div>
-
-<!-- NAV -->
 <nav id="nav">
-  <a href="index.html">
-    <img src="logo.png" alt="Mansium" class="nav-logo" onerror="this.style.display='none';document.querySelector('.nav-logo-fb').style.display='block'">
-    <span class="nav-logo-fb">MANSIUM</span>
+  <a href="index.html" class="nav-logo-link">
+    <img src="logo.png" alt="Mansium Luxury" class="nav-logo-img">
   </a>
   <ul class="nav-links">
-    <li><a href="index.html#about">About</a></li>
-    <li><a href="index.html#services">Services</a></li>
-    <li><a href="projects.html" class="active">Portfolio</a></li>
-    <li><a href="index.html#process">Process</a></li>
-    <li><a href="index.html#contact" class="nav-btn">Start a Project</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#services">Expertise</a></li>
+    <li><a href="#" class="active">Portfolio</a></li>
+    <li><a href="index.html#contact" class="nav-btn">Inquire</a></li>
   </ul>
-  <button class="ham" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- PAGE HERO -->
-<section id="phero">
-  <div class="ph-bg"></div>
-  <div class="ph-grid"></div>
-  <div class="ph-glow"></div>
-  <div class="w ph-inner">
-    <div>
-      <div class="ph-bc">
-        <a href="index.html">Home</a>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        Portfolio
-      </div>
-      <h1 class="ph-title">Our<br><em>Portfolio</em></h1>
-    </div>
-    <div class="ph-right">
-      <div class="ph-big-num" id="total-display">12</div>
-      <p class="ph-desc">Every project is a fully bespoke digital experience, built to present luxury real estate at its absolute finest.</p>
-    </div>
-  </div>
+<header class="portfolio-header">
+  <span class="sec-subtitle">The Collection</span>
+  <h1 class="sec-title">Exclusive <i>Estates</i></h1>
+</header>
+
+<section class="projects-section">
+  <div class="grid" id="project-grid"></div>
 </section>
 
-<!-- FILTER BAR -->
-<div id="filterbar">
-  <div class="w px fb-inner">
-    <div class="fb-tabs" id="fb-tabs">
-      <button class="fb-tab active" data-f="all">All</button>
-      <button class="fb-tab" data-f="villa">Villas</button>
-      <button class="fb-tab" data-f="penthouse">Penthouses</button>
-      <button class="fb-tab" data-f="duplex">Duplexes</button>
-      <button class="fb-tab" data-f="mansion">Mansions</button>
-      <button class="fb-tab" data-f="available">Available</button>
-      <button class="fb-tab" data-f="sold">Sold</button>
-    </div>
-    <div class="fb-meta">Showing <span id="shown-count">12</span> properties</div>
-  </div>
-</div>
-
-<!-- GRID -->
-<section id="grid-sec">
-  <div class="w px">
-    <div class="pg" id="pg"></div>
-    <div id="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <p>No properties in this category.</p>
-    </div>
-  </div>
+<section class="cta-section">
+  <h2 class="sec-title">Ready to <i>Elevate</i> Your Property?</h2>
+  <p style="color: var(--t2); font-size: 16px; margin-top: 10px;">Reach out today to discuss marketing, representation, and web design for your estate.</p>
+  <a href="index.html#contact" class="btn-large">Start a Conversation</a>
 </section>
 
-<!-- CTA -->
-<section id="cta">
-  <div class="cta-bg-word">MANSIUM</div>
-  <div class="cta-inner w rv">
-    <div class="lbl">Ready to Begin</div>
-    <h2 class="cta-h">Have a Property<br>Worth <em>Showcasing?</em></h2>
-    <p class="cta-p">We accept a limited number of new projects each quarter. If your property is exceptional, we'd love to hear about it.</p>
-    <div class="cta-acts">
-      <a href="index.html#contact" class="btn-g">Submit Your Property <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      <a href="index.html" class="btn-o">Back to Home</a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="foot-logo">
-    <img src="logo.png" alt="Mansium" onerror="this.style.display='none';document.querySelector('.foot-logo-fb').style.display='block'">
-    <span class="foot-logo-fb">MANSIUM</span>
-  </div>
-  <div class="foot-copy">© 2025 Mansium — Istanbul, Turkey</div>
-  <div class="foot-back"><a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Home</a></div>
-</footer>
-
-<!-- MOBILE STICKY CTA -->
-<div id="mob-cta">
-  <a href="index.html" class="mc-s">Home</a>
-  <a href="index.html#contact" class="mc-p">Start a Project</a>
-</div>
-
-<!-- POPUP -->
-<div id="pop-ov" onclick="handleOvClick(event)">
-  <div class="pop-win">
-    <div class="pop-bar">
-      <div class="pop-dots"><span class="pd-c" onclick="closePopup()"></span><span class="pd-m"></span><span class="pd-x"></span></div>
-      <div class="pop-url"><svg class="pop-ssl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span id="pop-url-txt">mansium.co/properties/...</span></div>
-    </div>
-    <div class="pop-banner" id="pop-banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="11" height="11"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/></svg>Live Website Preview — Powered by Mansium</div>
-    <div class="pop-body"><div class="pop-scroll" id="pop-content"></div></div>
+<div id="pop">
+  <div class="pop-c">
+    <button class="pop-x" id="pop-x">Close</button>
+    <div id="pop-content"></div>
   </div>
 </div>
 
 <script>
-/* CURSOR */
-const cd=document.getElementById('cur-d'),cr=document.getElementById('cur-r');
-if(cd&&cr){let mx=0,my=0,rx=0,ry=0;document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.cssText=`left:${mx}px;top:${my}px`});(function l(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cr.style.cssText=`left:${rx}px;top:${ry}px`;requestAnimationFrame(l)})()}
-
-/* MOBILE MENU */
-function toggleMob(){const h=document.getElementById('ham'),m=document.getElementById('mob-menu');h.classList.toggle('open');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
-function closeMob(){document.getElementById('ham').classList.remove('open');document.getElementById('mob-menu').classList.remove('open');document.body.style.overflow='';}
-
-/* REVEAL */
-const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')})},{threshold:.08});
-document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
-
-/* ICONS */
-const ICONS={
-  villa:`<svg class="c-icon" viewBox="0 0 100 100" fill="none"><path d="M10 90L50 10L90 90H10Z" stroke="#e0c58f" stroke-width=".8"/><path d="M35 90V65h30v25" stroke="#e0c58f" stroke-width=".8"/></svg>`,
-  penthouse:`<svg class="c-icon" viewBox="0 0 100 100" fill="none"><rect x="25" y="15" width="50" height="75" stroke="#e0c58f" stroke-width=".8"/><rect x="35" y="25" width="12" height="12" stroke="#e0c58f" stroke-width=".6"/><rect x="53" y="25" width="12" height="12" stroke="#e0c58f" stroke-width=".6"/><rect x="40" y="70" width="20" height="20" stroke="#e0c58f" stroke-width=".6"/></svg>`,
-  duplex:`<svg class="c-icon" viewBox="0 0 100 100" fill="none"><rect x="20" y="20" width="60" height="60" stroke="#e0c58f" stroke-width=".8"/><line x1="20" y1="50" x2="80" y2="50" stroke="#e0c58f" stroke-width=".8"/><rect x="30" y="28" width="16" height="12" stroke="#e0c58f" stroke-width=".6"/><rect x="54" y="28" width="16" height="12" stroke="#e0c58f" stroke-width=".6"/></svg>`,
-  mansion:`<svg class="c-icon" viewBox="0 0 100 100" fill="none"><path d="M10 80L30 40h40L90 80H10Z" stroke="#e0c58f" stroke-width=".8"/><rect x="20" y="55" width="60" height="25" stroke="#e0c58f" stroke-width=".6"/><rect x="44" y="60" width="12" height="20" stroke="#e0c58f" stroke-width=".5"/></svg>`,
-};
-const BGSCLASSES={villa:'linear-gradient(155deg,#0d2137,#093024)',penthouse:'linear-gradient(155deg,#0a0e2e,#1a0a2e)',duplex:'linear-gradient(155deg,#0a1a2e,#1a0e0a)',mansion:'linear-gradient(155deg,#0a1428,#1a1428)'};
-const BGSALT=['linear-gradient(155deg,#0d2030,#0a2820)','linear-gradient(155deg,#080d28,#0a1438)','linear-gradient(155deg,#100e28,#1a100e)','linear-gradient(155deg,#0a1828,#1a1010)'];
-
-/* PROJECTS */
-const PROJECTS=[
-  {id:'villa-azur',type:'villa',status:'available',name:'Azur Vista Villa',loc:'Bodrum, Turkey',price:'€4,850,000',beds:5,baths:6,sqm:620},
-  {id:'penthouse-horizon',type:'penthouse',status:'exclusive',name:'The Horizon Suite',loc:'Istanbul, Turkey',price:'$12,500,000',beds:4,baths:5,sqm:780},
-  {id:'duplex-meridian',type:'duplex',status:'offer',name:'Meridian Duplex',loc:'Dubai, UAE',price:'AED 28,000,000',beds:4,baths:5,sqm:520},
-  {id:'villa-sarande',type:'villa',status:'sold',name:'Villa Sarande',loc:'Çeşme, Turkey',price:'€3,200,000',beds:4,baths:5,sqm:480},
-  {id:'mansion-bosphorus',type:'mansion',status:'available',name:'Bosphorus Mansion',loc:'Bebek, Istanbul',price:'$22,000,000',beds:8,baths:9,sqm:1240},
-  {id:'penthouse-azure',type:'penthouse',status:'sold',name:'Azure Sky Penthouse',loc:'Maslak, Istanbul',price:'$8,900,000',beds:3,baths:4,sqm:610},
-  {id:'villa-palm',type:'villa',status:'available',name:'Palm Vista Estate',loc:'Palm Jumeirah, Dubai',price:'AED 45,000,000',beds:6,baths:7,sqm:950},
-  {id:'duplex-skyline',type:'duplex',status:'sold',name:'Skyline Duplex',loc:'Şişli, Istanbul',price:'$6,400,000',beds:3,baths:4,sqm:440},
-  {id:'mansion-sapphire',type:'mansion',status:'offer',name:'Sapphire Estate',loc:'Kemer, Antalya',price:'€18,500,000',beds:10,baths:12,sqm:1800},
-  {id:'penthouse-cloud',type:'penthouse',status:'available',name:'Cloud Nine Penthouse',loc:'DIFC, Dubai',price:'AED 19,500,000',beds:4,baths:5,sqm:700},
-  {id:'villa-aegean',type:'villa',status:'sold',name:'Aegean Pearl Villa',loc:'Fethiye, Turkey',price:'€2,750,000',beds:4,baths:4,sqm:380},
-  {id:'duplex-grand',type:'duplex',status:'available',name:'Grand Avenue Duplex',loc:'Nişantaşı, Istanbul',price:'$9,200,000',beds:4,baths:5,sqm:560},
-];
-
-const STMAP={available:{cls:'s-av',lbl:'Available'},sold:{cls:'s-sold',lbl:'Sold'},offer:{cls:'s-offer',lbl:'Under Offer'},exclusive:{cls:'s-ex',lbl:'Exclusive'}};
-
-function makeCard(p,i){
-  const st=STMAP[p.status]||STMAP.available;
-  const bg=BGSCLASSES[p.type]||BGSALT[i%BGSALT.length];
-  const el=document.createElement('div');
-  el.className='card';el.setAttribute('data-type',p.type);el.setAttribute('data-status',p.status);
-  el.innerHTML=`
-    <div class="c-thumb">
-      <div class="c-bg" style="background:${bg}"></div>
-      ${ICONS[p.type]||ICONS.villa}
-      <div class="c-ov"></div>
-      <div class="c-status ${st.cls}">${st.lbl}</div>
-    </div>
-    <div class="c-body">
-      <div class="c-type">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</div>
-      <div class="c-name">${p.name}</div>
-      <div class="c-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${p.loc}</div>
-      <div class="c-specs">
-        <div class="cs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>${p.beds} Beds</span></div>
-        <div class="cs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h16M4 12a2 2 0 01-2-2V6h20v4a2 2 0 01-2 2M6 12v8M18 12v8"/></svg><span>${p.baths} Baths</span></div>
-        <div class="cs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 3H3v7h18V3zM21 14H3v7h18v-7z"/></svg><span>${p.sqm} m²</span></div>
-      </div>
-      <div class="c-foot">
-        <div class="c-price">${p.price}</div>
-        <button class="c-prev" onclick="openPopup('${p.id}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-          Preview
-        </button>
-      </div>
-    </div>`;
-  el.addEventListener('click',e=>{if(!e.target.closest('.c-prev'))openPopup(p.id)});
-  return el;
-}
-
-function render(list){
-  const g=document.getElementById('pg'),em=document.getElementById('empty-state');
-  g.innerHTML='';
-  document.getElementById('shown-count').textContent=list.length;
-  if(!list.length){em.style.display='block';return}
-  em.style.display='none';
-  list.forEach((p,i)=>{
-    const el=makeCard(p,i);g.appendChild(el);
-    setTimeout(()=>{el.classList.add('vis');el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'))},40+i*50);
+  // CURSOR
+  const curD = document.getElementById('cur-d');
+  const curR = document.getElementById('cur-r');
+  document.addEventListener('mousemove', (e) => {
+    if (curD && curR) {
+      curD.style.left = e.clientX + 'px'; curD.style.top = e.clientY + 'px';
+      setTimeout(() => { curR.style.left = e.clientX + 'px'; curR.style.top = e.clientY + 'px'; }, 50);
+    }
   });
-  document.querySelectorAll('.c-prev,.card').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'))});
-}
 
-document.querySelectorAll('.fb-tab').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.fb-tab').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const f=btn.dataset.f;
-    const filtered=f==='all'?PROJECTS:f==='available'?PROJECTS.filter(p=>p.status==='available'):f==='sold'?PROJECTS.filter(p=>p.status==='sold'):PROJECTS.filter(p=>p.type===f);
-    render(filtered);
+  const updateCursorTargets = () => {
+    document.querySelectorAll('a, button, .card').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('ch'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('ch'));
+    });
+  };
+
+  // PROJELER LİSTESİ (RESİMLER EKLENEBİLİR)
+  const projects = [
+    {
+      id: 1, name: "The Glass Pavilion", loc: "Beverly Hills, CA", price: "$42,500,000",
+      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), var(--navy-1)", status: "Available",
+      images: [],
+      specs: [ { l: "Living Area", v: "14,500 sqft" }, { l: "Bedrooms", v: "6" }, { l: "Bathrooms", v: "9" } ],
+      desc: "An architectural triumph suspended above the Los Angeles basin. Museum-quality finishes.",
+      features: ["Infinity Pool & Spa", "Private Cinema", "Wine Tasting Room"]
+    },
+    {
+      id: 2, name: "Palais de la Mer", loc: "French Riviera", price: "€65,000,000",
+      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), var(--navy-3)", status: "Off-Market",
+      images: [],
+      specs: [ { l: "Living Area", v: "22,000 sqft" }, { l: "Bedrooms", v: "10" }, { l: "Bathrooms", v: "12" } ],
+      desc: "A historic chateau meticulously restored to modern ultra-luxury standards. Featuring direct Mediterranean Sea access.",
+      features: ["Private Dock", "Helipad", "Guest House"]
+    },
+    {
+      id: 3, name: "Sky Penthouse", loc: "Manhattan, NY", price: "$28,000,000",
+      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), var(--navy-2)", status: "Available",
+      images: [],
+      specs: [ { l: "Living Area", v: "7,200 sqft" }, { l: "Bedrooms", v: "4" } ],
+      desc: "Occupying the entire 82nd floor of a premier Billionaires' Row tower. Unparalleled Central Park views.",
+      features: ["Private Elevator Landing", "Central Park Views", "Chef's Kitchen"]
+    }
+  ];
+
+  const grid = document.getElementById('project-grid');
+  projects.forEach(p => {
+    grid.innerHTML += `
+      <div class="card" onclick="openPop(${p.id})">
+        <div class="card-bg" style="background: ${p.bg}"></div>
+        <div class="card-content">
+          <div class="card-badge">${p.status}</div>
+          <h3 class="card-title">${p.name}</h3>
+          <div class="card-loc">${p.loc}</div>
+          <div class="card-btn"><span>Explore Property</span><span>→</span></div>
+        </div>
+      </div>
+    `;
   });
-});
-render(PROJECTS);
-document.getElementById('total-display').textContent=PROJECTS.length;
 
-/* POPUP DATA */
-const PD={
-  'villa-azur':{url:'mansium.co/properties/azur-vista-villa',banner:'Azur Vista Villa · Bodrum, Turkey',label:'Villa · Mediterranean',price:'€4,850,000',name:'Azur Vista Villa',loc:'Bodrum, Muğla — Turkey',bg:'linear-gradient(155deg,#0d2137,#093024)',specs:[{v:'5',l:'Bedrooms'},{v:'6',l:'Bathrooms'},{v:'620',l:'Sqm'},{v:'1',l:'Pool'}],dt:'Mediterranean Excellence',dd:'Perched above the Aegean Sea with panoramic views stretching to the Greek islands, Azur Vista Villa is a masterwork of contemporary Mediterranean architecture. Stone, timber, and glass unite across 620 square metres of seamless indoor-outdoor living.',feats:['Infinity pool overlooking the Aegean','Private cinema room','Smart home automation','Landscaped olive terraces','Triple garage with EV charging','Rooftop entertainment deck','Chef\'s kitchen with La Cornue range']},
-  'penthouse-horizon':{url:'mansium.co/properties/horizon-suite',banner:'The Horizon Suite · Istanbul, Turkey',label:'Penthouse · Ultra-Luxury',price:'$12,500,000',name:'The Horizon Suite',loc:'Levent, Istanbul — Turkey',bg:'linear-gradient(155deg,#0a0e2e,#1a0a2e)',specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'780',l:'Sqm'},{v:'52',l:'Floor'}],dt:'Above The City',dd:'Rising above Istanbul\'s financial district on the 52nd floor, The Horizon Suite redefines urban luxury. Floor-to-ceiling glass walls dissolve the boundary between the living space and a breathtaking 360° panorama.',feats:['52nd floor panoramic terrace','Private heated plunge pool','Bosphorus & city dual aspect','Wine cellar','24/7 concierge & security','Home theatre with Dolby Atmos','Hotel-style master bathroom']},
-  'duplex-meridian':{url:'mansium.co/properties/meridian-duplex',banner:'Meridian Duplex · Dubai, UAE',label:'Duplex · Premium',price:'AED 28,000,000',name:'Meridian Duplex',loc:'Downtown Dubai — UAE',bg:'linear-gradient(155deg,#0a1a2e,#1a0e0a)',specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'520',l:'Sqm'},{v:'2',l:'Floors'}],dt:'Art of Living',dd:'At the intersection of design and desire, Meridian Duplex occupies two full floors in one of Downtown Dubai\'s most sought-after towers. Italian marble, bespoke millwork, and museum-quality lighting.',feats:['Double-height living area','Rooftop with Burj views','Bulthaup kitchen','Italian marble throughout','Fendi Casa furnishings','Temperature-controlled wine wall']},
-  'villa-sarande':{url:'mansium.co/properties/villa-sarande',banner:'Villa Sarande · Çeşme, Turkey',label:'Villa · Aegean',price:'€3,200,000',name:'Villa Sarande',loc:'Çeşme, İzmir — Turkey',bg:'linear-gradient(155deg,#0d2030,#0a2820)',specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'480',l:'Sqm'},{v:'1',l:'Pool'}],dt:'Aegean Serenity',dd:'Nestled on the Çeşme peninsula with direct views of the Aegean, Villa Sarande combines traditional Aegean stone architecture with contemporary interior design. A private retreat of exceptional character.',feats:['Sea-view infinity pool','Private beach access','Wine cellar','Landscaped garden','Smart home system','Outdoor kitchen & terrace']},
-  'mansion-bosphorus':{url:'mansium.co/properties/bosphorus-mansion',banner:'Bosphorus Mansion · Bebek, Istanbul',label:'Mansion · Ultra-Prestigious',price:'$22,000,000',name:'Bosphorus Mansion',loc:'Bebek, Istanbul — Turkey',bg:'linear-gradient(155deg,#0a1428,#1a1428)',specs:[{v:'8',l:'Bedrooms'},{v:'9',l:'Bathrooms'},{v:'1240',l:'Sqm'},{v:'3',l:'Floors'}],dt:'Historic Grandeur',dd:'Standing on the European shores of the Bosphorus in the prestigious Bebek neighbourhood, this waterfront mansion is one of Istanbul\'s most extraordinary private residences.',feats:['Private Bosphorus waterfront','Private dock & boat berth','Ottoman ceiling details','Hamam & wellness centre','Indoor pool','Private staff quarters']},
-  'penthouse-azure':{url:'mansium.co/properties/azure-sky',banner:'Azure Sky · Maslak, Istanbul',label:'Penthouse · Luxury',price:'$8,900,000',name:'Azure Sky Penthouse',loc:'Maslak, Istanbul — Turkey',bg:'linear-gradient(155deg,#080d28,#0a1438)',specs:[{v:'3',l:'Bedrooms'},{v:'4',l:'Bathrooms'},{v:'610',l:'Sqm'},{v:'48',l:'Floor'}],dt:'City & Sky',dd:'Occupying the entire 48th floor of Maslak\'s most prestigious tower, Azure Sky Penthouse offers an uninterrupted panorama of Istanbul spanning from the Bosphorus to the Marmara Sea.',feats:['360° city panorama','Private terrace 180sqm','Smart home automation','Double garage','Concierge 24/7','Custom Italian kitchen']},
-  'villa-palm':{url:'mansium.co/properties/palm-vista',banner:'Palm Vista Estate · Dubai',label:'Villa · Waterfront',price:'AED 45,000,000',name:'Palm Vista Estate',loc:'Palm Jumeirah, Dubai — UAE',bg:'linear-gradient(155deg,#0a1828,#1a1010)',specs:[{v:'6',l:'Bedrooms'},{v:'7',l:'Bathrooms'},{v:'950',l:'Sqm'},{v:'1',l:'Pool'}],dt:'Palm Perfection',dd:'Located on the iconic Palm Jumeirah, Palm Vista Estate sits on a prime frond with direct beach access and panoramic views of the Dubai skyline.',feats:['Private beach access','Infinity pool facing Marina','Home cinema','6-car garage','Smart villa automation','Staff accommodation']},
-  'duplex-skyline':{url:'mansium.co/properties/skyline-duplex',banner:'Skyline Duplex · Istanbul',label:'Duplex · Contemporary',price:'$6,400,000',name:'Skyline Duplex',loc:'Şişli, Istanbul — Turkey',bg:'linear-gradient(155deg,#0e1830,#181020)',specs:[{v:'3',l:'Bedrooms'},{v:'4',l:'Bathrooms'},{v:'440',l:'Sqm'},{v:'2',l:'Floors'}],dt:'Urban Elegance',dd:'A stunning contemporary duplex in the heart of Şişli, Skyline Duplex spans two floors with a sweeping wraparound terrace offering panoramic city views.',feats:['Wraparound city-view terrace','Double-height lounge','German kitchen system','Private parking x2','Building concierge','Floor-to-ceiling glazing']},
-  'mansion-sapphire':{url:'mansium.co/properties/sapphire-estate',banner:'Sapphire Estate · Antalya',label:'Mansion · Resort-Style',price:'€18,500,000',name:'Sapphire Estate',loc:'Kemer, Antalya — Turkey',bg:'linear-gradient(155deg,#0a1428,#0a2418)',specs:[{v:'10',l:'Bedrooms'},{v:'12',l:'Bathrooms'},{v:'1800',l:'Sqm'},{v:'3',l:'Pools'}],dt:'Resort Without Boundaries',dd:'Sapphire Estate spans 1,800 square metres across a private 8,000 sqm plot in the mountains above Kemer, with stunning views of the Taurus Mountains and Mediterranean Sea.',feats:['Three swimming pools','Private tennis court','Cinema & games room','Helipad','Full spa & gym','Guest house']},
-  'penthouse-cloud':{url:'mansium.co/properties/cloud-nine',banner:'Cloud Nine · DIFC, Dubai',label:'Penthouse · Financial District',price:'AED 19,500,000',name:'Cloud Nine Penthouse',loc:'DIFC, Dubai — UAE',bg:'linear-gradient(155deg,#080a24,#1a0a20)',specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'700',l:'Sqm'},{v:'55',l:'Floor'}],dt:'At The Top',dd:'Positioned at the pinnacle of DIFC\'s most sought-after residential tower, Cloud Nine Penthouse offers the ultimate in Dubai luxury living with rare materials and a private rooftop terrace.',feats:['Private rooftop 200sqm','Burj Khalifa & sea views','Custom marble interiors','Private elevator','Smart home','3 parking bays']},
-  'villa-aegean':{url:'mansium.co/properties/aegean-pearl',banner:'Aegean Pearl · Fethiye, Turkey',label:'Villa · Coastal',price:'€2,750,000',name:'Aegean Pearl Villa',loc:'Fethiye, Muğla — Turkey',bg:'linear-gradient(155deg,#0d2034,#0a2c24)',specs:[{v:'4',l:'Bedrooms'},{v:'4',l:'Bathrooms'},{v:'380',l:'Sqm'},{v:'1',l:'Pool'}],dt:'Turquoise Coast Living',dd:'Surrounded by pine trees on the Turquoise Coast, Aegean Pearl Villa is a boutique retreat of rare natural beauty. The property sits above Fethiye bay with spectacular views of the archipelago.',feats:['Panoramic sea terrace','Heated plunge pool','Private garden','Sea kayak access','Traditional stone walls','Alfresco dining']},
-  'duplex-grand':{url:'mansium.co/properties/grand-avenue',banner:'Grand Avenue Duplex · Istanbul',label:'Duplex · Prime District',price:'$9,200,000',name:'Grand Avenue Duplex',loc:'Nişantaşı, Istanbul — Turkey',bg:'linear-gradient(155deg,#100e28,#1a100e)',specs:[{v:'4',l:'Bedrooms'},{v:'5',l:'Bathrooms'},{v:'560',l:'Sqm'},{v:'2',l:'Floors'}],dt:'Nişantaşı Prestige',dd:'In Istanbul\'s most prestigious address, Grand Avenue Duplex occupies two floors of a newly completed boutique building on Abdi İpekçi Avenue. Italian craftsmanship and natural stone throughout.',feats:['Abdi İpekçi Avenue address','Bespoke Italian millwork','Natural stone floors','Private parking x2','Wine cellar','Rooftop Bosphorus views']},
-};
+  const pop = document.getElementById('pop');
+  const popContent = document.getElementById('pop-content');
+  const popX = document.getElementById('pop-x');
 
-function openPopup(id){
-  const p=PD[id];if(!p)return;
-  document.getElementById('pop-url-txt').textContent=p.url;
-  document.getElementById('pop-banner').innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="11" height="11"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="1" fill="currentColor"/><circle cx="10" cy="6" r="1" fill="currentColor"/></svg>${p.banner}`;
-  const feats=p.feats.map(f=>`<div class="pp-f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>${f}</div>`).join('');
-  const specs=p.specs.map(s=>`<div class="pp-spec"><span class="pp-sv">${s.v}</span><span class="pp-sl">${s.l}</span></div>`).join('');
-  document.getElementById('pop-content').innerHTML=`<div class="pp"><div class="pp-hero" style="background:${p.bg}"><div class="pp-hero-bg"></div><div class="pp-grid"></div><div class="pp-grd"></div><div class="pp-content"><div class="pp-badge"><div class="pp-dot"></div>${p.label}</div><div class="pp-title">${p.name}</div><div class="pp-sub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${p.loc}</div></div><div class="pp-price"><span class="pa">${p.price}</span><span class="pl">Asking Price</span></div></div><div class="pp-body"><div class="pp-specs">${specs}</div><div class="pp-two"><div><div class="pp-dt">${p.dt}</div><p class="pp-dd">${p.dd}</p></div><div><div class="pp-ft">Property Highlights</div><div class="pp-fl">${feats}</div></div></div><div class="pp-ctas"><button class="pp-btn pp-bp">Request a Viewing</button><button class="pp-btn pp-bg">Download Brochure</button><button class="pp-btn pp-bg">Contact Agent</button></div></div></div>`;
-  document.getElementById('pop-ov').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closePopup(){document.getElementById('pop-ov').classList.remove('open');document.body.style.overflow='';}
-function handleOvClick(e){if(e.target===document.getElementById('pop-ov'))closePopup()}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closePopup()});
+  window.openPop = (id) => {
+    const p = projects.find(item => item.id === id);
+    if(!p) return;
+
+    const specsHtml = p.specs.map(s => `<div class="pp-spec-item"><span class="pp-spec-val">${s.v}</span><span class="pp-spec-lbl">${s.l}</span></div>`).join('');
+    const featsHtml = p.features.map(f => `<li>${f}</li>`).join('');
+    const galleryHtml = (p.images && p.images.length > 0) ? `<div class="pp-gallery">${p.images.map(img => `<img src="${img}" alt="View">`).join('')}</div>` : '';
+
+    popContent.innerHTML = `
+      <div class="pp-hero" style="background: ${p.bg}">
+        <div><div class="pp-badge"><div class="pp-dot"></div>${p.status}</div><h2 class="pp-title">${p.name}</h2><div class="pp-loc">${p.loc}</div></div>
+        <div class="pp-price-wrap"><div class="pp-price">${p.price}</div><div class="pp-price-lbl">Asking Price</div></div>
+      </div>
+      <div class="pp-body">
+        <div class="pp-main">
+          <div class="pp-specs">${specsHtml}</div>
+          <div class="pp-desc">
+            <h3 style="font-family:'Cormorant',serif; font-size:24px; color:var(--gold); margin-bottom:15px;">Property Overview</h3>
+            <p>${p.desc}</p><ul class="pp-features">${featsHtml}</ul>
+            ${galleryHtml}
+          </div>
+        </div>
+        <div class="pp-sidebar">
+          <div class="pp-ctas"><a href="index.html#contact" class="pp-btn primary">Inquire Now</a></div>
+        </div>
+      </div>
+    `;
+    pop.classList.add('active');
+    updateCursorTargets();
+  };
+
+  popX.addEventListener('click', () => pop.classList.remove('active'));
+  pop.addEventListener('click', (e) => { if(e.target === pop) pop.classList.remove('active'); });
+
+  updateCursorTargets();
 </script>
+
 </body>
 </html>
