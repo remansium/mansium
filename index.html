@@ -94,6 +94,10 @@ button { font-family: inherit; cursor: none; outline: none; border: none; backgr
 .nav-btn { border: 1px solid rgba(224,197,143,.3); color: var(--gold) !important; padding: 11px 26px; transition: all .3s !important; }
 .nav-btn:hover { background: var(--gold) !important; color: var(--navy-0) !important; border-color: var(--gold) !important; }
 
+/* HAMBURGER BUTON TASARIMI */
+.hamburger { display: none; flex-direction: column; gap: 6px; z-index: 400; }
+.hamburger .line { width: 30px; height: 1px; background: var(--gold); transition: transform 0.4s var(--ease), opacity 0.4s; pointer-events: none; }
+
 /* ════════════════════════════════════════
    HERO SECTION
 ════════════════════════════════════════ */
@@ -267,7 +271,6 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
   .section { padding: 80px 30px; }
   .hero-left { padding: 120px 30px 60px; }
   #nav { padding: 20px 30px; }
-  .nav-links { display: none; } /* Mobil menü gizlendi */
   .services-grid, .footer-grid { grid-template-columns: 1fr; }
   .contact-wrapper { padding: 40px 30px; gap: 40px; }
   .price-card { padding: 40px 30px; }
@@ -277,6 +280,22 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
     height: auto !important; 
     min-height: auto !important; 
   }
+  .hamburger { display: flex; } /* Butonu telefonda görünür yap */
+  
+  /* Tam ekran lüks açılır menü */
+  .nav-links {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background: rgba(6,13,30,0.98); backdrop-filter: blur(20px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 40px; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease);
+    z-index: 350; margin: 0;
+  }
+  .nav-links.active { opacity: 1; pointer-events: all; }
+  .nav-links a { font-size: 14px; letter-spacing: 6px; }
+  
+  /* Çarpı İşareti Animasyonu */
+  .hamburger.active .line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.active .line:nth-child(2) { transform: translateY(-7px) rotate(-45deg); }
 }
 </style>
 </head>
@@ -290,11 +309,18 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
   <a href="https://mansium.com" class="nav-logo-link">
     <img src="logo.png" alt="Mansium Luxury" class="nav-logo-img">
   </a>
-  <ul class="nav-links">
+
+<button class="hamburger" id="hamburger">
+    <span class="line"></span>
+    <span class="line"></span>
+  </button>
+
+  <ul class="nav-links" id="nav-links">
     <li><a href="#about">Legacy</a></li>
     <li><a href="#services">Expertise</a></li>
     <li><a href="projects.html">Portfolio</a></li>
-    <li><a href="#contact" class="nav-btn">Inquire</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact" class="nav-btn">Get Access</a></li>
   </ul>
 </nav>
 
@@ -612,6 +638,31 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
       
       // Kullanıcının mail uygulamasını aç ve bilgileri doldur
       window.location.href = 'mailto:' + mailTo + '?subject=' + subject + '&body=' + body;
+    });
+  }
+
+  // ════════════════════════════════════════
+  // MOBİL HAMBURGER MENÜ LOGIC
+  // ════════════════════════════════════════
+  const hamburger = document.getElementById('hamburger');
+  const navLinksList = document.getElementById('nav-links');
+  const navItems = document.querySelectorAll('.nav-links a');
+
+  if(hamburger) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinksList.classList.toggle('active');
+      // Menü açıldığında arkadaki sayfanın kaymasını engeller
+      document.body.style.overflow = navLinksList.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Menüdeki bir linke tıklandığında menüyü zarifçe kapat
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinksList.classList.remove('active');
+        document.body.style.overflow = '';
+      });
     });
   }
 </script>
