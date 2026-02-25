@@ -388,6 +388,7 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
       <h2 class="sec-title">Featured <i>Estates</i></h2>
       <p style="color: var(--t3);">Click to explore our featured properties in detail.</p>
     </div>
+
     <div class="teaser-grid">
       <div class="teaser-item reveal delay-1" onclick="openPop(1)">
         <div class="teaser-bg" style="background: linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('kucuk-1.jpg') center/cover;"></div>
@@ -537,7 +538,9 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
   }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
   revealElements.forEach(el => revealObserver.observe(el));
 
+
   // ANA SAYFA MODAL VERİLERİ (GALERİLİ)
+  // Ratio: 1920 x 1200 pixel (16:10) YATAY
   const homeProjects = [
     {
       id: 1,
@@ -547,6 +550,7 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
       status: "Available",
       
       // SADECE POP-UP'TA AÇILACAK OLAN GENİŞ/YATAY RESİM:
+      // Ratio: 1920 x 1200 pixel (16:10)
       bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('buyuk-1.jpg') center/cover",
       
       images: [], 
@@ -561,8 +565,10 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
       price: "$42,500,000",
       status: "Available",
       
+    
       // SADECE POP-UP'TA AÇILACAK OLAN GENİŞ/YATAY RESİM:
-      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('buyuk-1.jpg') center/cover",
+      // Ratio: 1920 x 1200 pixel (16:10)
+      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('penthouse.jpeg') center/cover",
       
       images: [], 
       specs: [ { l: "Living Area", v: "14,500 sqft" }, { l: "Bedrooms", v: "6" } ],
