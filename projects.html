@@ -105,6 +105,11 @@ button { font-family: inherit; cursor: none; outline: none; border: none; backgr
   .grid { grid-template-columns: 1fr; }
   #nav { padding: 20px 30px; }
   .nav-links { display: none; }
+  .pp-hero {
+    min-height: 280px !important; /* Telefonda yatay (landscape) durmaya zorlar */
+    height: 280px !important;
+    padding: 30px !important;
+  }
 }
 </style>
 </head>
@@ -182,7 +187,7 @@ button { font-family: inherit; cursor: none; outline: none; border: none; backgr
       // 2. POP-UP'TAKİ YATAY RESİM (bg)
       bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('art-of-living.png') center/cover",
       
-      images: ["salon.jpg", "havuz.jpg"], // En alttaki galeri resimleri
+      images: [], // En alttaki galeri resimleri
       specs: [ { l: "Living Area", v: "7,200 sqft" }, { l: "Bedrooms", v: "4" } ],
       desc: "Occupying the entire 82nd floor of a premier Billionaires' Row tower. Unparalleled Central Park views.",
       features: ["Private Elevator Landing", "Central Park Views", "Chef's Kitchen"]
