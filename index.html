@@ -351,14 +351,15 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
     </div>
     <div class="teaser-grid">
       <div class="teaser-item reveal delay-1" onclick="openPop(1)">
-        <div class="teaser-bg" style="background: radial-gradient(circle at center, rgba(6,13,30,0.4), var(--navy-2));"></div>
+        <div class="teaser-bg" style="background: linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('kucuk-1.jpg') center/cover;"></div>
         <div class="teaser-content">
           <div class="teaser-title">The Glass Pavilion</div>
           <div class="teaser-loc">Beverly Hills, CA</div>
         </div>
       </div>
+
       <div class="teaser-item reveal delay-2" onclick="openPop(2)">
-        <div class="teaser-bg" style="background: radial-gradient(circle at center, rgba(6,13,30,0.4), var(--navy-2));"></div>
+        <div class="teaser-bg" style="background: linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('kucuk-2.jpg') center/cover;"></div>
         <div class="teaser-content">
           <div class="teaser-title">Palais de la Mer</div>
           <div class="teaser-loc">French Riviera</div>
@@ -504,26 +505,30 @@ footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px sol
       name: "The Glass Pavilion",
       loc: "Beverly Hills, CA",
       price: "$42,500,000",
-      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), var(--navy-2)",
       status: "Available",
-      images: [
-        /* Buraya kendi resim URL'lerini ekleyebilirsin örn: "havuz.jpg" */
-      ],
-      specs: [ { l: "Living Area", v: "14,500 sqft" }, { l: "Bedrooms", v: "6" }, { l: "Bathrooms", v: "9" } ],
-      desc: "An architectural triumph suspended above the Los Angeles basin. Museum-quality finishes.",
-      features: ["Infinity Pool & Spa", "Private Cinema", "Smart Home Integration"]
+      
+      // SADECE POP-UP'TA AÇILACAK OLAN GENİŞ/YATAY RESİM:
+      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('buyuk-1.jpg') center/cover",
+      
+      images: ["salon.jpg"], 
+      specs: [ { l: "Living Area", v: "14,500 sqft" }, { l: "Bedrooms", v: "6" } ],
+      desc: "An architectural triumph suspended above the Los Angeles basin.",
+      features: ["Infinity Pool & Spa"]
     },
     {
       id: 2,
-      name: "Palais de la Mer",
-      loc: "French Riviera",
-      price: "€65,000,000",
-      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), var(--navy-3)",
-      status: "Off-Market",
-      images: [],
-      specs: [ { l: "Living Area", v: "22,000 sqft" }, { l: "Bedrooms", v: "10" } ],
-      desc: "A historic chateau meticulously restored to modern ultra-luxury standards. Featuring direct Mediterranean Sea access.",
-      features: ["Private Dock", "Helipad", "Guest House"]
+      name: "The Glass Pavilion",
+      loc: "Beverly Hills, CA",
+      price: "$42,500,000",
+      status: "Available",
+      
+      // SADECE POP-UP'TA AÇILACAK OLAN GENİŞ/YATAY RESİM:
+      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('buyuk-1.jpg') center/cover",
+      
+      images: ["salon.jpg"], 
+      specs: [ { l: "Living Area", v: "14,500 sqft" }, { l: "Bedrooms", v: "6" } ],
+      desc: "An architectural triumph suspended above the Los Angeles basin.",
+      features: ["Infinity Pool & Spa"]
     }
   ];
 

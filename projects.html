@@ -167,38 +167,34 @@ button { font-family: inherit; cursor: none; outline: none; border: none; backgr
   };
 
   // PROJELER LİSTESİ (RESİMLER EKLENEBİLİR)
+  // PROJELER LİSTESİ
   const projects = [
     {
-      id: 1, name: "The Glass Pavilion", loc: "Beverly Hills, CA", price: "$42,500,000",
-      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), var(--navy-1)", status: "Available",
-      images: [],
-      specs: [ { l: "Living Area", v: "14,500 sqft" }, { l: "Bedrooms", v: "6" }, { l: "Bathrooms", v: "9" } ],
-      desc: "An architectural triumph suspended above the Los Angeles basin. Museum-quality finishes.",
-      features: ["Infinity Pool & Spa", "Private Cinema", "Wine Tasting Room"]
-    },
-    {
-      id: 2, name: "Palais de la Mer", loc: "French Riviera", price: "€65,000,000",
-      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), var(--navy-3)", status: "Off-Market",
-      images: [],
-      specs: [ { l: "Living Area", v: "22,000 sqft" }, { l: "Bedrooms", v: "10" }, { l: "Bathrooms", v: "12" } ],
-      desc: "A historic chateau meticulously restored to modern ultra-luxury standards. Featuring direct Mediterranean Sea access.",
-      features: ["Private Dock", "Helipad", "Guest House"]
-    },
-    {
-      id: 3, name: "Sky Penthouse", loc: "Manhattan, NY", price: "$28,000,000",
-      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), var(--navy-2)", status: "Available",
-      images: [],
+      id: 1, 
+      name: "Sky Penthouse", 
+      loc: "Manhattan, NY", 
+      price: "$28,000,000",
+      status: "Available",
+      
+      // 1. KUTUDAKİ DİKEY RESİM (thumb)
+      thumb: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('penthouse.jpeg') center/cover",
+      
+      // 2. POP-UP'TAKİ YATAY RESİM (bg)
+      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('art-of-living.png') center/cover",
+      
+      images: ["salon.jpg", "havuz.jpg"], // En alttaki galeri resimleri
       specs: [ { l: "Living Area", v: "7,200 sqft" }, { l: "Bedrooms", v: "4" } ],
       desc: "Occupying the entire 82nd floor of a premier Billionaires' Row tower. Unparalleled Central Park views.",
       features: ["Private Elevator Landing", "Central Park Views", "Chef's Kitchen"]
-    }
+    },
+    // Diğer evlerini de aynı şekilde thumb ve bg olarak ayırabilirsin...
   ];
 
   const grid = document.getElementById('project-grid');
   projects.forEach(p => {
     grid.innerHTML += `
       <div class="card" onclick="openPop(${p.id})">
-        <div class="card-bg" style="background: ${p.bg}"></div>
+        <div class="card-bg" style="background: ${p.thumb}"></div> 
         <div class="card-content">
           <div class="card-badge">${p.status}</div>
           <h3 class="card-title">${p.name}</h3>
