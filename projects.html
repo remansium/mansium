@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Projects — Mansium</title>
-  <!-- Favicon: replace favicon.png with your actual file -->
+  <title>Our Work — Mansium</title>
   <link rel="icon" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,22 +12,18 @@
 </head>
 <body>
 
-<!-- ── NAV ──────────────────────────────────────────────────── -->
+<!-- ── NAV ── -->
 <nav id="nav">
-  <!-- Logo: replace logo.png with your actual file -->
   <a href="index.html" class="nav-logo">
-    <img src="logo.png" alt="Mansium Logo"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';" />
+    <img src="logo.png" alt="Mansium Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';" />
     <span class="nav-logo-text" style="display:none;">mans<span>ium</span></span>
   </a>
-
   <ul class="nav-links">
     <li><a href="index.html"     data-nav-page="index.html">Home</a></li>
-    <li><a href="projects.html"  data-nav-page="projects.html">My Projects</a></li>
+    <li><a href="projects.html"  data-nav-page="projects.html">Our Work</a></li>
     <li><a href="templates.html" data-nav-page="templates.html">Templates</a></li>
     <li><a href="index.html#configurator" class="nav-cta">Get Started</a></li>
   </ul>
-
   <button class="hamburger" id="hamburger" aria-label="Open menu">
     <span></span><span></span><span></span>
   </button>
@@ -36,21 +31,22 @@
 
 <div class="mobile-menu" id="mobileMenu">
   <a href="index.html"     data-nav-page="index.html">Home</a>
-  <a href="projects.html"  data-nav-page="projects.html">My Projects</a>
+  <a href="projects.html"  data-nav-page="projects.html">Our Work</a>
   <a href="templates.html" data-nav-page="templates.html">Templates</a>
   <a href="index.html#configurator" style="color:var(--accent-dark);font-weight:600;">Get Started</a>
 </div>
 
-<!-- ── PAGE HERO ─────────────────────────────────────────────── -->
+<!-- ── PAGE HERO ── -->
 <div class="page-hero">
   <div class="page-hero-inner">
     <span class="section-label reveal">Portfolio</span>
     <h1 class="section-title reveal reveal-delay-1">Selected Work</h1>
     <p class="section-sub reveal reveal-delay-2">
-      A curated selection of digital experiences we've built for discerning clients.
+      A curated selection of property websites and digital platforms we have built for
+      elite agents and developers across London, Dubai, Qatar, and New York.
       Click any project to explore in detail.
     </p>
-    <!-- Filter tabs — populated from project categories in data.js -->
+    <!-- Filter tabs populated from project categories in data.js -->
     <div class="projects-filters reveal reveal-delay-3" id="projectFilters">
       <button class="filter-btn active" data-filter="all" onclick="filterProjects('all', this)">All Projects</button>
       <!-- Category buttons injected by renderProjectFilters() -->
@@ -58,21 +54,20 @@
   </div>
 </div>
 
-<!-- ── PROJECTS GRID ─────────────────────────────────────────── -->
+<!-- ── PROJECTS GRID ── -->
 <div class="projects-grid-section">
   <div class="projects-grid" id="projectsGrid">
-    <!-- Cards injected by renderProjectCards() from data.js -->
+    <!-- Cards injected by renderProjectCards() -->
   </div>
 </div>
 
-<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<!-- ── FOOTER ── -->
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <img src="logo.png" alt="Mansium" class="footer-logo-img"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+      <img src="logo.png" alt="Mansium" class="footer-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';" />
       <span class="footer-logo-text" style="display:none;">mans<span>ium</span></span>
-      <p class="footer-tagline">Bespoke digital architecture for brands that understand the value of precision.</p>
+      <p class="footer-tagline">Bespoke property websites for elite real estate agents and developers in London, Dubai, Qatar, and New York.</p>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Studio</div>
@@ -87,7 +82,7 @@
       <div class="footer-col-title">Pages</div>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="projects.html">My Projects</a></li>
+        <li><a href="projects.html">Our Work</a></li>
         <li><a href="templates.html">Templates</a></li>
         <li><a href="index.html#configurator">Configurator</a></li>
       </ul>
@@ -103,7 +98,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <span class="footer-copy">© 2025 Mansium Studio Ltd. All rights reserved.</span>
+    <span class="footer-copy">&copy; 2025 Mansium Studio Ltd. All rights reserved.</span>
     <div class="footer-legal">
       <a href="#">Privacy Policy</a>
       <a href="#">Terms of Service</a>
@@ -112,10 +107,9 @@
   </div>
 </footer>
 
-<!-- ── PROJECT DETAIL MODAL ──────────────────────────────────── -->
+<!-- ── PROJECT DETAIL MODAL ── -->
 <div class="project-modal-overlay" id="projectModal">
   <div class="project-modal-box">
-    <!-- Image area: filled dynamically by openProjectModal() -->
     <div class="project-modal-image" id="projectModalImage">
       <div class="project-modal-image-placeholder">
         <svg viewBox="0 0 24 24" stroke="var(--gray-300)" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -125,28 +119,24 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-    <!-- Body: filled dynamically by openProjectModal() -->
     <div class="project-modal-body">
-      <div class="project-modal-tags"  id="projectModalTags"></div>
-      <div class="project-modal-name"  id="projectModalName"></div>
+      <div class="project-modal-tags"   id="projectModalTags"></div>
+      <div class="project-modal-name"   id="projectModalName"></div>
       <div class="project-modal-client" id="projectModalClient"></div>
-      <div class="project-modal-desc"  id="projectModalDesc"></div>
-      <div class="project-modal-stats" id="projectModalStats"></div>
+      <div class="project-modal-desc"   id="projectModalDesc"></div>
+      <div class="project-modal-stats"  id="projectModalStats"></div>
       <div class="project-modal-actions">
-        <a href="#" id="projectModalLink" target="_blank" rel="noopener" class="btn-primary"
-           style="font-size:0.85rem;padding:0.7rem 1.4rem;">
+        <a href="#" id="projectModalLink" target="_blank" rel="noopener" class="btn-primary" style="font-size:0.85rem;padding:0.7rem 1.4rem;">
           View Live Site
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </a>
-        <button class="btn-secondary" onclick="closeProjectModal()"
-                style="font-size:0.85rem;padding:0.7rem 1.4rem;">Close</button>
+        <button class="btn-secondary" onclick="closeProjectModal()" style="font-size:0.85rem;padding:0.7rem 1.4rem;">Close</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── SCRIPTS ───────────────────────────────────────────────── -->
-<!-- Load order: data → shared → page-specific -->
+<!-- ── SCRIPTS ── -->
 <script src="data.js"></script>
 <script src="main.js"></script>
 <script>
@@ -155,11 +145,10 @@
    Reads from PROJECTS_DATA (data.js)
    ============================================================ */
 
-/* ── Build filter buttons from unique project categories ── */
+/* ── Build filter buttons from unique categories ── */
 function renderProjectFilters() {
   const container = document.getElementById('projectFilters');
   if (!container) return;
-
   const categories = [...new Set(PROJECTS_DATA.map(p => p.category))];
   categories.forEach(cat => {
     const btn = document.createElement('button');
@@ -171,15 +160,16 @@ function renderProjectFilters() {
   });
 }
 
-/* ── Filter project cards by category ── */
+/* ── Filter cards ── */
 function filterProjects(filter, clickedBtn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   clickedBtn.classList.add('active');
   renderProjectCards(filter);
 }
 
-/* ── Render project cards into the grid ── */
-function renderProjectCards(filter = 'all') {
+/* ── Render project cards ── */
+function renderProjectCards(filter) {
+  filter = filter || 'all';
   const grid = document.getElementById('projectsGrid');
   if (!grid) return;
   grid.innerHTML = '';
@@ -198,7 +188,8 @@ function renderProjectCards(filter = 'all') {
       : `<div class="project-card-image-placeholder">
            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
              <rect x="2" y="3" width="20" height="14" rx="2"/>
-             <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+             <line x1="8" y1="21" x2="16" y2="21"/>
+             <line x1="12" y1="17" x2="12" y2="21"/>
            </svg>
            <span>Add Image</span>
          </div>`;
@@ -229,12 +220,11 @@ function renderProjectCards(filter = 'all') {
   });
 }
 
-/* ── Open project detail modal ── */
+/* ── Open project modal ── */
 function openProjectModal(projectId) {
   const p = PROJECTS_DATA.find(pr => pr.id === projectId);
   if (!p) return;
 
-  // Image area
   const imageEl = document.getElementById('projectModalImage');
   const closeBtn = `<button class="project-modal-close" onclick="closeProjectModal()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -249,21 +239,19 @@ function openProjectModal(projectId) {
       <div class="project-modal-image-placeholder">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="3" width="20" height="14" rx="2"/>
-          <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
         </svg>
         <span>Project Preview</span>
       </div>${closeBtn}`;
   }
 
-  // Metadata tags
   document.getElementById('projectModalTags').innerHTML = [p.category, p.year, p.template]
     .map(t => `<span class="project-modal-tag">${t}</span>`).join('');
-
   document.getElementById('projectModalName').textContent   = p.name;
   document.getElementById('projectModalClient').textContent = p.client;
   document.getElementById('projectModalDesc').textContent   = p.desc;
 
-  // Stats
   document.getElementById('projectModalStats').innerHTML = p.stats
     .map(s => `
       <div class="modal-stat">
@@ -272,7 +260,6 @@ function openProjectModal(projectId) {
       </div>`).join('');
 
   document.getElementById('projectModalLink').href = p.liveUrl;
-
   document.getElementById('projectModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -283,12 +270,9 @@ function closeProjectModal() {
   document.body.style.overflow = '';
 }
 
-// Close on backdrop click
 document.getElementById('projectModal').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeProjectModal();
 });
-
-// Close on Escape key
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeProjectModal();
 });

@@ -1,103 +1,66 @@
 /* ============================================================
-   MANSIUM — data.js
+   MANSIUM — data.js  (complete, luxury real estate niche)
    ============================================================
-   This is your central content file.
-   Edit TEMPLATES_DATA and PROJECTS_DATA here to manage ALL
-   content across the entire site. No HTML editing required.
-
-   TEMPLATES_DATA fields:
-     id        — unique key used by the configurator
-     name      — display name (shown everywhere)
-     desc      — short description for the configurator tile
-     fullDesc  — longer description for the Templates page
-     image     — path to image, e.g. "images/template-estate.jpg"
-                 Leave as "" to show a placeholder until you add photos.
-     tag       — optional badge label ("Popular", "New", etc.)
-                 Leave as "" for no badge.
-     features  — array of feature strings shown on the Templates page
-     bespoke   — set to true ONLY for the Bespoke/Custom option
-
-   PROJECTS_DATA fields:
-     id        — unique key
-     name      — project name shown on cards and in modal
-     client    — client / company name
-     year      — year delivered (string, e.g. "2024")
-     category  — used for filter tabs, e.g. "Real Estate", "Brand"
-     template  — which Mansium template was used (display string)
-     image     — path to screenshot, e.g. "images/projects/meridian.jpg"
-                 Leave as "" for placeholder.
-     desc      — full paragraph shown inside the project modal
-     liveUrl   — URL for the "View Live Site" button. Use "#" if none.
-     stats     — array of up to 3 objects: { num: "340%", label: "Enquiry uplift" }
+   Central content file. Edit here to update the entire site.
    ============================================================ */
 
-/* ── BASE PRICE ──────────────────────────────────────────────
-   All templates share this single base price.
-   Extra costs come only from the pages and timeline add-ons.
-   Change this one value to update pricing everywhere instantly.
-   ─────────────────────────────────────────────────────────── */
 const BASE_PRICE = 2400;
 
-/* ── TEMPLATES DATA ─────────────────────────────────────────
-   Add or remove objects to add or remove template options.
-   ─────────────────────────────────────────────────────────── */
+/* ── TEMPLATES DATA ── */
 const TEMPLATES_DATA = [
   {
     id:       "showcase",
-    name:     "Showcase One-Pager",
-    desc:     "A single, scroll-driven canvas. Ideal for portfolio presentations, property reveals, or brand launches.",
-    fullDesc: "A powerful single-page experience designed for maximum impact. The Showcase One-Pager guides visitors through your story in one seamless scroll — from hero statement to contact, with no distractions and no dead ends. Perfect for property launches, personal brands, and campaign microsites.",
-    image:    "logo.png",   // e.g. "images/template-showcase.jpg"
+    name:     "Property Showcase",
+    desc:     "A single, scroll-driven canvas built to launch one exceptional property. Ideal for penthouses, villas, and flagship new-build reveals.",
+    fullDesc: "A powerful single-page experience engineered for maximum impact at the point of launch. The Property Showcase guides serious buyers through your listing in one seamless scroll — from cinematic hero to enquiry form, with no distractions and no dead ends. Ideal for off-plan launches, private villa sales, and prestige apartment reveals in London, Dubai, Qatar, or New York.",
+    image:    "",
     tag:      "",
-    features: ["Single-page scroll", "Full-screen hero", "Contact form", "Mobile-first", "Scroll animations"],
+    features: ["Single-page scroll", "Full-screen hero", "Buyer enquiry form", "Virtual tour embed", "Mobile-first", "Scroll animations"],
     bespoke:  false
   },
   {
     id:       "estate",
     name:     "Estate Listing Platform",
-    desc:     "Multi-property listings with gallery, virtual tour integration, enquiry forms, and CRM connection.",
-    fullDesc: "A comprehensive property showcase platform built for premium estate agents and developers. Display multiple listings with rich galleries, floor plans, and virtual tour embeds. Enquiry forms connect directly to your CRM of choice, and the admin panel lets you manage listings without a developer.",
-    image:    "",   // e.g. "images/template-estate.jpg"
+    desc:     "Multi-property listings with gallery, virtual tour integration, buyer enquiry flows, and CRM connection. Built for elite agents and developers.",
+    fullDesc: "A comprehensive property showcase platform built for premium estate agencies and development groups managing multiple active listings. Display properties with rich galleries, interactive floor plans, and virtual tour embeds. Enquiry forms connect directly to your CRM, and the admin panel lets your team manage listings independently — no developer required.",
+    image:    "",
     tag:      "Popular",
-    features: ["Multi-listing", "Gallery & tours", "CRM integration", "Enquiry forms", "Map view", "Filter & search"],
+    features: ["Multi-listing management", "Gallery & virtual tours", "CRM integration", "Buyer enquiry flows", "Interactive map view", "Filter & search"],
     bespoke:  false
   },
   {
     id:       "brand",
-    name:     "Brand & Studio Site",
-    desc:     "A multi-section brand platform with team profiles, editorial journal, service detail pages, and contact flows.",
-    fullDesc: "A complete brand presence for agencies, studios, and consultancies. Features team bios, an editorial journal, detailed service pages, and a sophisticated contact flow. Built to communicate credibility and attract high-calibre clients through authoritative, well-structured content.",
-    image:    "",   // e.g. "images/template-brand.jpg"
+    name:     "Agency Brand Site",
+    desc:     "A flagship multi-section brand platform for luxury estate agencies — agent profiles, featured listings, editorial content, and a sophisticated contact flow.",
+    fullDesc: "A complete brand presence for luxury real estate agencies and boutique developers. Features agent profiles, a curated listings showcase, editorial content hub, and a sophisticated buyer contact flow. Built to attract high-net-worth clients and position your agency as the definitive authority in your market — whether that is Mayfair, DIFC, or the Hamptons.",
+    image:    "",
     tag:      "",
-    features: ["Journal / blog", "Team profiles", "Service pages", "Contact flow", "SEO optimised"],
+    features: ["Agent profiles", "Featured listings", "Editorial content hub", "Contact flow", "International SEO"],
     bespoke:  false
   },
   {
     id:       "investment",
     name:     "Investment Deck Site",
-    desc:     "A private, password-protected digital investment deck — data-room ready with gated document access.",
-    fullDesc: "A secure, beautifully designed digital counterpart to your pitch deck. Protected by a password gate, it presents your investment thesis, team, market opportunity, and financials in a way that inspires confidence. Document download gating and analytics tell you exactly who engaged with what.",
-    image:    "",   // e.g. "images/template-investment.jpg"
+    desc:     "A private, password-gated digital investment deck for off-plan developments — data-room ready with document access and investor analytics.",
+    fullDesc: "A secure, beautifully designed digital counterpart to your off-plan investment deck. Protected by a password gate, it presents your development thesis, site CGIs, projected returns, and payment plan structure in a way that inspires confidence. Document download gating and engagement analytics tell you exactly which investors reviewed what.",
+    image:    "",
     tag:      "",
-    features: ["Password protection", "Document gating", "Investor analytics", "Investor-focused layout", "Custom domain"],
+    features: ["Password protection", "Document gating", "Investor analytics", "Off-plan focused layout", "Custom domain"],
     bespoke:  false
   },
   {
     id:       "bespoke",
     name:     "Bespoke / Custom Build",
-    desc:     "A completely unique digital architecture, conceived and engineered from scratch. No templates, no constraints — only precision craftsmanship tailored exclusively to your brief.",
-    fullDesc: "When off-the-shelf simply will not do. Our Bespoke Build service begins with a blank canvas and ends with a digital product that exists nowhere else on the internet. From custom interaction design to proprietary CMS architecture, every decision is made exclusively in service of your brand.",
-    image:    "",   // e.g. "images/template-bespoke.jpg"
+    desc:     "A completely unique digital architecture for a property or agency that refuses to be templated. No constraints — only precision craftsmanship.",
+    fullDesc: "When the property is extraordinary, the website must be too. Our Bespoke Build service begins with a blank canvas and ends with a digital experience that exists nowhere else on the internet. From custom 3D property walkthroughs to proprietary CMS architecture, every decision is made exclusively in service of one listing or brand.",
+    image:    "",
     tag:      "",
-    features: ["Fully custom architecture", "Unique interaction design", "Proprietary CMS", "Bespoke animations", "Dedicated team"],
+    features: ["Fully custom architecture", "Unique interaction design", "Proprietary CMS", "Bespoke animations", "Dedicated senior team"],
     bespoke:  true
   }
 ];
 
-/* ── PROJECTS DATA ───────────────────────────────────────────
-   Add or remove objects to manage your portfolio.
-   New category values automatically create new filter tabs.
-   ─────────────────────────────────────────────────────────── */
+/* ── PROJECTS DATA ── */
 const PROJECTS_DATA = [
   {
     id:       "proj-001",
@@ -106,93 +69,93 @@ const PROJECTS_DATA = [
     year:     "2024",
     category: "Real Estate",
     template: "Estate Listing Platform",
-    image:    "",   // e.g. "images/projects/meridian.jpg"
-    desc:     "A premium multi-listing platform for a boutique London developer specialising in riverside residences. The site replaced a generic template with a bespoke experience that elevated every listing through immersive gallery views, interactive floor plans, and a streamlined enquiry flow. Organic enquiries increased by 340% within 60 days of launch.",
+    image:    "",
+    desc:     "A premium multi-listing platform for a boutique London developer specialising in riverside residences. The site replaced a generic template with a bespoke experience that elevated every listing through immersive gallery views, interactive floor plans, and a streamlined enquiry flow. Organic buyer enquiries increased by 340% within 60 days of launch.",
     liveUrl:  "#",
     stats: [
-      { num: "340%", label: "Enquiry uplift" },
+      { num: "340%", label: "Buyer enquiry uplift" },
       { num: "60",   label: "Days to impact" },
       { num: "12",   label: "Listings managed" }
     ]
   },
   {
     id:       "proj-002",
-    name:     "Studio Calloway",
-    client:   "Calloway Architecture Ltd.",
+    name:     "Khalidiyah Towers",
+    client:   "Al Faris Developments, Dubai",
     year:     "2024",
-    category: "Brand",
-    template: "Brand & Studio Site",
-    image:    "",   // e.g. "images/projects/calloway.jpg"
-    desc:     "A flagship brand site for a Mayfair-based architecture studio seeking to attract high-net-worth residential clients. The design language mirrors the studio's architectural philosophy — clean geometry, controlled white space, and material sensitivity. The editorial journal positions the partners as industry voices, driving consistent inbound from target demographics.",
+    category: "Real Estate",
+    template: "Property Showcase",
+    image:    "",
+    desc:     "A cinematic single-page launch site for a 42-storey luxury tower on Sheikh Zayed Road, Dubai. Designed to drive off-plan reservations through a full-screen hero, animated floor reveal sections, and a frictionless buyer registration flow. Over 600 qualified enquiries were captured before ground-breaking, exceeding the sales team's pre-launch target by more than 3x.",
     liveUrl:  "#",
     stats: [
-      { num: "5×",  label: "Inbound leads" },
-      { num: "3",   label: "Award entries" },
-      { num: "68h", label: "Prototype delivery" }
+      { num: "600+", label: "Pre-launch enquiries" },
+      { num: "3x",   label: "Target exceeded" },
+      { num: "72h",  label: "Prototype delivery" }
     ]
   },
   {
     id:       "proj-003",
-    name:     "Aurum Capital Partners",
-    client:   "Aurum Capital Partners LLP",
-    year:     "2023",
+    name:     "The Pearl Collection",
+    client:   "Lusail Luxury Properties, Qatar",
+    year:     "2024",
     category: "Investment",
     template: "Investment Deck Site",
-    image:    "",   // e.g. "images/projects/aurum.jpg"
-    desc:     "A gated digital investment deck for a London-based private equity firm raising a second fund. The site presents the firm's thesis, portfolio performance, and team credentials in an experience that mirrors the rigour of the fund itself. Password-protected access and document download analytics gave the team real-time insight into LP engagement.",
+    image:    "",
+    desc:     "A password-gated digital investment deck for an off-plan residential development on The Pearl, Qatar. The site presents the development thesis, CGI renderings, projected yields, and payment plan structure in a format designed to inspire institutional and private investor confidence. Real-time document analytics allowed the sales team to prioritise follow-up with the most engaged leads.",
     liveUrl:  "#",
     stats: [
-      { num: "£28M", label: "Fund raised" },
-      { num: "100%", label: "LP engagement" },
+      { num: "£94M", label: "Units reserved" },
+      { num: "100%", label: "Investor engagement" },
       { num: "48h",  label: "Build turnaround" }
     ]
   },
   {
     id:       "proj-004",
     name:     "Lowe Residences",
-    client:   "Lowe Property Group",
+    client:   "Lowe Property Group, London",
     year:     "2023",
     category: "Real Estate",
-    template: "Showcase One-Pager",
-    image:    "",   // e.g. "images/projects/lowe.jpg"
-    desc:     "A high-impact one-page launch site for a flagship riverside development in East London. Designed to generate pre-launch registrations through a cinematic full-screen hero, animated reveal sections, and a frictionless waitlist form. The page generated over 800 registrations in its first two weeks — exceeding the client's target by 4×.",
+    template: "Property Showcase",
+    image:    "",
+    desc:     "A high-impact one-page launch site for a flagship riverside development in East London. Designed to generate pre-launch registrations through a cinematic full-screen hero, animated reveal sections, and a frictionless waitlist form. The page generated over 800 registrations in its first two weeks — exceeding the client's target by 4x.",
     liveUrl:  "#",
     stats: [
       { num: "800+", label: "Pre-registrations" },
-      { num: "4×",   label: "Target exceeded" },
+      { num: "4x",   label: "Target exceeded" },
       { num: "2",    label: "Weeks to result" }
     ]
   },
   {
     id:       "proj-005",
-    name:     "Forma Studio",
-    client:   "Forma Design Studio",
+    name:     "Calloway Prime",
+    client:   "Calloway Residential, Mayfair",
     year:     "2024",
     category: "Brand",
-    template: "Brand & Studio Site",
-    image:    "",   // e.g. "images/projects/forma.jpg"
-    desc:     "A portfolio and studio site for an interior design practice specialising in high-end residential and hospitality projects. The visual system was built around the studio's own project photography, with a custom cursor, parallax gallery, and a project filtration system that allows visitors to explore work by typology and scale.",
+    template: "Agency Brand Site",
+    image:    "",
+    desc:     "A flagship agency brand site for a Mayfair-based residential agency specialising in super-prime London properties. The design language mirrors the precision of the properties they represent — controlled white space, refined typography, and a curated listings showcase. The editorial market intelligence section positions the partners as the authoritative voice in prime central London.",
     liveUrl:  "#",
     stats: [
-      { num: "220%", label: "Session duration" },
-      { num: "8",    label: "Projects featured" },
-      { num: "95",   label: "Lighthouse score" }
+      { num: "5x",  label: "Qualified inbound" },
+      { num: "3",   label: "Award nominations" },
+      { num: "68h", label: "Prototype delivery" }
     ]
   },
   {
     id:       "proj-006",
     name:     "The Harlow Collection",
-    client:   "Harlow Luxury Interiors",
+    client:   "Harlow Luxury Interiors, London",
     year:     "2023",
     category: "Brand",
     template: "Bespoke / Custom Build",
-    image:    "",   // e.g. "images/projects/harlow.jpg"
-    desc:     "A fully bespoke digital showroom for a luxury furniture and interiors brand. Built from scratch with a custom CMS, product configurator, and an immersive 3D product viewer. The experience was designed to mirror the tactility and exclusivity of the physical showroom, resulting in a substantial increase in high-value direct enquiries.",
+    image:    "",
+    desc:     "A fully bespoke digital showroom for a luxury property staging and interiors brand. Built from scratch with a custom CMS, room configurator, and an immersive 3D material viewer. The experience was designed to mirror the tactility and exclusivity of the physical showroom — directly serving the high-net-worth buyers and developers who commission their work.",
     liveUrl:  "#",
     stats: [
       { num: "190%",   label: "Direct enquiries" },
       { num: "Custom", label: "Architecture" },
-      { num: "3D",     label: "Product viewer" }
+      { num: "3D",     label: "Material viewer" }
     ]
   }
 ];
