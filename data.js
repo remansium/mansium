@@ -69,7 +69,7 @@ const PROJECTS_DATA = [
     year:     "2024",
     category: "Real Estate",
     template: "Estate Listing Platform",
-    image:    "Our Work/Penthouse/img-06.webp",
+    image:    "Our Work/Project-01/img-06.webp",
     desc:     "A premium multi-listing platform for a boutique London developer specialising in riverside residences. The site replaced a generic template with a bespoke experience that elevated every listing through immersive gallery views, interactive floor plans, and a streamlined enquiry flow. Organic buyer enquiries increased by 340% within 60 days of launch.",
     liveUrl:  "Our Work/Project-01/project-01.html",
     stats: [
