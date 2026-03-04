@@ -71,7 +71,7 @@ const PROJECTS_DATA = [
     template: "Estate Listing Platform",
     image:    "",
     desc:     "A premium multi-listing platform for a boutique London developer specialising in riverside residences. The site replaced a generic template with a bespoke experience that elevated every listing through immersive gallery views, interactive floor plans, and a streamlined enquiry flow. Organic buyer enquiries increased by 340% within 60 days of launch.",
-    liveUrl:  "#",
+    liveUrl:  "Our Work/work-1.html",
     stats: [
       { num: "340%", label: "Buyer enquiry uplift" },
       { num: "60",   label: "Days to impact" },
