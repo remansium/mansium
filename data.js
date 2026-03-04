@@ -4,7 +4,7 @@
    Central content file. Edit here to update the entire site.
    ============================================================ */
 
-const BASE_PRICE = 2400;
+const BASE_PRICE = 999;
 
 /* ── TEMPLATES DATA ── */
 const TEMPLATES_DATA = [
