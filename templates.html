@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Templates — Mansium</title>
+  <!-- Favicon: replace favicon.png with your actual file -->
+  <link rel="icon" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav id="nav">
+  <!-- Logo: replace logo.png with your actual file -->
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Mansium Logo"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';" />
+    <span class="nav-logo-text" style="display:none;">mans<span>ium</span></span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html"     data-nav-page="index.html">Home</a></li>
+    <li><a href="projects.html"  data-nav-page="projects.html">My Projects</a></li>
+    <li><a href="templates.html" data-nav-page="templates.html">Templates</a></li>
+    <li><a href="index.html#configurator" class="nav-cta">Get Started</a></li>
+  </ul>
+
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html"     data-nav-page="index.html">Home</a>
+  <a href="projects.html"  data-nav-page="projects.html">My Projects</a>
+  <a href="templates.html" data-nav-page="templates.html">Templates</a>
+  <a href="index.html#configurator" style="color:var(--accent-dark);font-weight:600;">Get Started</a>
+</div>
+
+<!-- ── PAGE HERO ─────────────────────────────────────────────── -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="section-label reveal">Template Library</span>
+    <h1 class="section-title reveal reveal-delay-1">Our Starting Points.</h1>
+    <p class="section-sub reveal reveal-delay-2">
+      Each template is a proven starting point — fully customised to your brand during the build process.
+      All templates share the same base price of <strong>£2,400</strong>.
+      Looking for something truly unique?
+      <a href="index.html#configurator" style="color:var(--accent-dark);font-weight:500;text-decoration:none;">
+        Select Bespoke
+      </a>
+      from the configurator.
+    </p>
+  </div>
+</div>
+
+<!-- ── TEMPLATES GRID ────────────────────────────────────────── -->
+<div class="templates-grid-section">
+  <div class="templates-grid" id="templatesGrid">
+    <!-- Cards injected by renderTemplatesPage() from data.js -->
+  </div>
+</div>
+
+<!-- ── CTA BAND ──────────────────────────────────────────────── -->
+<section class="cta-section">
+  <span class="section-label">Ready to Begin</span>
+  <h2 class="section-title">Can't decide?<br />Let's talk it through.</h2>
+  <p class="section-sub">Every project starts with a free 30-minute discovery call. No commitment required.</p>
+  <div class="cta-actions">
+    <a href="index.html#configurator" class="btn-white">
+      Open Configurator
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="mailto:hello@mansium.co" class="btn-ghost">
+      Email Us Directly
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="logo.png" alt="Mansium" class="footer-logo-img"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+      <span class="footer-logo-text" style="display:none;">mans<span>ium</span></span>
+      <p class="footer-tagline">Bespoke digital architecture for brands that understand the value of precision.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Studio</div>
+      <ul>
+        <li><a href="#">Our Approach</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">The Team</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Pages</div>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="projects.html">My Projects</a></li>
+        <li><a href="templates.html">Templates</a></li>
+        <li><a href="index.html#configurator">Configurator</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <ul>
+        <li><a href="mailto:hello@mansium.co">hello@mansium.co</a></li>
+        <li><a href="#">London, UK</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Mansium Studio Ltd. All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Settings</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ── SCRIPTS ───────────────────────────────────────────────── -->
+<!-- Load order: data → shared → page-specific -->
+<script src="data.js"></script>
+<script src="main.js"></script>
+<script>
+/* ============================================================
+   TEMPLATES PAGE — templates.html only
+   Reads from TEMPLATES_DATA and BASE_PRICE (data.js)
+   ============================================================ */
+
+function renderTemplatesPage() {
+  const grid = document.getElementById('templatesGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  TEMPLATES_DATA.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className = 'template-preview-card reveal' + (i > 0 ? ` reveal-delay-${Math.min(i, 3)}` : '');
+
+    // Image or placeholder
+    const imgHtml = t.image
+      ? `<img src="${t.image}" alt="${t.name}" loading="lazy" />`
+      : `<div class="template-preview-image-placeholder">
+           <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+             <rect x="3" y="3" width="18" height="18" rx="2"/>
+             <circle cx="8.5" cy="8.5" r="1.5"/>
+             <polyline points="21 15 16 10 5 21"/>
+           </svg>
+           <span>Add Image</span>
+         </div>`;
+
+    // Feature pills
+    const featuresHtml = t.features
+      .map(f => `<span class="template-feature-tag">${f}</span>`)
+      .join('');
+
+    // Price display
+    const priceText = t.bespoke
+      ? 'Bespoke Quotation'
+      : `From £${BASE_PRICE.toLocaleString()}`;
+
+    // Badge
+    const badgeClass = t.bespoke ? 'signature' : '';
+    const badgeLabel = t.bespoke ? 'Signature' : (t.tag || 'Template');
+
+    card.innerHTML = `
+      <div class="template-preview-image">
+        ${imgHtml}
+        <span class="template-badge ${badgeClass}">${badgeLabel}</span>
+      </div>
+      <div class="template-preview-body">
+        <div class="template-preview-name">${t.name}</div>
+        <div class="template-preview-desc">${t.fullDesc}</div>
+        <div class="template-preview-features">${featuresHtml}</div>
+        <div class="template-preview-footer">
+          <div class="template-preview-price">${priceText}</div>
+          <a href="index.html#configurator" class="template-preview-cta">
+            Select template
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>`;
+
+    grid.appendChild(card);
+  });
+
+  // Trigger reveal observer after cards are in the DOM
+  const newReveals = grid.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  newReveals.forEach(el => obs.observe(el));
+}
+
+/* ── Init ── */
+renderTemplatesPage();
+</script>
+</body>
+</html>

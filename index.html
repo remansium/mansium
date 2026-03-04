@@ -1,677 +1,725 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mansium — Luxury Property Marketing</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-<style>
-/* ════════════════════════════════════════
-   TOKENS & VARIABLES
-════════════════════════════════════════ */
-:root {
-  --gold:        #e0c58f;
-  --gold-light:  #f2dcb0;
-  --gold-dark:   #c4a468;
-  --navy-0:      #060d1e;
-  --navy-1:      #091428;
-  --navy-2:      #0d1c38;
-  --navy-3:      #142448;
-
-  --t1:  #ece6d9;      
-  --t2:  #b0a898;      
-  --t3:  #7d7568;      
-  --t4:  #524e46;      
-
-  --border: rgba(224,197,143,0.12);
-  --border-hover: rgba(224,197,143,0.35);
-  --ease: cubic-bezier(0.16,1,0.3,1);
-}
-
-/* ════════════════════════════════════════
-   RESET + BASE
-════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--navy-0); color: var(--t1);
-  font-family: 'Jost', sans-serif; font-weight: 300;
-  overflow-x: hidden; cursor: none; line-height: 1.6;
-}
-img { display: block; max-width: 100%; }
-a { text-decoration: none; color: inherit; cursor: none; }
-button { font-family: inherit; cursor: none; outline: none; border: none; background: transparent; }
-
-/* ════════════════════════════════════════
-   CUSTOM CURSOR & NOISE
-════════════════════════════════════════ */
-@media(pointer: fine) {
-  #cur-d { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: opacity .2s; }
-  #cur-r { position: fixed; width: 44px; height: 44px; border: 1px solid rgba(224,197,143,.55); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width .3s var(--ease), height .3s var(--ease), border-color .3s; }
-  body.ch #cur-r { width: 68px; height: 68px; border-color: var(--gold); background: rgba(224,197,143,0.05); }
-}
-@media(pointer: coarse) { body { cursor: auto; } #cur-d, #cur-r { display: none; } }
-
-#noise {
-  position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .025;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* ════════════════════════════════════════
-   COMMON STYLES & REVEAL ANIMATIONS
-════════════════════════════════════════ */
-.section { padding: 140px 60px; position: relative; z-index: 2; border-bottom: 1px solid var(--border); }
-.container { max-width: 1400px; margin: 0 auto; }
-
-.sec-title { font-family: 'Cormorant', serif; font-size: clamp(36px, 5vw, 72px); font-weight: 300; line-height: 1.1; margin-bottom: 24px; color: var(--t1); }
-.sec-title i { font-style: italic; color: var(--gold); }
-.sec-subtitle { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: block; }
-
-.reveal { opacity: 0; transform: translateY(40px); transition: all 1s var(--ease); }
-.reveal.active { opacity: 1; transform: translateY(0); }
-.delay-1 { transition-delay: 0.1s; }
-.delay-2 { transition-delay: 0.2s; }
-.delay-3 { transition-delay: 0.3s; }
-
-/* ════════════════════════════════════════
-   NAVIGATION
-════════════════════════════════════════ */
-#nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 300;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 60px; transition: padding .5s var(--ease), background .5s, border-color .5s; border-bottom: 1px solid transparent;
-}
-#nav.stuck { background: rgba(6,13,30,.95); backdrop-filter: blur(24px); border-color: var(--border); }
-.nav-logo-link { display: flex; align-items: center; }
-.nav-logo-img { height: 32px; width: auto; display: block; }
-
-.nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
-.nav-links a { font-size: 10.5px; letter-spacing: 3.5px; text-transform: uppercase; color: var(--t3); position: relative; transition: color .3s; }
-.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--gold); transition: width .35s var(--ease); }
-.nav-links a:hover { color: var(--gold); }
-.nav-links a:hover::after { width: 100%; }
-.nav-btn { border: 1px solid rgba(224,197,143,.3); color: var(--gold) !important; padding: 11px 26px; transition: all .3s !important; }
-.nav-btn:hover { background: var(--gold) !important; color: var(--navy-0) !important; border-color: var(--gold) !important; }
-
-/* HAMBURGER BUTON TASARIMI */
-.hamburger { display: none; flex-direction: column; gap: 6px; z-index: 400; }
-.hamburger .line { width: 30px; height: 1px; background: var(--gold); transition: transform 0.4s var(--ease), opacity 0.4s; pointer-events: none; }
-
-/* ════════════════════════════════════════
-   HERO SECTION
-════════════════════════════════════════ */
-#hero { position: relative; min-height: 100svh; display: grid; grid-template-columns: 1fr 420px; overflow: hidden; border-bottom: 1px solid var(--border); }
-.hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, var(--navy-0) 0%, var(--navy-1) 60%, var(--navy-2) 100%); }
-.hero-grid-lines { position: absolute; inset: 0; background-image: linear-gradient(rgba(224,197,143,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(224,197,143,.04) 1px, transparent 1px); background-size: 72px 72px; animation: gridDrift 24s linear infinite; }
-@keyframes gridDrift { to { background-position: 72px 72px; } }
-.hero-left { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: center; padding: 140px 60px 80px; }
-.hero-badge { display: inline-flex; align-items: center; gap: 12px; border: 1px solid rgba(224,197,143,.2); padding: 9px 20px; margin-bottom: 40px; font-size: 10px; letter-spacing: 4.5px; text-transform: uppercase; color: var(--gold); width: fit-content; animation: rIn .8s .3s var(--ease) forwards; opacity: 0; }
-.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .3; transform: scale(.7); } }
-@keyframes rIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-.hero-h1 { font-family: 'Cormorant', serif; font-size: clamp(45px, 7.5vw, 118px); font-weight: 300; line-height: .92; letter-spacing: -2px; color: var(--t1); opacity: 0; animation: rIn 1s .5s var(--ease) forwards; }
-.hero-h1 .italic-gold { font-style: italic; color: var(--gold); }
-.hero-h1 .indent { display: block; margin-left: clamp(10px, 4vw, 72px); }
-
-.hero-desc-row { margin-top: 36px; display: flex; align-items: flex-start; gap: 24px; opacity: 0; animation: rIn .8s .75s var(--ease) forwards; }
-.hero-desc-bar { width: 1px; min-height: 64px; background: linear-gradient(to bottom, var(--gold), transparent); flex-shrink: 0; margin-top: 4px; }
-.hero-desc-text { font-size: 14px; line-height: 1.9; color: var(--t2); max-width: 400px; }
-
-.hero-stat-row { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); border-left: 1px solid var(--border); opacity: 0; animation: rIn .7s 1.1s var(--ease) forwards; max-width: 600px; }
-.hstat { padding: 22px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.hstat-val { font-family: 'Cormorant', serif; font-size: clamp(24px, 3vw, 36px); font-weight: 300; color: var(--gold); line-height: 1; }
-.hstat-lbl { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--t3); margin-top: 6px; }
-
-.hero-right { position: relative; z-index: 3; background: rgba(20,36,72,.4); border-left: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 140px 40px 80px; opacity: 0; animation: rIn .9s .6s var(--ease) forwards; }
-.blueprint-wrap { width: 100%; max-width: 320px; border: 1px solid rgba(224,197,143,.15); padding: 32px; background: rgba(224,197,143,.015); text-align: center; }
-.prop-list { margin-top: 32px; width: 100%; display: flex; flex-direction: column; gap: 0; }
-.prop-list-item { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--t3); transition: color .3s; }
-.prop-list-item:hover { color: var(--gold); padding-left: 10px; }
-
-/* ════════════════════════════════════════
-   ABOUT SECTION
-════════════════════════════════════════ */
-#about { background: var(--navy-1); }
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-.about-text p { color: var(--t2); font-size: 16px; line-height: 1.8; margin-bottom: 24px; }
-.about-image { width: 100%; aspect-ratio: 4/5; border: 1px solid var(--border); background: linear-gradient(45deg, var(--navy-0), var(--navy-2)); position: relative; overflow: hidden; }
-.about-image::after { content: ''; position: absolute; inset: 20px; border: 1px solid rgba(224,197,143,.2); }
-.about-image-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Cormorant', serif; font-size: 32px; color: var(--gold-dark); opacity: 0.5; text-align: center; }
-
-/* ════════════════════════════════════════
-   SERVICES
-════════════════════════════════════════ */
-.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 60px; }
-.service-card { padding: 40px; border: 1px solid var(--border); background: rgba(224,197,143,.02); transition: all 0.4s var(--ease); }
-.service-card:hover { transform: translateY(-10px); border-color: var(--gold); background: rgba(224,197,143,.05); }
-.service-icon { font-size: 32px; color: var(--gold); margin-bottom: 24px; font-family: 'Cormorant', serif; }
-.service-card h3 { font-size: 20px; font-weight: 400; color: var(--t1); margin-bottom: 16px; letter-spacing: 1px; }
-.service-card p { font-size: 14px; color: var(--t3); line-height: 1.7; }
-
-/* ════════════════════════════════════════
-   FEATURED TEASER
-════════════════════════════════════════ */
-#featured { background: var(--navy-0); text-align: center; }
-.featured-header { max-width: 600px; margin: 0 auto 60px; }
-.teaser-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-.teaser-item { position: relative; height: 500px; border: 1px solid var(--border); background: var(--navy-2); display: flex; align-items: flex-end; padding: 40px; overflow: hidden; transition: border-color 0.4s; cursor: none; }
-.teaser-item:hover { border-color: var(--gold); }
-.teaser-bg { position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(224,197,143,0.1), transparent 70%); transition: transform 0.8s var(--ease); background-size: cover !important; background-position: center !important; }
-.teaser-item:hover .teaser-bg { transform: scale(1.05); }
-.teaser-content { position: relative; z-index: 2; text-align: left; width: 100%; }
-.teaser-title { font-family: 'Cormorant', serif; font-size: clamp(28px, 4vw, 36px); color: var(--t1); margin-bottom: 8px; }
-.teaser-loc { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
-.btn-large { display: inline-block; margin-top: 60px; padding: 16px 40px; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 3px; font-size: 11px; transition: all 0.3s; }
-.btn-large:hover { background: var(--gold); color: var(--navy-0); }
-
-/* ════════════════════════════════════════
-   PRICING
-════════════════════════════════════════ */
-#pricing { background: var(--navy-1); }
-.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px; }
-.price-card { padding: 60px; border: 1px solid var(--border); background: var(--navy-0); position: relative; transition: border-color 0.4s; }
-.price-card:hover { border-color: var(--gold); }
-.price-card h3 { font-family: 'Cormorant', serif; font-size: 32px; color: var(--t1); margin-bottom: 20px; font-weight: 300; }
-.price-val { font-size: 48px; color: var(--gold); margin-bottom: 30px; line-height: 1; }
-.price-val span { font-size: 14px; color: var(--t3); letter-spacing: 1px; font-family: 'Jost', sans-serif; }
-.price-card ul { list-style: none; margin-bottom: 40px; }
-.price-card ul li { padding: 12px 0; border-bottom: 1px solid var(--border); color: var(--t2); font-size: 15px; display: flex; align-items: center; gap: 10px; }
-.price-card ul li::before { content: '✦'; color: var(--gold); font-size: 10px; }
-
-/* ════════════════════════════════════════
-   CONTACT
-════════════════════════════════════════ */
-#contact { background: var(--navy-0); }
-.contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; background: rgba(20,36,72,.2); border: 1px solid var(--border); padding: 80px; }
-.form-group { margin-bottom: 30px; position: relative; }
-.form-group input, .form-group textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); padding: 15px 0; color: var(--t1); font-family: 'Jost', sans-serif; font-size: 14px; outline: none; transition: border-color 0.3s; resize: none; }
-.form-group input:focus, .form-group textarea:focus { border-bottom-color: var(--gold); }
-.form-group label { position: absolute; top: 15px; left: 0; color: var(--t3); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; pointer-events: none; transition: all 0.3s; }
-.form-group input:focus ~ label, .form-group input:valid ~ label,
-.form-group textarea:focus ~ label, .form-group textarea:valid ~ label { top: -10px; font-size: 10px; color: var(--gold); }
-.submit-btn { background: var(--gold); color: var(--navy-0); padding: 15px 40px; text-transform: uppercase; letter-spacing: 3px; font-size: 11px; cursor: none; font-weight: 500; transition: background 0.3s; margin-top: 20px; width: 100%; }
-.submit-btn:hover { background: var(--gold-light); }
-
-/* ════════════════════════════════════════
-   POP-UP MODAL (INDEX İÇİN)
-════════════════════════════════════════ */
-#pop { position: fixed; inset: 0; z-index: 9000; background: rgba(6,13,30,.98); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease); }
-#pop.active { opacity: 1; pointer-events: all; }
-.pop-c { width: 100%; max-width: 1200px; height: 90vh; border: 1px solid var(--border); background: var(--navy-0); position: relative; display: flex; flex-direction: column; transform: translateY(30px); transition: transform 0.5s var(--ease); overflow-y: auto; }
-#pop.active .pop-c { transform: translateY(0); }
-.pop-x { position: absolute; top: 20px; right: 20px; z-index: 10; font-size: 10px; letter-spacing: 3px; color: var(--t1); text-transform: uppercase; background: rgba(6,13,30,.8); border: 1px solid var(--border); padding: 10px 20px; transition: all .3s; }
-.pop-x:hover { color: var(--gold); border-color: var(--gold); }
-.pp-hero { 
-  position: relative; 
-  padding: 80px 60px; 
-  border-bottom: 1px solid var(--border); 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: flex-end; 
-  aspect-ratio: 16 / 10; /* İşte sihir burada! Oranı tamamen kilitliyoruz */
-  min-height: auto; 
-}.pp-badge { display: inline-flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
-.pp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
-.pp-title { font-family: 'Cormorant', serif; font-size: clamp(32px, 6vw, 80px); line-height: 1; color: var(--t1); margin-bottom: 15px; }
-.pp-loc { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--t2); margin-bottom: 30px; }
-.pp-price-wrap { position: absolute; right: 60px; bottom: 60px; text-align: right; }
-.pp-price { font-family: 'Cormorant', serif; font-size: clamp(28px, 4vw, 40px); color: var(--gold); line-height: 1; }
-.pp-price-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--t3); }
-.pp-body { padding: 60px; display: grid; grid-template-columns: 2fr 1fr; gap: 60px; }
-.pp-specs { display: flex; flex-wrap: wrap; gap: 40px; border-bottom: 1px solid var(--border); padding-bottom: 40px; margin-bottom: 40px; }
-.pp-spec-item { display: flex; flex-direction: column; gap: 5px; }
-.pp-spec-val { font-family: 'Cormorant', serif; font-size: 28px; color: var(--t1); }
-.pp-spec-lbl { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--t3); }
-.pp-desc p { color: var(--t2); font-size: 15px; line-height: 1.8; margin-bottom: 20px; }
-.pp-features { list-style: none; margin-top: 30px; }
-.pp-features li { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 12px; letter-spacing: 1px; color: var(--t2); display: flex; align-items: center; gap: 10px; }
-.pp-features li::before { content: '✦'; color: var(--gold); font-size: 10px; }
-.pp-ctas { display: flex; flex-direction: column; gap: 15px; }
-.pp-btn { padding: 18px; text-align: center; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; transition: all .3s; }
-.pp-btn.primary { background: var(--gold); color: var(--navy-0); font-weight: 500; }
-.pp-btn.primary:hover { background: var(--gold-light); }
-.pp-btn.outline { border: 1px solid var(--border); color: var(--gold); }
-.pp-btn.outline:hover { border-color: var(--gold); background: rgba(224,197,143,.05); }
-
-/* Modal Galeri Sistemi */
-.pp-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 40px; }
-.pp-gallery img { width: 100%; height: 220px; object-fit: cover; border: 1px solid var(--border); border-radius: 4px; transition: transform 0.4s var(--ease), border-color 0.4s; }
-.pp-gallery img:hover { transform: scale(1.03); border-color: var(--gold); }
-.pop-c::-webkit-scrollbar { width: 6px; }
-.pop-c::-webkit-scrollbar-track { background: var(--navy-0); }
-.pop-c::-webkit-scrollbar-thumb { background: rgba(224,197,143,.3); border-radius: 10px; }
-
-/* ════════════════════════════════════════
-   FOOTER & RESPONSIVE TWEAKS
-════════════════════════════════════════ */
-footer { padding: 80px 60px 40px; background: var(--navy-0); border-top: 1px solid var(--border); }
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 80px; }
-.footer-brand { font-family: 'Cormorant', serif; font-size: 32px; letter-spacing: 5px; color: var(--gold); margin-bottom: 20px; }
-.footer-text { color: var(--t3); font-size: 13px; max-width: 300px; }
-.footer-title { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--t1); margin-bottom: 24px; }
-.footer-links { list-style: none; }
-.footer-links li { margin-bottom: 12px; }
-.footer-links a { color: var(--t3); font-size: 13px; transition: color 0.3s; }
-.footer-links a:hover { color: var(--gold); }
-.footer-bottom { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 30px; color: var(--t4); font-size: 12px; }
-
-/* ─ RESPONSIVE (MOBİL İÇİN ÖZEL DÜZENLEMELER) ─ */
-@media(max-width: 1024px) {
-  #hero { grid-template-columns: 1fr; }
-  .hero-right { display: none; }
-  .about-grid, .contact-wrapper, .teaser-grid, .pricing-grid { grid-template-columns: 1fr; }
-  .services-grid { grid-template-columns: 1fr 1fr; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .pp-body { grid-template-columns: 1fr; }
-  .pp-price-wrap { position: relative; right: auto; bottom: auto; text-align: left; margin-top: 20px; }
-}
-@media(max-width: 768px) {
-  .section { padding: 80px 30px; }
-  .hero-left { padding: 120px 30px 60px; }
-  #nav { padding: 20px 30px; }
-  .services-grid, .footer-grid { grid-template-columns: 1fr; }
-  .contact-wrapper { padding: 40px 30px; gap: 40px; }
-  .price-card { padding: 40px 30px; }
-  .pp-body { padding: 40px 30px; }
-  .pp-hero { 
-    padding: 40px 30px !important; 
-    height: auto !important; 
-    min-height: auto !important; 
-  }
-  .hamburger { display: flex; } /* Butonu telefonda görünür yap */
-  
-  /* Tam ekran lüks açılır menü */
-  .nav-links {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-    background: rgba(6,13,30,0.98); backdrop-filter: blur(20px);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 40px; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease);
-    z-index: 350; margin: 0;
-  }
-  .nav-links.active { opacity: 1; pointer-events: all; }
-  .nav-links a { font-size: 14px; letter-spacing: 6px; }
-  
-  /* Çarpı İşareti Animasyonu */
-  .hamburger.active .line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .hamburger.active .line:nth-child(2) { transform: translateY(-7px) rotate(-45deg); }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mansium — Bespoke Digital Architecture</title>
+  <!-- Favicon: replace favicon.png with your actual file -->
+  <link rel="icon" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div id="noise"></div>
-<div id="cur-d"></div>
-<div id="cur-r"></div>
-
+<!-- ── NAV ──────────────────────────────────────────────────── -->
 <nav id="nav">
-  <a href="https://mansium.com" class="nav-logo-link">
-    <img src="logo.png" alt="Mansium Luxury" class="nav-logo-img">
+  <!-- Logo: replace logo.png with your actual file -->
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Mansium Logo"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';" />
+    <span class="nav-logo-text" style="display:none;">mans<span>ium</span></span>
   </a>
 
-<button class="hamburger" id="hamburger">
-    <span class="line"></span>
-    <span class="line"></span>
-  </button>
-
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#about">Legacy</a></li>
-    <li><a href="#services">Expertise</a></li>
-    <li><a href="projects.html">Portfolio</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#contact" class="nav-btn">Get Access</a></li>
+  <ul class="nav-links">
+    <li><a href="index.html"     data-nav-page="index.html">Home</a></li>
+    <li><a href="projects.html"  data-nav-page="projects.html">My Projects</a></li>
+    <li><a href="templates.html" data-nav-page="templates.html">Templates</a></li>
+    <li><a href="#configurator" class="nav-cta">Get Started</a></li>
   </ul>
+
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid-lines"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html"     data-nav-page="index.html">Home</a>
+  <a href="projects.html"  data-nav-page="projects.html">My Projects</a>
+  <a href="templates.html" data-nav-page="templates.html">Templates</a>
+  <a href="#configurator" style="color:var(--accent-dark);font-weight:600;">Get Started</a>
+</div>
 
-  <div class="hero-left">
-    <div class="hero-badge"><div class="badge-dot"></div> Now Accepting Commissions</div>
-    <h1 class="hero-h1">Curating <span class="italic-gold">Legacy</span><span class="indent">Properties</span></h1>
-    <div class="hero-desc-row">
-      <div class="hero-desc-bar"></div>
-      <p class="hero-desc-text">We elevate prime real estate through architectural storytelling, high-end visual marketing, and unparalleled exclusivity.</p>
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<section class="hero" id="home">
+  <div class="hero-bg-orb orb1"></div>
+  <div class="hero-bg-orb orb2"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Now accepting Q3 2025 Projects
     </div>
-    <div class="hero-stat-row">
-      <div class="hstat"><div class="hstat-val">$2.4B</div><div class="hstat-lbl">Represented</div></div>
-      <div class="hstat"><div class="hstat-val">40+</div><div class="hstat-lbl">Global Markets</div></div>
-      <div class="hstat"><div class="hstat-val">12</div><div class="hstat-lbl">Awards</div></div>
+    <h1>Digital Architecture<br />for <em>Discerning</em> Brands</h1>
+    <p class="hero-sub">
+      Mansium crafts bespoke digital experiences for premium real estate, luxury brands,
+      and private ventures — engineered for conversion, built for legacy.
+    </p>
+    <div class="hero-actions">
+      <a href="#configurator" class="btn-primary">
+        Configure Your Project
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="projects.html" class="btn-secondary">View Our Work</a>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric-item"><div class="metric-num">200+</div><div class="metric-label">Projects Delivered</div></div>
+      <div class="metric-item"><div class="metric-num">98%</div><div class="metric-label">Client Retention</div></div>
+      <div class="metric-item"><div class="metric-num">4.2×</div><div class="metric-label">Avg. Conversion Uplift</div></div>
+      <div class="metric-item"><div class="metric-num">72h</div><div class="metric-label">First Prototype</div></div>
     </div>
   </div>
+</section>
 
-  <div class="hero-right">
-    <div class="blueprint-wrap">
-      <h3 style="color: var(--gold); font-family: 'Cormorant', serif; font-size: 24px; font-weight: 300;">Architecture</h3>
-      <div class="prop-list">
-        <a href="projects.html" class="prop-list-item"><span>Penthouse Suites</span></a>
-        <a href="projects.html" class="prop-list-item"><span>Coastal Estates</span></a>
-        <a href="projects.html" class="prop-list-item"><span>Urban Mansions</span></a>
+<!-- ── MARQUEE ───────────────────────────────────────────────── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Luxury Real Estate</span>
+    <span class="marquee-item">Private Equity</span>
+    <span class="marquee-item">Architecture Studios</span>
+    <span class="marquee-item">Premium E-Commerce</span>
+    <span class="marquee-item">Hospitality &amp; Resorts</span>
+    <span class="marquee-item">Investment Platforms</span>
+    <span class="marquee-item">Luxury Automotive</span>
+    <span class="marquee-item">Private Ventures</span>
+    <span class="marquee-item">Luxury Real Estate</span>
+    <span class="marquee-item">Private Equity</span>
+    <span class="marquee-item">Architecture Studios</span>
+    <span class="marquee-item">Premium E-Commerce</span>
+    <span class="marquee-item">Hospitality &amp; Resorts</span>
+    <span class="marquee-item">Investment Platforms</span>
+    <span class="marquee-item">Luxury Automotive</span>
+    <span class="marquee-item">Private Ventures</span>
+  </div>
+</div>
+
+<!-- ── PROCESS ───────────────────────────────────────────────── -->
+<section id="how-it-works">
+  <div class="section-header centered">
+    <span class="section-label reveal">Process</span>
+    <h2 class="section-title reveal reveal-delay-1">Four steps to an<br />exceptional digital presence</h2>
+    <p class="section-sub reveal reveal-delay-2">From first conversation to live deployment, our process is designed for clarity, speed, and uncompromising precision.</p>
+  </div>
+  <div class="steps-grid reveal">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
       </div>
+      <div class="step-title">Discovery Brief</div>
+      <div class="step-desc">A focused consultation to understand your brand, target audience, competitive landscape, and measurable goals.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="step-title">Rapid Prototyping</div>
+      <div class="step-desc">Within 72 hours, you receive a high-fidelity prototype — not wireframes. A real, interactive preview of your future site.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      </div>
+      <div class="step-title">Iterative Refinement</div>
+      <div class="step-desc">Two structured revision cycles ensure every pixel, interaction, and word reflects your standards precisely.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </div>
+      <div class="step-title">Launch &amp; Handover</div>
+      <div class="step-desc">We deploy, test, and transfer complete ownership — with optional ongoing retainer support available.</div>
     </div>
   </div>
 </section>
 
-<section id="about" class="section">
-  <div class="container about-grid">
-    <div class="about-text reveal">
-      <span class="sec-subtitle">The Legacy</span>
-      <h2 class="sec-title">A Tradition of <i>Excellence</i></h2>
-      <p>Mansium was founded on a singular premise: that truly exceptional properties require an equally exceptional approach to representation.</p>
-    </div>
-    <div class="about-image reveal delay-1">
-      <img src="art-of-living.png" alt="">
-    </div>
+<!-- ── CONFIGURATOR ──────────────────────────────────────────── -->
+<section id="configurator">
+  <div class="section-header" style="max-width:1160px;margin:0 auto 3rem;">
+    <span class="section-label reveal">Project Configurator</span>
+    <h2 class="section-title reveal reveal-delay-1">Build your project,<br />your way</h2>
+    <p class="section-sub reveal reveal-delay-2">Select your template, pages, timeline, and support package. Your price summary updates in real time.</p>
   </div>
-</section>
 
-<section id="services" class="section">
-  <div class="container">
-    <div class="reveal">
-      <span class="sec-subtitle">Our Expertise</span>
-      <h2 class="sec-title">Bespoke <i>Services</i></h2>
-    </div>
-    <div class="services-grid">
-      <div class="service-card reveal delay-1"><div class="service-icon">01</div><h3>Private Sales</h3><p>Discreet, off-market transactions managed with absolute confidentiality.</p></div>
-      <div class="service-card reveal delay-2"><div class="service-icon">02</div><h3>Global Marketing</h3><p>Cinematic storytelling and targeted placement across prestigious networks.</p></div>
-      <div class="service-card reveal delay-3"><div class="service-icon">03</div><h3>Architectural Advisory</h3><p>Consulting on value-add renovations and ground-up luxury developments.</p></div>
-    </div>
-  </div>
-</section>
+  <div class="configurator-layout">
 
-<section id="featured" class="section">
-  <div class="container">
-    <div class="featured-header reveal">
-      <span class="sec-subtitle">Curated Selection</span>
-      <h2 class="sec-title">Featured <i>Estates</i></h2>
-      <p style="color: var(--t3);">Click to explore our featured properties in detail.</p>
-    </div>
+    <!-- LEFT: OPTION SELECTORS -->
+    <div class="config-main">
 
-    <div class="teaser-grid">
-      <div class="teaser-item reveal delay-1" onclick="openPop(1)">
-        <div class="teaser-bg" style="background: linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('kucuk-1.jpg') center/cover;"></div>
-        <div class="teaser-content">
-          <div class="teaser-title">The Glass Pavilion</div>
-          <div class="teaser-loc">Beverly Hills, CA</div>
+      <!-- STEP 1: Template (rendered from data.js by configurator.js) -->
+      <div class="config-group reveal">
+        <div class="config-group-label">Step 1 — Project Template</div>
+        <div class="option-grid" id="template-group">
+          <!-- Injected by configurator.js -->
         </div>
       </div>
 
-      <div class="teaser-item reveal delay-2" onclick="openPop(2)">
-        <div class="teaser-bg" style="background: linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('kucuk-2.jpg') center/cover;"></div>
-        <div class="teaser-content">
-          <div class="teaser-title">Palais de la Mer</div>
-          <div class="teaser-loc">French Riviera</div>
+      <!-- STEP 2: Pages -->
+      <div class="config-group reveal reveal-delay-1">
+        <div class="config-group-label">Step 2 — Number of Pages</div>
+        <div class="option-grid cols-3" id="pages-group">
+          <div class="option-tile compact" data-group="pages" data-val="1-3" data-price="0" data-label="1–3 Pages">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">1–3 Pages</div>
+                <div class="tile-desc">Focused &amp; efficient</div>
+                <div class="tile-price">Included</div>
+              </div>
+            </div>
+          </div>
+          <div class="option-tile compact" data-group="pages" data-val="4-8" data-price="800" data-label="4–8 Pages">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">4–8 Pages</div>
+                <div class="tile-desc">Standard depth</div>
+                <div class="tile-price">+ £800</div>
+              </div>
+            </div>
+          </div>
+          <div class="option-tile compact" data-group="pages" data-val="9+" data-price="1800" data-label="9+ Pages">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">9+ Pages</div>
+                <div class="tile-desc">Comprehensive platform</div>
+                <div class="tile-price">+ £1,800</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- STEP 3: Timeline -->
+      <div class="config-group reveal reveal-delay-2">
+        <div class="config-group-label">Step 3 — Delivery Timeline</div>
+        <div class="option-grid cols-3" id="timeline-group">
+          <div class="option-tile compact" data-group="timeline" data-val="standard" data-price="0" data-label="Standard (4–6 Weeks)">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">Standard</div>
+                <div class="tile-desc">4–6 weeks</div>
+                <div class="tile-price">Included</div>
+              </div>
+            </div>
+          </div>
+          <div class="option-tile compact" data-group="timeline" data-val="priority" data-price="600" data-label="Priority (2–3 Weeks)">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">Priority <span class="tile-tag">Fast</span></div>
+                <div class="tile-desc">2–3 weeks</div>
+                <div class="tile-price">+ £600</div>
+              </div>
+            </div>
+          </div>
+          <div class="option-tile compact" data-group="timeline" data-val="express" data-price="1400" data-label="Express (Under 10 Days)">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">Express</div>
+                <div class="tile-desc">Under 10 days</div>
+                <div class="tile-price">+ £1,400</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: Support -->
+      <div class="config-group reveal reveal-delay-3">
+        <div class="config-group-label">Step 4 — Ongoing Support</div>
+        <div class="option-grid cols-2" id="support-group">
+          <div class="option-tile compact" data-group="support" data-val="none" data-price="0" data-label="No Retainer">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">No Retainer</div>
+                <div class="tile-desc">Full handover. Ad-hoc support billed separately.</div>
+                <div class="tile-price">Included</div>
+              </div>
+            </div>
+          </div>
+          <div class="option-tile compact" data-group="support" data-val="essential" data-price="350" data-label="Essential Retainer">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">Essential Retainer</div>
+                <div class="tile-desc">Monthly updates, monitoring &amp; priority support.</div>
+                <div class="tile-price">+ £350 / mo</div>
+              </div>
+            </div>
+          </div>
+          <div class="option-tile compact" data-group="support" data-val="growth" data-price="750" data-label="Growth Retainer">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">Growth Retainer <span class="tile-tag popular">Best Value</span></div>
+                <div class="tile-desc">SEO, A/B testing, content updates &amp; quarterly strategy calls.</div>
+                <div class="tile-price">+ £750 / mo</div>
+              </div>
+            </div>
+          </div>
+          <div class="option-tile compact" data-group="support" data-val="concierge" data-price="1600" data-label="Concierge Retainer">
+            <div class="tile-body">
+              <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+              <div class="tile-content">
+                <div class="tile-name">Concierge Retainer</div>
+                <div class="tile-desc">Unlimited changes, dedicated lead &amp; new feature development.</div>
+                <div class="tile-price">+ £1,600 / mo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /config-main -->
+
+    <!-- RIGHT: SUMMARY PANEL -->
+    <div class="config-panel reveal reveal-delay-1">
+      <div class="summary-card">
+        <div class="summary-title">Your Project Summary</div>
+        <div class="summary-rows">
+          <div class="summary-row"><span class="summary-row-label">Template</span><span class="summary-row-val" id="sum-template">—</span></div>
+          <div class="summary-row"><span class="summary-row-label">Pages</span><span class="summary-row-val" id="sum-pages">—</span></div>
+          <div class="summary-row"><span class="summary-row-label">Timeline</span><span class="summary-row-val" id="sum-timeline">—</span></div>
+          <div class="summary-row"><span class="summary-row-label">Support</span><span class="summary-row-val" id="sum-support">—</span></div>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-total-row">
+          <span>Estimated Total</span>
+          <span id="totalPrice" style="color:var(--gray-400);font-size:0.85rem;font-weight:500;">Select options</span>
+        </div>
+        <div class="summary-note" id="summaryNote">All projects include 2 revision rounds, mobile-responsive build, and full source code delivery.</div>
+        <button class="btn-full" onclick="openContactModal()">
+          Request This Project
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-full secondary" onclick="openContactModal()">Schedule a Discovery Call</button>
+      </div>
     </div>
-    <div class="reveal delay-3" style="text-align: center;">
-      <a href="projects.html" class="btn-large">View Full Portfolio</a>
+
+  </div><!-- /configurator-layout -->
+</section>
+
+<!-- ── FEATURES ──────────────────────────────────────────────── -->
+<section id="features" style="background:var(--white);">
+  <div class="section-header centered">
+    <span class="section-label reveal">Capabilities</span>
+    <h2 class="section-title reveal reveal-delay-1">Every project.<br />Every standard met.</h2>
+    <p class="section-sub reveal reveal-delay-2">A fixed set of non-negotiable qualities built into every engagement — regardless of scope or budget.</p>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <div class="feature-title">Performance-First Engineering</div>
+      <div class="feature-desc">Sub-2s load times globally via CDN optimisation, lazy loading, and Core Web Vitals tuning as standard.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+      <div class="feature-title">Flawless Responsiveness</div>
+      <div class="feature-desc">Pixel-perfect across every breakpoint — from 320px mobile to 4K widescreen, without compromise.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="feature-title">Enterprise-Grade Security</div>
+      <div class="feature-desc">SSL, GDPR-compliant data handling, rate-limited forms, and optional password protection on all builds.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+      <div class="feature-title">Bespoke Visual Identity</div>
+      <div class="feature-desc">Every layout, typeface pairing, and interaction pattern is designed exclusively for your brand.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <div class="feature-title">Analytics &amp; CRO Ready</div>
+      <div class="feature-desc">GA4, Meta Pixel, Hotjar, and custom event tracking configured out of the box. Know exactly what converts.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <div class="feature-title">SEO Architecture</div>
+      <div class="feature-desc">Structured metadata, semantic HTML, schema markup, and canonical tag strategy built into the foundation.</div>
     </div>
   </div>
 </section>
 
-<section id="pricing" class="section">
-  <div class="container">
-    <div class="reveal">
-      <span class="sec-subtitle">Investment</span>
-      <h2 class="sec-title">Tailored <i>Pricing</i></h2>
-      <p style="color: var(--t3); max-width: 500px;">Transparent, premium packages crafted for exclusive real estate representation.</p>
+<!-- ── TESTIMONIALS ──────────────────────────────────────────── -->
+<section class="testimonials-section" id="testimonials">
+  <div class="section-header centered">
+    <span class="section-label reveal">Client Stories</span>
+    <h2 class="section-title reveal reveal-delay-1">Built on trust.<br />Measured by results.</h2>
+    <p class="section-sub reveal reveal-delay-2">What our clients say — in their own words.</p>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="testimonial-quote">"Mansium redefined how we present our portfolio. Enquiry quality improved overnight — we now attract exactly the right buyers, not just traffic."</div>
+      <div class="testimonial-author"><div class="author-avatar">SL</div><div><div class="author-name">Sebastian Lowe</div><div class="author-title">Managing Partner, Lowe Residences</div></div></div>
     </div>
-    <div class="pricing-grid">
-      <div class="price-card reveal delay-1">
-        <h3>Pure Realty Space</h3>
-        <div class="price-val">$999.90<span> / one-time</span></div>
-        <ul>
-          <li>Bespoke Property Landing Page</li>
-          <li>Interactive Gallery System</li>
-          <li>Luxury Typography & Micro-Animations</li>
-          <li>Mobile & Tablet Optimization</li>
-        </ul>
-        <a href="https://whop.com/checkout/plan_3RbYab3LXffNy" class="btn-large" style="margin-top:20px; width:100%; text-align:center;">Start Project</a>
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="testimonial-stars">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </div>
-      <div class="price-card reveal delay-2">
-        <h3>Listing Sync</h3>
-        <div class="price-val">$150<span> / month</span></div>
-        <ul>
-          <li>5 Revisions & Updates</li>
-          <li>Technical Support</li>
-          <li>Premium Hosting & Security</li>
-          <li>Priority Response Time</li>
-        </ul>
-        <a href="https://whop.com/checkout/plan_solRhhcko9Vkj" class="btn-large" style="margin-top:20px; width:100%; text-align:center;">Select Plan</a>
+      <div class="testimonial-quote">"The team grasped our brief in the first call. The prototype arrived in 68 hours and required almost no changes. That's a level of craft you rarely find."</div>
+      <div class="testimonial-author"><div class="author-avatar">AN</div><div><div class="author-name">Amara Ndoye</div><div class="author-title">Creative Director, Studio AN</div></div></div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="testimonial-stars">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </div>
+      <div class="testimonial-quote">"Our investor portal is clean, confidential, and incredibly intuitive. We closed a £12M round within three months of launch. Correlation? We think so."</div>
+      <div class="testimonial-author"><div class="author-avatar">JC</div><div><div class="author-name">James Calloway</div><div class="author-title">Founder, Calloway Capital Partners</div></div></div>
     </div>
   </div>
 </section>
 
-<section id="contact" class="section">
-  <div class="container">
-    <div class="contact-wrapper reveal">
-      <div>
-        <span class="sec-subtitle">Private Inquiry</span>
-        <h2 class="sec-title">Start a <i>Conversation</i></h2>
-        <p style="color: var(--t3); margin-top: 20px; max-width: 300px;">Connect with our senior partners to discuss your real estate acquisitions or disposition strategies.</p>
-      </div>
-      <div>
-        <form id="direct-mail-form">
-          <div class="form-group">
-            <input type="text" id="user-name" required>
-            <label>Full Name</label>
-          </div>
-          <div class="form-group">
-            <input type="email" id="user-email" required>
-            <label>Email Address</label>
-          </div>
-          <div class="form-group">
-            <textarea id="user-msg" rows="4" required></textarea>
-            <label>Message / Inquiry Details</label>
-          </div>
-          <button type="submit" class="submit-btn">Send Inquiry</button>
-        </form>
-      </div>
-    </div>
+<!-- ── CTA ───────────────────────────────────────────────────── -->
+<section class="cta-section">
+  <span class="section-label">Ready to Begin</span>
+  <h2 class="section-title">The detail is in<br />the difference.</h2>
+  <p class="section-sub">Reserve your build slot for Q3 2025. Availability is limited by design — we take on fewer projects to guarantee exceptional output.</p>
+  <div class="cta-actions">
+    <a href="#configurator" class="btn-white">
+      Configure Your Project
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <button onclick="openContactModal()" class="btn-ghost">Schedule a Discovery Call</button>
   </div>
 </section>
 
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
 <footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-brand">MANSIUM</div>
-        <p class="footer-text">Curating the world's most exceptional properties. Redefining luxury real estate representation.</p>
-      </div>
-      <div>
-        <h4 class="footer-title">Offices</h4>
-        <ul class="footer-links">
-          <li><a href="#">New York</a></li><li><a href="#">London</a></li><li><a href="#">Dubai</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="footer-title">Explore</h4>
-        <ul class="footer-links">
-          <li><a href="#about">The Legacy</a></li><li><a href="projects.html">Portfolio</a></li><li><a href="#pricing">Pricing</a></li>
-        </ul>
-      </div>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="logo.png" alt="Mansium" class="footer-logo-img"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" />
+      <span class="footer-logo-text" style="display:none;">mans<span>ium</span></span>
+      <p class="footer-tagline">Bespoke digital architecture for brands that understand the value of precision.</p>
     </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 Mansium Luxury Marketing. All rights reserved.</span>
+    <div class="footer-col">
+      <div class="footer-col-title">Studio</div>
+      <ul>
+        <li><a href="#">Our Approach</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">The Team</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Pages</div>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="projects.html">My Projects</a></li>
+        <li><a href="templates.html">Templates</a></li>
+        <li><a href="#configurator">Configurator</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <ul>
+        <li><a href="mailto:hello@mansium.co">hello@mansium.co</a></li>
+        <li><a href="#">London, UK</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Mansium Studio Ltd. All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Settings</a>
     </div>
   </div>
 </footer>
 
-<div id="pop">
-  <div class="pop-c">
-    <button class="pop-x" id="pop-x">Close</button>
-    <div id="pop-content"></div>
+<!-- ── CONTACT / REQUEST MODAL ───────────────────────────────── -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeContactModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div id="contactModalContent">
+      <div class="modal-title">Request Your Project</div>
+      <div class="modal-sub">Complete the form below and we'll be in touch within one business day.</div>
+      <div class="form-summary" id="contactModalSummary">
+        Configure your project above to include a summary here.
+      </div>
+
+      <!--
+      ================================================================
+      FORMSPREE SETUP — 3 easy steps:
+        1. Go to https://formspree.io and sign up for a free account.
+        2. Create a new form — you'll receive an endpoint URL like:
+              https://formspree.io/f/YOUR_FORM_ID
+        3. Paste that URL into the "action" attribute below.
+           Everything else is handled automatically.
+
+      Every email you receive will include the full project
+      configuration (template, pages, timeline, support, price)
+      as hidden fields alongside the visitor's contact details.
+      ================================================================
+      -->
+      <form id="contactForm"
+            action="PASTE_YOUR_FORMSPREE_URL_HERE"
+            method="POST"
+            onsubmit="handleFormSubmit(event)">
+
+        <!-- Hidden fields: configurator selection injected by JS -->
+        <input type="hidden" name="Selected Template" id="hTemplate" value="" />
+        <input type="hidden" name="Selected Pages"    id="hPages"    value="" />
+        <input type="hidden" name="Selected Timeline" id="hTimeline" value="" />
+        <input type="hidden" name="Selected Support"  id="hSupport"  value="" />
+        <input type="hidden" name="Estimated Price"   id="hPrice"    value="" />
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name *</label>
+            <input class="form-input" type="text" name="first_name" placeholder="Sebastian" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name *</label>
+            <input class="form-input" type="text" name="last_name" placeholder="Lowe" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input class="form-input" type="email" name="email" placeholder="hello@yourbrand.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company / Brand</label>
+          <input class="form-input" type="text" name="company" placeholder="Your company name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tell us about your project <span style="color:var(--gray-400);font-weight:300;">(optional)</span></label>
+          <input class="form-input" type="text" name="message" placeholder="A brief overview of your goals..." />
+        </div>
+        <button type="submit" class="btn-full" style="margin-top:0.5rem;">
+          Submit Request
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
   </div>
 </div>
 
+<!-- ── SCRIPTS ───────────────────────────────────────────────── -->
+<!-- Load order: data → shared → page-specific -->
+<script src="data.js"></script>
+<script src="main.js"></script>
 <script>
-  // CURSOR
-  const curD = document.getElementById('cur-d');
-  const curR = document.getElementById('cur-r');
-  document.addEventListener('mousemove', (e) => {
-    if (curD && curR) {
-      curD.style.left = e.clientX + 'px'; curD.style.top = e.clientY + 'px';
-      setTimeout(() => { curR.style.left = e.clientX + 'px'; curR.style.top = e.clientY + 'px'; }, 50);
-    }
+/* ============================================================
+   CONFIGURATOR — index.html only
+   Reads from TEMPLATES_DATA and BASE_PRICE (data.js)
+   ============================================================ */
+
+/* State */
+const configState  = { template: null, pages: null, timeline: null, support: null };
+const configPrices = { template: 0,    pages: 0,    timeline: 0,    support: 0   };
+const configLabels = { template: null, pages: null, timeline: null, support: null };
+
+/* ── Render template tiles from data.js ── */
+function renderTemplateTiles() {
+  const grid = document.getElementById('template-group');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  TEMPLATES_DATA.forEach(t => {
+    const tile = document.createElement('div');
+    tile.className = 'option-tile' + (t.bespoke ? ' bespoke' : '');
+    tile.dataset.group = 'template';
+    tile.dataset.val   = t.id;
+    tile.dataset.price = t.bespoke ? '0' : BASE_PRICE;
+    tile.dataset.label = t.name;
+
+    const imgHtml = t.image
+      ? `<img src="${t.image}" alt="${t.name}" loading="lazy" />`
+      : `<div class="tile-image-placeholder">
+           <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+           <span>Add Image</span>
+         </div>`;
+
+    tile.innerHTML = `
+      ${t.bespoke ? '<div class="bespoke-badge">Signature</div>' : ''}
+      <div class="tile-image">${imgHtml}</div>
+      <div class="tile-body">
+        <div class="tile-radio"><div class="tile-radio-dot"></div></div>
+        <div class="tile-content">
+          <div class="tile-name">
+            ${t.name}
+            ${t.tag ? `<span class="tile-tag ${t.tag === 'Popular' ? 'popular' : ''}">${t.tag}</span>` : ''}
+          </div>
+          <div class="tile-desc">${t.desc}</div>
+          <div class="tile-price">${t.bespoke ? 'Bespoke Quotation' : 'From £' + BASE_PRICE.toLocaleString()}</div>
+          <a href="templates.html" class="tile-learn-more">
+            Learn more
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>`;
+
+    tile.addEventListener('click', (e) => {
+      // Don't trigger tile selection when clicking the "Learn more" link
+      if (e.target.closest('.tile-learn-more')) return;
+      handleOptionClick(tile);
+    });
+    grid.appendChild(tile);
   });
+}
 
-  const attachCursor = () => {
-    document.querySelectorAll('a, button, input, textarea, .teaser-item').forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('ch'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('ch'));
-    });
-  };
-  attachCursor();
+/* ── Handle any option click ── */
+function handleOptionClick(tile) {
+  const group = tile.dataset.group;
+  document.querySelectorAll(`.option-tile[data-group="${group}"]`).forEach(t => t.classList.remove('selected'));
+  tile.classList.add('selected');
+  configState[group]  = tile.dataset.val;
+  configPrices[group] = parseInt(tile.dataset.price) || 0;
+  configLabels[group] = tile.dataset.label;
+  updateSummary();
+}
 
-  // STICKY NAV
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => { if(window.scrollY > 50) nav.classList.add('stuck'); else nav.classList.remove('stuck'); });
+/* ── Attach listeners to non-template tiles ── */
+document.querySelectorAll('.option-tile.compact').forEach(tile => {
+  tile.addEventListener('click', () => handleOptionClick(tile));
+});
 
-  // SCROLL REVEAL
-  const revealElements = document.querySelectorAll('.reveal');
-  const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => { if(entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
-  }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
-  revealElements.forEach(el => revealObserver.observe(el));
+/* ── Update the summary panel ── */
+function updateSummary() {
+  document.getElementById('sum-template').textContent = configLabels.template || '—';
+  document.getElementById('sum-pages').textContent    = configLabels.pages    || '—';
+  document.getElementById('sum-timeline').textContent = configLabels.timeline || '—';
+  document.getElementById('sum-support').textContent  = configLabels.support  || '—';
 
+  const priceEl = document.getElementById('totalPrice');
+  const noteEl  = document.getElementById('summaryNote');
+  const allSet  = configState.template && configState.pages && configState.timeline && configState.support;
 
-  // ANA SAYFA MODAL VERİLERİ (GALERİLİ)
-  // Ratio: 1920 x 1200 pixel (16:10) YATAY
-  const homeProjects = [
-    {
-      id: 1,
-      name: "The Glass Pavilion",
-      loc: "Beverly Hills, CA",
-      price: "$42,500,000",
-      status: "Available",
-      
-      // SADECE POP-UP'TA AÇILACAK OLAN GENİŞ/YATAY RESİM:
-      // Ratio: 1920 x 1200 pixel (16:10)
-      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('buyuk-1.jpg') center/cover",
-      
-      images: [], 
-      specs: [ { l: "Living Area", v: "14,500 sqft" }, { l: "Bedrooms", v: "6" } ],
-      desc: "An architectural triumph suspended above the Los Angeles basin.",
-      features: ["Infinity Pool & Spa"]
-    },
-    {
-      id: 2,
-      name: "The Glass Pavilion",
-      loc: "Beverly Hills, CA",
-      price: "$42,500,000",
-      status: "Available",
-      
-    
-      // SADECE POP-UP'TA AÇILACAK OLAN GENİŞ/YATAY RESİM:
-      // Ratio: 1920 x 1200 pixel (16:10)
-      bg: "linear-gradient(180deg, rgba(6,13,30,0) 0%, rgba(6,13,30,0.8) 100%), url('penthouse.jpeg') center/cover",
-      
-      images: [], 
-      specs: [ { l: "Living Area", v: "14,500 sqft" }, { l: "Bedrooms", v: "6" } ],
-      desc: "An architectural triumph suspended above the Los Angeles basin.",
-      features: ["Infinity Pool & Spa"]
+  if (!allSet) {
+    priceEl.textContent  = 'Select all options';
+    priceEl.style.cssText = 'color:var(--gray-400);font-size:0.85rem;font-weight:500;';
+    noteEl.textContent   = 'All projects include 2 revision rounds, mobile-responsive build, and full source code delivery.';
+    return;
+  }
+
+  if (configState.template === 'bespoke') {
+    priceEl.textContent  = 'Custom Quote';
+    priceEl.style.cssText = 'color:var(--accent-dark);font-size:1.3rem;font-weight:700;';
+    noteEl.textContent   = 'Bespoke projects are scoped individually. We\'ll prepare a detailed proposal within 48 hours.';
+    return;
+  }
+
+  const oneOff  = BASE_PRICE + configPrices.pages + configPrices.timeline;
+  const support = configPrices.support;
+  const suppStr = support > 0 ? ` + £${support.toLocaleString()}/mo` : '';
+  priceEl.textContent  = `£${oneOff.toLocaleString()}${suppStr}`;
+  priceEl.style.cssText = 'color:var(--black);font-size:1.3rem;font-weight:700;';
+  noteEl.textContent   = 'Price excludes VAT. 50% deposit required at project commencement.';
+}
+
+/* ── Contact modal ── */
+function openContactModal() {
+  // Populate hidden fields with current configurator state
+  document.getElementById('hTemplate').value = configLabels.template || 'Not selected';
+  document.getElementById('hPages').value    = configLabels.pages    || 'Not selected';
+  document.getElementById('hTimeline').value = configLabels.timeline || 'Not selected';
+  document.getElementById('hSupport').value  = configLabels.support  || 'Not selected';
+  document.getElementById('hPrice').value    = document.getElementById('totalPrice').textContent;
+
+  // Visible summary inside modal
+  const allSet = configState.template && configState.pages && configState.timeline && configState.support;
+  const summaryEl = document.getElementById('contactModalSummary');
+  if (allSet) {
+    summaryEl.innerHTML = `
+      <strong>Template:</strong> ${configLabels.template}<br/>
+      <strong>Pages:</strong> ${configLabels.pages} &nbsp;·&nbsp; <strong>Timeline:</strong> ${configLabels.timeline}<br/>
+      <strong>Support:</strong> ${configLabels.support}<br/>
+      <strong>Estimated:</strong> ${document.getElementById('totalPrice').textContent}`;
+  } else {
+    summaryEl.textContent = 'No configuration selected — we\'ll discuss your requirements on the discovery call.';
+  }
+
+  document.getElementById('contactModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeContactModal() {
+  document.getElementById('contactModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on backdrop click
+document.getElementById('contactModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeContactModal();
+});
+
+/* ── Form submission (Formspree via fetch) ── */
+function handleFormSubmit(e) {
+  e.preventDefault();
+  const form   = e.target;
+  const data   = new FormData(form);
+  const button = form.querySelector('button[type="submit"]');
+
+  button.textContent = 'Sending...';
+  button.disabled    = true;
+
+  fetch(form.action, {
+    method:  'POST',
+    body:    data,
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(res => {
+    if (res.ok) {
+      const firstName = data.get('first_name') || 'there';
+      const email     = data.get('email')       || 'your inbox';
+      document.getElementById('contactModalContent').innerHTML = `
+        <div class="modal-success">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="success-title">Request Received</div>
+          <div class="success-msg">
+            Thank you, ${firstName}. A member of our team will be in touch at
+            <strong>${email}</strong> within one business day.<br/><br/>
+            We look forward to building something exceptional together.
+          </div>
+        </div>`;
+    } else {
+      button.textContent = 'Submit Request';
+      button.disabled    = false;
+      alert('Something went wrong. Please check your Formspree URL and try again.');
     }
-  ];
+  })
+  .catch(() => {
+    button.textContent = 'Submit Request';
+    button.disabled    = false;
+    alert('Network error. Please try again or email us directly.');
+  });
+}
 
-  const pop = document.getElementById('pop');
-  const popContent = document.getElementById('pop-content');
-  const popX = document.getElementById('pop-x');
-
-  window.openPop = (id) => {
-    const p = homeProjects.find(item => item.id === id);
-    if(!p) return;
-
-    const specsHtml = p.specs.map(s => `<div class="pp-spec-item"><span class="pp-spec-val">${s.v}</span><span class="pp-spec-lbl">${s.l}</span></div>`).join('');
-    const featsHtml = p.features.map(f => `<li>${f}</li>`).join('');
-    const galleryHtml = (p.images && p.images.length > 0) ? `<div class="pp-gallery">${p.images.map(img => `<img src="${img}" alt="Property">`).join('')}</div>` : '';
-
-    popContent.innerHTML = `
-      <div class="pp-hero" style="background: ${p.bg}">
-        <div><div class="pp-badge"><div class="pp-dot"></div>${p.status}</div><h2 class="pp-title">${p.name}</h2><div class="pp-loc">${p.loc}</div></div>
-        <div class="pp-price-wrap"><div class="pp-price">${p.price}</div><div class="pp-price-lbl">Asking Price</div></div>
-      </div>
-      <div class="pp-body">
-        <div class="pp-main">
-          <div class="pp-specs">${specsHtml}</div>
-          <div class="pp-desc">
-            <h3 style="font-family:'Cormorant',serif; font-size:24px; color:var(--gold); margin-bottom:15px;">Property Overview</h3>
-            <p>${p.desc}</p><ul class="pp-features">${featsHtml}</ul>
-            ${galleryHtml}
-          </div>
-        </div>
-        <div class="pp-sidebar">
-          <div class="pp-ctas">
-            <a href="#contact" class="pp-btn primary" onclick="document.getElementById('pop').classList.remove('active');">Go To Website</a>
-          </div>
-        </div>
-      </div>
-    `;
-    pop.classList.add('active');
-    attachCursor();
-  };
-
-  popX.addEventListener('click', () => pop.classList.remove('active'));
-  pop.addEventListener('click', (e) => { if(e.target === pop) pop.classList.remove('active'); });
-
-  // DOĞRUDAN MAİL GÖNDERME FONKSİYONU
-  const mailForm = document.getElementById('direct-mail-form');
-  
-  if(mailForm) {
-    mailForm.addEventListener('submit', function(e) {
-      e.preventDefault(); // Sayfanın yenilenmesini engeller
-      
-      // Formdaki bilgileri al
-      const name = document.getElementById('user-name').value;
-      const email = document.getElementById('user-email').value;
-      const msg = document.getElementById('user-msg').value;
-      
-      // Mailin konusunu ve içeriğini lüks ve okunaklı bir şekilde hazırla
-      const mailTo = 're.mansium@gmail.com'; // BURAYA KENDİ MAİLİNİ YAZ
-      const subject = encodeURIComponent('New Private Inquiry from ' + name);
-      const body = encodeURIComponent(
-        "Hello Mansium Team,\n\n" +
-        "You have received a new inquiry from your website:\n\n" +
-        "Name: " + name + "\n" +
-        "Email: " + email + "\n\n" +
-        "Message:\n" + msg + "\n\n" +
-        "------------------------------\n" +
-        "Sent via Mansium Luxury Portal"
-      );
-      
-      // Kullanıcının mail uygulamasını aç ve bilgileri doldur
-      window.location.href = 'mailto:' + mailTo + '?subject=' + subject + '&body=' + body;
-    });
-  }
-
-  // ════════════════════════════════════════
-  // MOBİL HAMBURGER MENÜ LOGIC
-  // ════════════════════════════════════════
-  const hamburger = document.getElementById('hamburger');
-  const navLinksList = document.getElementById('nav-links');
-  const navItems = document.querySelectorAll('.nav-links a');
-
-  if(hamburger) {
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('active');
-      navLinksList.classList.toggle('active');
-      // Menü açıldığında arkadaki sayfanın kaymasını engeller
-      document.body.style.overflow = navLinksList.classList.contains('active') ? 'hidden' : '';
-    });
-
-    // Menüdeki bir linke tıklandığında menüyü zarifçe kapat
-    navItems.forEach(item => {
-      item.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        navLinksList.classList.remove('active');
-        document.body.style.overflow = '';
-      });
-    });
-  }
+/* ── Init ── */
+renderTemplateTiles();
 </script>
-
 </body>
 </html>
