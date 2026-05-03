@@ -1,0 +1,13 @@
+{
+  "name": "mansium",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mansium — Premium agency for luxury real estate consultants. Static site (Vanilla HTML/CSS/JS).",
+  "scripts": {
+    "dev": "serve . -l 3000 --no-clipboard --no-port-switching",
+    "start": "serve . -l 3000 --no-clipboard --no-port-switching"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
